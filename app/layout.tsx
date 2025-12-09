@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Footer from '@/components/Footer';
 
 import Navbar from "@/components/Navbar"; 
 
@@ -19,13 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        
+      {/* 🚀 Apply the new custom gradient-bg class here */}
+      <body className={`gradient-bg text-gray-100 ${inter.className}`}>
         <Navbar />
-      
-        <main>{children}</main> 
-
+        <main>{children}</main>
+        
       </body>
+      <Footer />
+      
     </html>
   );
 }

@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.gradient-bg {
+  /* radial-gradient creates a smooth, circular blend */
+  /* This gradient goes from near-black (center) to dark-blue/navy (edges) */
+  background: radial-gradient(
+    at 70% 30%, /* Starts slightly off-center for a subtle shift */
+    #131a26,   /* A dark, charcoal blue near the center */
+    #0a0f18    /* A deeper, darker navy at the edges */
+  );
+  /* Ensures the gradient covers the entire viewport, even if content is short */
+  min-height: 100vh;
+}
+
+.leading-relaxed-custom {
+  line-height: 1.75; /* Slightly increased line height for better readability */
+}
+
+/* Target specific headings for a bolder, sharper look */
+h1, h2 {
+  letter-spacing: -0.025em; /* Subtle tightening of letter spacing for a 'punchy' headline effect */
+}

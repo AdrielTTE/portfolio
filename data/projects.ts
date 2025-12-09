@@ -17,22 +17,22 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     id: 1,
-    slug: 'e-commerce-dashboard',
-    title: 'E-commerce Admin Dashboard',
-    shortDescription: 'A responsive full-stack dashboard for managing orders, users, and inventory.',
-    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'PostgreSQL'],
-    imageUrl: '/images/ecommerce-dash.jpg', // You'll put this image in your /public folder
-    githubUrl: 'https://github.com/yourname/ecommerce-dashboard',
-    liveUrl: 'https://dashboard.example.com',
+    slug: 'Habitect',
+    title: 'Habitect',
+    shortDescription: 'A habit tracking mobile application to help keep track of all your habits',
+    technologies: ['Flutter', 'Dart'],
+    imageUrl: '/images/habitects.png',
+    githubUrl: 'https://github.com/AdrielTTE/Habitect',
+
   },
   {
     id: 2,
-    slug: 'personal-blog',
-    title: 'Personal Dev Blog',
-    shortDescription: 'A static-generated blog focused on modern web development tutorials.',
-    technologies: ['Next.js', 'MDX', 'Sass'],
+    slug: 'Package Tracker',
+    title: 'Package Tracker',
+    shortDescription: 'A package tracking web application for customers, admins, and delivery drivers',
+    technologies: ['Laravel', 'PHP', 'MySQL'],
     imageUrl: '/images/dev-blog.jpg',
-    githubUrl: 'https://github.com/yourname/dev-blog',
+    githubUrl: 'https://github.com/AdrielTTE/Integrative-Programming-Assignment',
     liveUrl: 'https://blog.example.com',
   },
   {

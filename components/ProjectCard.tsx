@@ -1,49 +1,50 @@
-// components/ProjectCard.tsx
+// components/ProjectCard.tsx - FINAL GLASSMORPHISM VERSION
+
 import Link from 'next/link';
 import Image from 'next/image';
-// Import the Project type definition from your data file
-import type { Project } from '@/data/projects';
+import type { Project } from '@/data/projects'; 
 
-// Define the component props using the Project interface
 interface ProjectCardProps {
   project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  // Construct the URL for the individual project details page
   const projectDetailUrl = `/projects/${project.slug}`;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
+    
+    <div className="bg-white/5 backdrop-blur-sm rounded-xl shadow-2xl hover:shadow-sky-500/30 transition-shadow duration-300 overflow-hidden border border-white/10">
       
-      {/* Project Image - Ensure your images are in public/images/ */}
+      {/* Project Image */}
       <div className="relative h-48 w-full">
         <Image 
           src={project.imageUrl}
           alt={`Screenshot of ${project.title}`}
-          fill // Makes the image fill the parent div
-          style={{ objectFit: 'cover' }} // Ensures the image covers the area nicely
+          fill 
+          style={{ objectFit: 'cover' }} 
           className="transition-transform duration-500 hover:scale-105"
         />
       </div>
 
       <div className="p-6">
         {/* Project Title (Linked to Detail Page) */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          <Link href={projectDetailUrl} className="hover:text-indigo-600 transition-colors">
+        <h2 className="text-2xl font-bold text-white mb-2">
+          {/* Link uses Sky Blue hover for interactivity */}
+          <Link href={projectDetailUrl} className="hover:text-sky-400 transition-colors duration-200">
             {project.title}
           </Link>
         </h2>
 
         {/* Short Description */}
-        <p className="text-gray-600 mb-4">{project.shortDescription}</p>
+        <p className="text-gray-300 mb-4">{project.shortDescription}</p>
 
-        {/* Technologies List */}
+        {/* Technologies List - Muted but visible accents */}
         <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.map((tech) => (
             <span 
               key={tech} 
-              className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full"
+              // Muted dark background for the pill, Sky Blue text
+              className="px-3 py-1 text-xs font-medium bg-white/10 text-sky-400 rounded-full"
             >
               {tech}
             </span>
@@ -51,23 +52,25 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         {/* Action Links */}
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 pt-2 border-t border-white/20">
           <a 
             href={project.githubUrl} 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="text-indigo-600 hover:text-indigo-800 font-semibold"
+            // Link color is Sky Blue
+            className="text-sky-500 hover:text-sky-400 font-semibold transition-colors duration-200"
           >
-            GitHub Repo
+            GitHub Repo →
           </a>
           {project.liveUrl && (
             <a 
               href={project.liveUrl} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-green-600 hover:text-green-800 font-semibold"
+              // Subtle accent color for live link
+              className="text-green-400 hover:text-green-300 font-semibold transition-colors duration-200"
             >
-              Live Demo
+              Live Demo →
             </a>
           )}
         </div>
