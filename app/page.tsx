@@ -35,7 +35,7 @@ export default function Home() {
         // Main text is bold white
         className="text-6xl font-extrabold text-white mb-2 text-center"
       >
-        ADRIEL TANG THIEN ERN
+        Hi! I'm Adriel
       </motion.h1>
 
       <motion.h2 

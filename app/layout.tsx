@@ -24,9 +24,9 @@ export default function RootLayout({
       <body className={`gradient-bg text-gray-100 ${inter.className}`}>
         <Navbar />
         <main>{children}</main>
-        
+        <Footer />
       </body>
-      <Footer />
+      
       
     </html>
   );
