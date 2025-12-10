@@ -75,14 +75,14 @@ export default function Home() {
                 animate={{ opacity: 1, scale: 1 }}
                 // Uses the explicitly typed spread
                 transition={{ ...minimalTransition, duration: 0.3, delay: 0.5 }}
-                href="/projects"
+                href="/about"
                 className="
                     // SYNCHRONIZED STYLES: Matches Navbar Active Button
                     inline-block px-6 py-3 text-lg font-medium rounded-full transition-all duration-300 ease-in-out
                     bg-sky-600 text-white shadow-lg shadow-sky-900/50 hover:bg-sky-500 active:bg-sky-700 z-10
                 "
             >
-                View Projects
+                Who Am I?
             </motion.a>
             
         </div>
