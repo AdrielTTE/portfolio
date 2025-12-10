@@ -37,7 +37,7 @@ export default function Navbar() {
                         href="/" 
                         className="text-gray-100 text-2xl font-black hover:text-sky-400 transition-colors duration-200"
                     >
-                        ADRIEL TANG
+                        Adriel Tang
                     </Link>
                     
                     {/* Navigation Links */}

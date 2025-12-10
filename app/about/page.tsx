@@ -48,10 +48,10 @@ export default function AboutPage() {
                     </div>
                     <div className="lg:col-span-2">
                         <h1 className="text-5xl font-extrabold mb-5 text-white">
-                            ADRIEL TANG THIEN ERN
+                            Adriel Tang Thien Ern
                         </h1>
                         <h2 className="text-3xl font-light mb-10 text-sky-400">
-                            Full Stack Developer | Architecting Modern Solutions
+                            Full Stack Development | Application Deployment
                         </h2>
                         <p className="text-xl text-gray-300 mb-6 font-semibold border-l-4 border-sky-500 pl-4 italic leading-relaxed">
                             "I am a results-focused Full Stack Developer specializing in delivering high-performance and structured web and cross-platform mobile applications. My passion lies in learning new methods and streamlining processes that prioritize optimal user experience and scalable efficiency."
