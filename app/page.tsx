@@ -1,84 +1,90 @@
-// app/page.tsx - FINAL COHESIVE VERSION
+// app/page.tsx - FINAL MINIMALIST VERSION synchronized with About Page Button Design
 
-"use client"; // Essential for using Framer Motion
+"use client";
 
 import Image from 'next/image';
-import { motion } from 'framer-motion'; 
+// Import Transition type here for explicit typing
+import { motion, Transition } from 'framer-motion'; 
+
+// Define a unified, minimal ease. 
+// Explicitly type it as a partial Transition object to resolve the TS error.
+const minimalTransition: Partial<Transition> = {
+    ease: "easeOut", // Use a smooth, non-bouncy easing function
+};
 
 export default function Home() {
-  return (
-    // 1. Structural Fix: Added pt-24 (or pt-32, depending on Navbar height) to clear the floating Navbar
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh)] p-8 pt-24 text-gray-100">
-      
-      {/* 2. Motion for Image - Material Border & Subtle Hover */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        // Border uses the primary Sky Blue color
-        className="relative w-48 h-48 rounded-full overflow-hidden mb-6 shadow-xl border-4 border-sky-600 transition-transform duration-500 hover:scale-105 hover:rotate-3"
-      >
-        <Image 
-          src="/images/tempProfile.jpg"
-          alt="Adriel Tang Thien Ern - Profile Picture"
-          fill
-          style={{ objectFit: 'cover' }}
-          priority
-        />
-      </motion.div>
+    return (
+        // Minimalist: Dark background (zinc-950) for stark contrast, generous padding
+        <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh)] p-8 pt-24 bg-zinc-950 text-gray-50">
+            
+            {/* Subtle background element for the blur filter to sample (Sky/Blue adjusted) */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-sky-800/50 rounded-full blur-3xl opacity-30 z-0"></div>
+            
+            {/* 1. Image - Minimal Opacity & Scale */}
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }} 
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }} 
+                className="relative w-48 h-48 rounded-lg overflow-hidden mb-8 
+                    border border-zinc-700 transition-transform duration-300 hover:scale-[1.02] z-10"
+            >
+                <Image 
+                    src="/images/tempProfile.jpg"
+                    alt="Adriel Tang Thien Ern - Profile Picture"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    priority
+                />
+            </motion.div>
 
-      {/* 3. Motion for Text - Slides in slightly later */}
-      <motion.h1 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        // Main text is bold white
-        className="text-6xl font-extrabold text-white mb-2 text-center"
-      >
-        Hi! I'm Adriel
-      </motion.h1>
+            {/* 2. Main Title - Minimal Y-Axis Shift and Opacity */}
+            <motion.h1 
+                initial={{ opacity: 0, y: 5 }} // Very small shift
+                animate={{ opacity: 1, y: 0 }}
+                // Uses the explicitly typed spread
+                transition={{ ...minimalTransition, duration: 0.4, delay: 0.1 }}
+                className="text-6xl font-light text-white mb-2 text-center z-10"
+            >
+                Adriel Tang
+            </motion.h1>
 
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-        // Sub-headline uses the eye-catching Sky Blue accent
-        className="text-3xl text-sky-500 font-medium mb-6 text-center"
-      >
-        Full Stack Development | Application Deployment
-      </motion.h2>
+            {/* 3. Sub-Headline - Sky-400 for consistency */}
+            <motion.h2 
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                // Uses the explicitly typed spread
+                transition={{ ...minimalTransition, duration: 0.4, delay: 0.2 }}
+                className="text-2xl text-sky-400 font-normal tracking-wider uppercase mb-8 text-center z-10"
+            >
+                Full Stack Developer
+            </motion.h2>
 
-      <motion.p 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-        // Body text is soft gray for good contrast against the dark background
-        className="text-lg text-gray-300 max-w-2xl text-center mb-8"
-      >
-        Building modern, high-performance web applications with a focus on clean code and accessibility. Explore my projects to see my work in action.
-      </motion.p>
-      
-      {/* 4. Motion for Button - Material Design Styling */}
-      <motion.a 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        href="/projects"
-        className="
-          // Primary color (Sky Blue) background
-          px-8 py-3 bg-sky-600 text-white text-xl font-semibold 
-          
-          // Material Geometry (Pill shape) and Elevation
-          rounded-full shadow-lg 
-          
-          // Intentional Motion/Feedback
-          hover:bg-sky-500 hover:shadow-xl active:bg-sky-700 
-          transition-all duration-200 active:scale-95 focus:ring-4 focus:ring-sky-500 focus:ring-opacity-50
-        "
-      >
-        View My Projects
-      </motion.a>
-      
-    </div>
-  );
+            {/* 4. Body Text - Pure Fade-In */}
+            <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                className="text-lg text-gray-400 max-w-xl text-center mb-12 leading-relaxed z-10"
+            >
+                Building modern, high-performance web applications with a focus on **clean code** and **accessible interfaces**. Explore my work.
+            </motion.p>
+            
+            {/* 5. Button - SYNCHRONIZED TO NAVBAR ACTIVE STATE (And Error Fixed) */}
+            <motion.a 
+                initial={{ opacity: 0, scale: 0.98 }} 
+                animate={{ opacity: 1, scale: 1 }}
+                // Uses the explicitly typed spread
+                transition={{ ...minimalTransition, duration: 0.3, delay: 0.5 }}
+                href="/projects"
+                className="
+                    // SYNCHRONIZED STYLES: Matches Navbar Active Button
+                    inline-block px-6 py-3 text-lg font-medium rounded-full transition-all duration-300 ease-in-out
+                    bg-sky-600 text-white shadow-lg shadow-sky-900/50 hover:bg-sky-500 active:bg-sky-700 z-10
+                "
+            >
+                View Projects
+            </motion.a>
+            
+        </div>
+    );
 }

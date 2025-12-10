@@ -1,76 +1,85 @@
-// components/ContactForm.tsx - FINAL THEME VERSION
+// components/ContactForm.tsx - FROSTED GLASS SUBMIT BUTTON
 
-"use client"; // Retain the client directive for best practice with interactive forms
+"use client";
+import React, { useState } from 'react';
 
-import React from 'react';
+// NOTE: This is a placeholder form component. Replace it with your actual form logic
+// (e.g., state, error handling, API submission logic).
 
 export default function ContactForm() {
-  // Replace the placeholder below with the actual URL you copied from Formspree!
-  const FORM_ACTION_URL = 'https://formspree.io/f/mwpgnwzl';
+    const [status, setStatus] = useState('');
 
-  return (
-    <form action={FORM_ACTION_URL} method="POST" className="space-y-6">
-      
-      {/* Name Field */}
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-          Your Name
-        </label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          required
-          placeholder="e.g., Jane Doe"
-          // Minimalist Dark Input Styling (Dark background, light text, Sky Blue focus)
-          className="w-full px-4 py-3 bg-zinc-700 border border-zinc-600 rounded-lg text-gray-100 placeholder-gray-500 
-                     focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors duration-200"
-        />
-      </div>
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus('submitting');
+        
+        // --- Replace this with your actual form submission logic (e.g., fetch, API call) ---
+        setTimeout(() => {
+            // Simulate success
+            setStatus('success');
+        }, 2000);
+    };
 
-      {/* Email Field */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-          Your Email
-        </label>
-        <input
-          type="email"
-          name="_replyto" 
-          id="email"
-          required
-          placeholder="you@example.com"
-          // Minimalist Dark Input Styling
-          className="w-full px-4 py-3 bg-zinc-700 border border-zinc-600 rounded-lg text-gray-100 placeholder-gray-500 
-                     focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors duration-200"
-        />
-      </div>
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    required
+                    className="w-full p-3 rounded-md bg-zinc-800/70 border border-zinc-700 focus:ring-sky-500 focus:border-sky-500 text-gray-100"
+                    placeholder="Your Name"
+                />
+            </div>
 
-      {/* Message Field */}
-      <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-          Message
-        </label>
-        <textarea
-          name="message"
-          id="message"
-          rows={5} // Increased rows for better visual balance
-          required
-          placeholder="Tell me about your project or opportunity!"
-          // Minimalist Dark Input Styling
-          className="w-full px-4 py-3 bg-zinc-700 border border-zinc-600 rounded-lg text-gray-100 placeholder-gray-500 
-                     focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors duration-200"
-        />
-      </div>
-      
-      {/* Submit Button - Sky Blue Primary Color and Material Geometry (Pill shape) */}
-      <button
-        type="submit"
-        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-lg text-lg font-semibold 
-                   bg-sky-600 text-white hover:bg-sky-500 active:bg-sky-700 focus:ring-4 focus:ring-sky-500 focus:ring-opacity-50
-                   transition-all duration-200"
-      >
-        Send Message
-      </button>
-    </form>
-  );
-}   
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    required
+                    className="w-full p-3 rounded-md bg-zinc-800/70 border border-zinc-700 focus:ring-sky-500 focus:border-sky-500 text-gray-100"
+                    placeholder="you@example.com"
+                />
+            </div>
+
+            <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">Message</label>
+                <textarea
+                    id="message"
+                    rows={4}
+                    required
+                    className="w-full p-3 rounded-md bg-zinc-800/70 border border-zinc-700 focus:ring-sky-500 focus:border-sky-500 text-gray-100 resize-none"
+                    placeholder="How can I help you?"
+                />
+            </div>
+
+            {/* 🎯 SUBMIT BUTTON - SYNCHRONIZED FROSTED GLASS STYLE */}
+            <button
+                type="submit"
+                disabled={status === 'submitting'}
+                className="
+                    w-full inline-block px-8 py-3 text-lg font-semibold rounded-full shadow-xl relative
+                    
+                    // FROSTED GLASS BASE
+                    bg-sky-600/40 backdrop-blur-md 
+                    
+                    // COLOR, BORDER, RING (Matches About Page Button)
+                    text-white
+                    border border-sky-500/50 ring-1 ring-sky-500/50 
+                    
+                    // HOVER EFFECT
+                    hover:bg-sky-500/60 active:bg-sky-700/80 
+                    transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed
+                "
+            >
+                {status === 'submitting' ? 'Sending...' : 'Send Message'}
+            </button>
+
+            {status === 'success' && (
+                <p className="text-center text-green-400 mt-4">Message sent successfully!</p>
+            )}
+        </form>
+    );
+}
