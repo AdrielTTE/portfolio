@@ -73,11 +73,11 @@ export default function AboutPage() {
                         </h2>
 
                         <p className="text-xl text-gray-300 mb-6 font-semibold border-l-4 border-sky-500 pl-4 italic leading-relaxed">
-                            "I am a results-focused Full Stack Developer specializing in **delivering high-performance** web and cross-platform mobile applications. My passion lies in **architecting robust solutions** that prioritize optimal user experience and scalable efficiency."
+                            "I am a results-focused Full Stack Developer specializing in delivering high-performance and structured web and cross-platform mobile applications. My passion lies in learning new methods and streamlining processes that prioritize optimal user experience and scalable efficiency."
                         </p>
 
                         <p className="text-lg text-gray-400">
-                            With proven experience in both **front-end mastery (React/Next.js)** and **back-end resilience (Node.js, ASP.NET Core)**, I thrive on translating complex requirements into elegant, user-friendly interfaces. I constantly **seek opportunities to innovate**, ensuring every project provides measurable value to clients and stakeholders.
+                            With proven experience in both front-end mastery (React/Next.js) and back-end resilience (Node.js, ASP.NET MVC Core), I thrive on translating complex requirements into elegant, user-friendly interfaces. I constantly seek opportunities to learn and innovate, ensuring every project provides measurable value to clients and stakeholders.
                         </p>
                     </div>
                 </div>

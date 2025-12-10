@@ -66,7 +66,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
                 className="text-lg text-gray-400 max-w-xl text-center mb-12 leading-relaxed z-10"
             >
-                Building modern, high-performance web applications with a focus on **clean code** and **accessible interfaces**. Explore my work.
+                Building structured, high-performance web applications with a focus on clean code and accessible interfaces. Explore my work.
             </motion.p>
             
             {/* 5. Button - SYNCHRONIZED TO NAVBAR ACTIVE STATE (And Error Fixed) */}
