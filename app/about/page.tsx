@@ -1,11 +1,9 @@
-// app/about/page.tsx - CLEANED MINIMAL VERSION (Focus: Identity & Philosophy)
+// app/about/page.tsx - ENHANCED VERSION (Identity, Philosophy & Interdisciplinary Skills)
 
 "use client";
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
-
-// Icons are no longer needed here, but keeping Variants and motion import
-// is necessary for the animations in this file.
+import { FaMicrophoneAlt, FaHandsHelping, FaHeadphones } from 'react-icons/fa'; // Import icons for new section
 
 // ====================================================================
 // 1. ANIMATION VARIANTS
@@ -94,16 +92,55 @@ export default function AboutPage() {
                     </div>
                 </motion.div>
                 
-                {/* SECTIONS 3 & 4 (Timeline & Technical Expertise) HAVE BEEN REMOVED 
-                and moved to the new app/experience/page.tsx
-                */}
+                {/* 🚨 ENHANCED SECTION 3: INTERDISCIPLINARY SKILLS */}
+                <motion.div
+                    variants={scrollReveal}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    className="p-10 rounded-xl bg-zinc-900/30 backdrop-blur-md shadow-xl ring-1 ring-inset ring-white/10"
+                >
+                    <h2 className="text-3xl font-bold mt-4 mb-8 border-b border-zinc-700 pb-3 text-sky-500">
+                        Interdisciplinary Skills & Reliability 🤝
+                    </h2>
+                    <p className="text-lg text-gray-400 mb-8">
+                        My commitments outside of software development—including 8 years in the audio & visual (AV) field, 2 years as an audio & visual (AV) Coordinator, and 7 years of live musical performance—provide a foundation of long-term dedication to systems management, reliability, and precision.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        
+                        {/* 3.1 AV Coordinator - Systems Thinking (Focus on 8 years) */}
+                        <div className="p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 transition-transform duration-300 hover:scale-[1.03] hover:shadow-sky-500/30 shadow-lg">
+                            <FaHeadphones size={32} className="mx-auto mb-3 text-sky-400" />
+                            <h3 className="text-xl font-bold text-white mb-1">Enduring System Reliability</h3>
+                            <p className="text-sm font-semibold text-sky-400/80 mb-2">8 Years</p>
+                            <p className="text-sm text-gray-300">Managing complex audio & visual (AV) setups for nearly a decade translates into an inherent ability to setup, operate, and troubleshoot complex issues under high-stakes conditions.</p>
+                        </div>
+                        
+                        {/* 3.2 Church Member - Service & Coordination (Refined) */}
+                        <div className="p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 transition-transform duration-300 hover:scale-[1.03] hover:shadow-sky-500/30 shadow-lg">
+                            <FaHandsHelping size={32} className="mx-auto mb-3 text-sky-400" />
+                            <h3 className="text-xl font-bold text-white mb-1">Coordination & Service Mindset</h3>
+                            <p className="text-sm font-semibold text-sky-400/80 mb-2">2 Years</p>
+                            <p className="text-sm text-gray-300">Serving as a coordinator requires precise communication, scheduling, and technical training, essential for coordinating complex features across an agile development team.</p>
+                        </div>
+
+                        {/* 3.3 Music Gigs - Performance Under Pressure (Focus on 7 years) */}
+                        <div className="p-6 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 transition-transform duration-300 hover:scale-[1.03] hover:hover:shadow-sky-500/30 shadow-lg">
+                            <FaMicrophoneAlt size={32} className="mx-auto mb-3 text-sky-400" />
+                            <h3 className="text-xl font-bold text-white mb-1">Flawless Live Delivery</h3>
+                            <p className="text-sm font-semibold text-sky-400/80 mb-2">7 Years</p>
+                            <p className="text-sm text-gray-300">Seven years of live performance instills the discipline to deliver complex projects flawlessly under strict deadlines and high-visibility scenarios, focusing on immediate problem-solving and quality control.</p>
+                        </div>
+                    </div>
+                </motion.div>
+                
             </div>
 
 
-            {/* 🌟 NEW CTA: Directs to the Denser Experience Page 🌟 */}
+            {/* CTA: Directs to the Denser Experience Page (KEPT) */}
             <div className="text-center pt-24 pb-24">
                 <a
-                    href="/experience" // <-- UPDATED LINK
+                    href="/experience" 
                     className="
                         inline-block px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 ease-in-out
                         bg-sky-600 text-white shadow-xl shadow-sky-900/50 hover:bg-sky-500 active:bg-sky-700
