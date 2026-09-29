@@ -1,0 +1,270 @@
+---
+// ⌘K palette. Native <dialog> gives the focus trap, Esc handling and the
+// backdrop. Markup/ARIA/interfaces: task-8 brief. Visuals: design-addendum
+// §7.6 (layout at 360/1440, motion, colours).
+import { getCollection } from 'astro:content';
+import { sortByOrder } from '../lib/work';
+import { site } from '../data/site';
+import type { Command } from '../lib/palette';
+
+const work = sortByOrder(await getCollection('work'));
+const commands: Command[] = [
+  { id: 'home', label: 'Home', group: 'Pages', href: '/' },
+  { id: 'work', label: 'Work', group: 'Pages', href: '/#work' },
+  { id: 'about', label: 'About', group: 'Pages', href: '/about/' },
+  { id: 'contact', label: 'Start a project', group: 'Pages', href: '/contact/', keywords: 'contact hire email' },
+  ...work.map((w) => ({
+    id: w.id,
+    label: w.data.title,
+    group: 'Projects' as const,
+    href: `/work/${w.id}/`,
+    keywords: w.data.stack.join(' '),
+  })),
+  { id: 'copy-email', label: 'Copy email address', group: 'Actions', action: 'copy-email', keywords: site.email },
+  { id: 'theme', label: 'Toggle theme', group: 'Actions', action: 'toggle-theme', keywords: 'dark light' },
+  { id: 'github', label: 'Open GitHub', group: 'Actions', href: site.github },
+  { id: 'linkedin', label: 'Open LinkedIn', group: 'Actions', href: site.linkedin },
+];
+---
+<dialog id="palette" aria-label="Command menu">
+  <div class="panel">
+    <div class="input-row">
+      <input
+        id="palette-q"
+        type="text"
+        role="combobox"
+        aria-expanded="true"
+        aria-controls="palette-list"
+        aria-autocomplete="list"
+        placeholder="Search or jump to…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="esc-hint" aria-hidden="true">esc</kbd>
+      <button type="button" class="close-btn" data-palette-close aria-label="Close command menu">Close</button>
+    </div>
+    <ul id="palette-list" role="listbox" aria-label="Results"></ul>
+    <p id="palette-empty" hidden>No results</p>
+    <span class="hl" aria-hidden="true"></span>
+    <div class="footer-hints" aria-hidden="true">
+      <span><kbd>↑↓</kbd> move</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+    </div>
+  </div>
+  <script type="application/json" id="palette-data" set:html={JSON.stringify(commands)} />
+  <span id="palette-email" hidden>{site.email}</span>
+</dialog>
+
+<script src="../scripts/palette.ts"></script>
+
+<style>
+  dialog {
+    padding: 0;
+    border: 1px solid var(--c-rule);
+    border-radius: 8px;
+    width: min(640px, calc(100vw - 32px));
+    max-height: 76vh;
+    margin: 12vh auto auto;
+    background: var(--c-bg);
+    color: var(--c-ink);
+  }
+  dialog[open] {
+    animation: pal-in var(--dur-base) var(--ease-enter);
+    transform-origin: top center;
+  }
+  dialog::backdrop {
+    background: rgb(17 19 22 / 0.4);
+    animation: fade var(--dur-base) var(--ease-enter);
+  }
+  :root[data-theme='dark'] dialog::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) dialog::backdrop {
+      background: rgb(0 0 0 / 0.6);
+    }
+  }
+  /* Exit (palette.ts adds .closing, closes on animationend). `forwards`
+     holds the end state for the frame before dialog.close(). */
+  dialog.closing {
+    animation: pal-out var(--dur-fast) var(--ease-exit) forwards;
+  }
+  dialog.closing::backdrop {
+    animation: fade-out var(--dur-fast) var(--ease-exit) forwards;
+  }
+  @keyframes pal-out {
+    to {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes pal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (max-width: 599px) {
+    dialog {
+      width: calc(100% - 16px);
+      margin: 8px auto auto;
+      max-height: calc(100dvh - 16px);
+    }
+  }
+
+  .panel {
+    position: relative;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-inline-end: 12px;
+    border-bottom: 1px solid var(--c-rule);
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: var(--step-1);
+    padding: 18px 16px;
+    border: 0;
+    background: none;
+    color: inherit;
+  }
+  input:focus {
+    outline: none;
+  }
+  @media (max-width: 599px) {
+    input {
+      padding-block: 16px;
+    }
+  }
+  .esc-hint {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .close-btn {
+    display: none;
+    flex-shrink: 0;
+    font: inherit;
+    font-size: var(--step-0);
+    background: none;
+    border: 0;
+    color: var(--c-ink);
+    cursor: pointer;
+  }
+  @media (pointer: coarse) {
+    .esc-hint {
+      display: none;
+    }
+    .close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    max-height: 60vh;
+    overflow-y: auto;
+    position: relative;
+  }
+  :global(#palette-list .grp-label) {
+    padding: 8px 12px 4px;
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  :global(#palette-list .item) {
+    position: relative;
+    z-index: 1;
+    min-height: 44px;
+    padding-inline: 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    font-size: var(--step-0);
+  }
+  :global(#palette-list .item .hint),
+  :global(#palette-list .item .grp) {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    white-space: nowrap;
+  }
+  @media (max-width: 599px) {
+    :global(#palette-list .item) {
+      min-height: 48px;
+    }
+    :global(#palette-list .item .hint),
+    :global(#palette-list .item .grp) {
+      display: none;
+    }
+  }
+
+  .hl {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    top: 0;
+    height: 44px;
+    border-radius: 4px;
+    background: var(--c-bg-2);
+    border-left: 2px solid var(--c-accent);
+    transition: transform var(--dur-fast) var(--ease-enter);
+    pointer-events: none;
+  }
+  @media (max-width: 599px) {
+    .hl {
+      height: 48px;
+    }
+  }
+
+  #palette-empty {
+    padding: 16px;
+    color: var(--c-ink-2);
+  }
+
+  .footer-hints {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 36px;
+    padding-inline: 12px;
+    border-top: 1px solid var(--c-rule);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  @media (pointer: coarse) {
+    .footer-hints {
+      display: none;
+    }
+  }
+</style>

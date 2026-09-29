@@ -4,8 +4,12 @@ import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Timeline from '../components/Timeline.astro';
 import SkillGroups from '../components/SkillGroups.astro';
+import CommitLog from '../components/CommitLog.astro';
+import { getCollection } from 'astro:content';
 import photo from '../assets/tempProfile.jpg';
 import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '../data/about';
+
+const lately = await getCollection('lately');
 ---
 <BaseLayout
   title="About: Adriel Tang"
@@ -35,23 +39,29 @@ import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '.
     </div>
 
     <div class="lower-content">
-      <section class="timeline-section">
+      <section class="timeline-section" data-reveal>
         <h2>Education and work</h2>
         <Timeline items={timeline} />
       </section>
 
-      <section class="skills-section">
+      <section class="skills-section" data-reveal>
         <h2>Skills</h2>
         <SkillGroups groups={skills} />
       </section>
 
-      <section class="music-section">
+      <section class="music-section" data-reveal>
         <h2>Sound and music</h2>
         <p>{musicParagraph}</p>
       </section>
+
+      <div id="log" class="log-section" data-reveal>
+        <CommitLog entries={lately.map((e) => e.data)} heading="Full log" />
+      </div>
     </div>
   </div>
 </BaseLayout>
+
+<script src="../scripts/reveal-sections.ts"></script>
 
 <style>
   .about-layout {
@@ -103,6 +113,12 @@ import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '.
     max-width: 58ch;
   }
   h2 {
+    font-size: var(--step-2);
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  /* The full log matches the other About section headings. */
+  .log-section :global(h2) {
     font-size: var(--step-2);
     font-weight: 500;
     margin-bottom: 24px;

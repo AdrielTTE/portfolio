@@ -1,0 +1,36 @@
+---
+// Lately as a dated commit list. Spec §3.1 item 5.
+// Visuals per docs/design-addendum.md §7.2/7.3 LOG row.
+import { toCommitLine, type CommitType } from '../lib/commitlog';
+
+interface Props { entries: { date: Date; type: CommitType; text: string }[]; limit?: number; heading?: string }
+const { entries, limit, heading = 'Log' } = Astro.props;
+const lines = [...entries].sort((a, b) => +b.date - +a.date).slice(0, limit ?? entries.length).map(toCommitLine);
+---
+<section class="log" aria-labelledby="log-h">
+  <h2 id="log-h">{heading}</h2>
+  <ol>
+    {lines.map((l) => (
+      <li>
+        <time datetime={l.stamp}>{l.stamp}</time>
+        <span class={`type type--${l.type}`}>{l.type}:</span>
+        <span class="msg">{l.text}</span>
+      </li>
+    ))}
+  </ol>
+  <slot />
+</section>
+
+<style>
+  h2 { font-size: var(--step-1); font-weight: 600; margin-bottom: 16px; }
+  ol { list-style: none; padding: 0; margin: 16px 0 0; font-family: var(--font-mono); font-size: var(--step--1); }
+  li { display: grid; grid-template-columns: 8ch 7ch 1fr; gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--c-rule); }
+  time { color: var(--c-ink-2); }
+  .type { color: var(--c-ink-2); }
+  .msg { font-family: var(--font-sans); font-size: var(--step-0); }
+  @media (max-width: 480px) {
+    /* Date + type on line 1, message full width on line 2 (addendum §7.3). */
+    li { grid-template-columns: 8ch 1fr; row-gap: 4px; }
+    .msg { grid-column: 1 / -1; }
+  }
+</style>

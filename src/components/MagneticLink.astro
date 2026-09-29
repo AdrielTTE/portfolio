@@ -1,0 +1,48 @@
+---
+// Primary CTA that leans toward the pointer on fine-pointer devices only.
+// Spec §5.3 item 10; visual states per docs/design-addendum.md §6.1 (primary).
+// The trailing arrow is rendered here so it can shift on hover.
+interface Props { href: string }
+---
+<a class="magnetic" href={Astro.props.href} data-magnetic><span><slot /></span><span class="arrow" aria-hidden="true">→</span></a>
+<script src="../scripts/magnetic.ts"></script>
+<style>
+  .magnetic {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 4px;
+    background: var(--c-accent);
+    color: var(--c-accent-ink);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--step-0);
+    white-space: nowrap;
+  }
+  .magnetic:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 3px;
+  }
+  /* `translate` (not `transform`) so the press nudge composes with the
+     magnet offset that magnetic.ts writes to `transform`. */
+  .magnetic:active {
+    translate: 0 1px;
+  }
+  .arrow {
+    transition: transform var(--dur-fast) var(--ease-enter);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .magnetic {
+      transition: transform var(--dur-base) var(--ease-enter);
+    }
+    /* Instant fill change, no colour transition (addendum §6.1). */
+    .magnetic:hover {
+      background: color-mix(in oklab, var(--c-accent) 86%, var(--c-ink));
+    }
+    .magnetic:hover .arrow {
+      transform: translateX(3px);
+    }
+  }
+</style>

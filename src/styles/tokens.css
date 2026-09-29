@@ -23,30 +23,29 @@
 :root {
   color-scheme: light;
 
-  /* colour */
-  --c-paper: #f6f6f3;
-  --c-paper-2: #ececE8;
-  --c-ink: #121212;
-  --c-ink-2: #5a5a56;
-  --c-rule: #d6d6d0;
-  --c-field-border: #8a8a84;
-  --c-signal: #f03a17;
+  /* colour (spec §4, docs/design-addendum.md §2.1) */
+  --c-bg: #f4f5f6;
+  --c-bg-2: #e9ebed;
+  --c-ink: #111316;
+  --c-ink-2: #565b63;
+  --c-rule: #d5d8dc;
+  --c-accent: #2b34e5;
+  --c-accent-ink: #ffffff;
+  --c-focus: #2b34e5;
   --c-error: #b42318;
 
   /* type */
   --font-sans: 'Hanken Grotesk Variable', 'Hanken Fallback', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono Fallback', ui-monospace, 'Cascadia Mono', Menlo, monospace;
-  --font-waybill: 'Archivo Variable', 'Arial Narrow', Arial, sans-serif;
-  --font-habitect: 'Roboto Variable', Roboto, system-ui, sans-serif;
   --font-device: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  --step--1: 12px;
+  --step--1: clamp(12px, 0.09vw + 11.67px, 13px);
   --step-0: 16px;
   --step-1: clamp(17px, 0.19vw + 16.3px, 19px);
   --step-2: clamp(19px, 0.46vw + 17.3px, 24px);
   --step-3: clamp(22px, 0.93vw + 18.7px, 32px);
   --step-4: clamp(30px, 1.67vw + 24px, 48px);
-  --step-5: clamp(40px, 5.9vw + 18.7px, 104px);
+  --step-5: clamp(36px, 3.7vw + 22.7px, 76px);
 
   /* space (4px base) */
   --space-1: 4px;
@@ -59,7 +58,7 @@
   --space-8: 64px;
   --space-9: 96px;
   --space-10: 128px;
-  --section: clamp(64px, 5.9vw + 42.7px, 128px);
+  --section: clamp(56px, 3.7vw + 42.7px, 96px);
   --header-h: 56px;
 
   /* grid */
@@ -67,13 +66,12 @@
   --gutter: 16px;
   --margin: 16px;
 
-  /* motion */
-  --ease-settle: cubic-bezier(0.2, 0, 0, 1);
-  --ease-out: cubic-bezier(0.3, 0, 0.2, 1);
-  --dur-morph: 560ms;
-  --dur-place: 800ms;
-  --dur-hover: 600ms;
-  --dur-ui: 160ms;
+  /* motion (spec §5.2) */
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
 }
 
 @media (min-width: 600px) {
@@ -94,22 +92,26 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --c-paper: #111110;
-    --c-paper-2: #1b1b19;
-    --c-ink: #ededE8;
-    --c-ink-2: #a09f98;
-    --c-rule: #2e2e2a;
-    --c-field-border: #6e6d67;
+    --c-bg: #0e0f11;
+    --c-bg-2: #17191c;
+    --c-ink: #ecedef;
+    --c-ink-2: #9ca1a9;
+    --c-rule: #2a2d32;
+    --c-accent: #5c8dff;
+    --c-accent-ink: #0e0f11;
+    --c-focus: #5c8dff;
     --c-error: #ff8a7a;
   }
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --c-paper: #111110;
-  --c-paper-2: #1b1b19;
-  --c-ink: #ededE8;
-  --c-ink-2: #a09f98;
-  --c-rule: #2e2e2a;
-  --c-field-border: #6e6d67;
+  --c-bg: #0e0f11;
+  --c-bg-2: #17191c;
+  --c-ink: #ecedef;
+  --c-ink-2: #9ca1a9;
+  --c-rule: #2a2d32;
+  --c-accent: #5c8dff;
+  --c-accent-ink: #0e0f11;
+  --c-focus: #5c8dff;
   --c-error: #ff8a7a;
 }

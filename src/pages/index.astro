@@ -1,109 +1,274 @@
 ---
-// Home: intro, lead project, Work (Grid <-> Index), colophon + Lately.
-// docs/design-spec.md §5.1.
+// Home: intro → offers → work → receipts → log. Spec §3.1.
+// Layout: docs/design-addendum.md §7.2 (1440) / §7.3 (360). Sections sit on
+// the ledger rail (§5.1): heading cols 1-3, content cols 4-12 at ≥1024,
+// stacked below. The rail is applied here, not in the components.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LeadProject from '../components/LeadProject.astro';
-import WorkSection from '../components/WorkSection.astro';
+import DeviceFrame from '../components/DeviceFrame.astro';
+import OfferSwitcher from '../components/OfferSwitcher.astro';
+import WorkList from '../components/WorkList.astro';
+import BuildReceipts from '../components/BuildReceipts.astro';
+import CommitLog from '../components/CommitLog.astro';
+import CopyEmail from '../components/CopyEmail.astro';
 import Colophon from '../components/Colophon.astro';
-import LatelyLog from '../components/LatelyLog.astro';
-import { getLead, numberFor } from '../lib/work';
-import { site } from '../data/site';
+import MagneticLink from '../components/MagneticLink.astro';
+import { getLead } from '../lib/work';
+import { site, home } from '../data/site';
 
 const allWork = await getCollection('work');
 const lately = await getCollection('lately');
 const lead = getLead(allWork);
 ---
-<BaseLayout
-  title="Adriel Tang: Full Stack Developer in Kuala Lumpur"
-  description="Full stack developer in Kuala Lumpur. Adriel Tang builds web and mobile apps with Next.js, Flutter, and Laravel. View recent projects and get in touch."
-  current="work"
->
-  <div class="container">
-    <section class="intro">
-      <h1>Adriel Tang</h1>
-      <p class="role-line">
-        Full stack developer in Kuala Lumpur, building web and mobile applications with Next.js, Flutter, and
-        Laravel.
-      </p>
+<BaseLayout title={home.title} description={home.description} current="work">
+  <div class="container home">
+    <section class="intro" aria-labelledby="intro-h" data-magnet-zone>
+      <div class="who">
+        <h1 id="intro-h" class="line-mask"><span style="--i:0">{site.name}</span></h1>
+        <p class="role line-mask"><span style="--i:1">{home.roleLine}</span></p>
+      </div>
+      <div class="lede">
+        <p class="pitch line-mask"><span style="--i:2">{home.pitch}</span></p>
+        <div class="actions line-rise" style="--i:3">
+          <MagneticLink href="/contact/">Start a project</MagneticLink>
+          <CopyEmail email={site.email} label="Copy email" variant="button" />
+        </div>
+        <div class="line-rise" style="--i:4"><Colophon availability={site.availability} /></div>
+      </div>
     </section>
 
-    {lead && <LeadProject project={lead} no={numberFor(lead)} />}
+    <div class="rail rail--offers" data-reveal><OfferSwitcher projects={allWork} /></div>
 
-    <WorkSection projects={allWork} leadId={lead?.id ?? ''} />
+    <div class="rail rail--work" data-reveal>
+      <WorkList projects={allWork} excludeId={lead?.id}>
+        {lead && (
+          <a slot="lead" class="lead" href={`/work/${lead.id}/`}>
+            <span class="lead-shot"><DeviceFrame project={lead} variant="lead" eager /></span>
+            <span class="cap">
+              <span class="cap-top">
+                <strong class="cap-name">{lead.data.title} <span class="arrow" aria-hidden="true">→</span></strong>
+                <span class="cap-year">{lead.data.year}</span>
+              </span>
+              <span class="cap-line">{lead.data.summary}</span>
+              <span class="cap-chips">{lead.data.stack.map((s) => <span class="chip">{s}</span>)}</span>
+            </span>
+          </a>
+        )}
+      </WorkList>
+    </div>
 
-    <section class="colophon-lately" aria-labelledby="colophon-h">
-      <Colophon desk={site.desk} availability={site.availability} />
-      <LatelyLog entries={lately.map((e) => ({ date: e.data.date, text: e.data.text }))} />
-    </section>
+    <div class="rail rail--receipts" data-reveal><BuildReceipts /></div>
+
+    <div class="rail rail--log" data-reveal>
+      <CommitLog entries={lately.map((e) => e.data)} limit={5} heading="Lately">
+        <a class="full-log" href="/about/#log">Full log <span class="arrow" aria-hidden="true">→</span></a>
+      </CommitLog>
+    </div>
   </div>
 </BaseLayout>
 
-<script src="../scripts/reveal.ts"></script>
+<script src="../scripts/reveal-sections.ts"></script>
 <script src="../scripts/stress.ts"></script>
 
 <style>
+  /* Intro: no top rule; space-8 (360) → space-9 (1440) below the header
+     (addendum §5.3). */
   .intro {
-    padding-block: 32px 24px;
+    padding-top: clamp(var(--space-8), 2.96vw + 53.3px, var(--space-9));
   }
   h1 {
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.55;
+  }
+  .role {
+    color: var(--c-ink-2);
+    max-width: 40ch;
+  }
+  .lede {
+    margin-top: var(--space-5);
+  }
+  .pitch {
     font-size: var(--step-4);
     font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
   }
-  .role-line {
-    font-size: var(--step-2);
-    max-width: 40ch;
-    margin-top: 12px;
-  }
-  @media (min-width: 1024px) {
-    .intro {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--gutter);
-      align-items: end;
-      padding-block: 48px 32px;
-    }
-    h1 {
-      grid-column: 1 / span 6;
-    }
-    .role-line {
-      grid-column: 8 / span 5;
-      margin-top: 0;
-    }
-  }
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .intro {
-      padding-block: 40px 28px;
-    }
-    .role-line {
-      margin-top: 12px;
-    }
-  }
-
-  .colophon-lately {
-    margin-top: var(--section);
+  .actions {
+    margin-top: var(--space-6);
     display: flex;
-    flex-direction: column;
-    gap: 48px;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .lede > .line-rise:last-child {
+    margin-top: var(--space-5);
+  }
+  /* Below 340px the two buttons stack full width (addendum §7.3). */
+  @media (max-width: 339px) {
+    .actions > :global(*),
+    .actions :global(.copy-button),
+    .actions :global(.magnetic) {
+      width: 100%;
+      justify-content: center;
+    }
   }
   @media (min-width: 1024px) {
-    .colophon-lately {
+    .intro {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--gutter);
       align-items: start;
-      gap: 0;
     }
-    .colophon-lately > :global(:first-child) {
-      grid-column: 1 / span 4;
+    .who {
+      grid-column: 1 / span 3;
     }
-    .colophon-lately > :global(:last-child) {
-      grid-column: 6 / span 7;
+    .lede {
+      grid-column: 4 / span 8;
+      margin-top: 0;
     }
   }
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .colophon-lately {
-      gap: 64px;
+
+  /* Ledger rail (addendum §5.1, §5.3): full-width hairline, --section above,
+     space-4 below, then heading + content. */
+  .rail {
+    margin-top: var(--section);
+    border-top: 1px solid var(--c-rule);
+    padding-top: var(--space-4);
+  }
+  .rail > :global(section) > :global(h2) {
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.55;
+    margin: 0 0 var(--space-4);
+  }
+  @media (min-width: 1024px) {
+    .rail > :global(section) {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: start;
+    }
+    .rail > :global(section) > :global(*) {
+      grid-column: 4 / -1;
+    }
+    .rail > :global(section) > :global(h2) {
+      grid-column: 1 / span 3;
+      margin: 0;
+    }
+    /* Offers: tabs cols 4-9, panel copy cols 4-10 (addendum §7.2). */
+    .rail--offers :global(.tabs) {
+      grid-column: 4 / span 6;
+    }
+    .rail--offers :global(.panels) {
+      grid-column: 4 / span 7;
+    }
+    /* The rail's hairline already closes the previous section. */
+    .rail--offers :global(.panel) {
+      padding-bottom: 0;
+    }
+  }
+
+  /* Lead project: frame then caption on mobile; frame cols 4-9 with the
+     caption in cols 10-12, bottom-aligned, at ≥1024. */
+  .lead {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    color: inherit;
+    text-decoration: none;
+  }
+  .lead:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 4px;
+  }
+  .cap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .cap-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+  .cap-name {
+    font-size: var(--step-2);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .cap-name .arrow {
+    font-size: var(--step-0);
+    transition: transform var(--dur-fast) var(--ease-enter);
+  }
+  .cap-year,
+  .chip {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .cap-line {
+    color: var(--c-ink-2);
+    max-width: 48ch;
+  }
+  .cap-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .chip {
+    border: 1px solid var(--c-rule);
+    border-radius: 3px;
+    padding: 2px 6px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lead:hover .cap-name {
+      color: var(--c-accent);
+    }
+    .lead:hover .arrow {
+      transform: translateX(3px);
+    }
+  }
+  @media (min-width: 1024px) {
+    .lead {
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: end;
+      margin-bottom: var(--space-6);
+    }
+    .lead-shot {
+      grid-column: 1 / span 6;
+    }
+    .cap {
+      grid-column: 7 / span 3;
+    }
+  }
+
+  .full-log {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin-top: var(--space-3);
+    text-decoration: none;
+  }
+  .full-log .arrow {
+    transition: transform var(--dur-fast) var(--ease-enter);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .full-log:hover {
+      color: var(--c-accent);
+    }
+    .full-log:hover .arrow {
+      transform: translateX(3px);
+    }
+  }
+  @media (min-width: 1024px) {
+    .rail--log :global(.full-log) {
+      justify-self: start;
     }
   }
 </style>

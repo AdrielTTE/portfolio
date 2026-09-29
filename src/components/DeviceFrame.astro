@@ -1,0 +1,173 @@
+---
+// Screenshot in a phone or browser frame. Placeholder (real UI strings, no
+// imagery) when a project has no shots yet. docs/design-addendum.md §6.5.
+import { Image } from 'astro:assets';
+import type { WorkEntry } from '../lib/work';
+
+interface Props { project: WorkEntry; variant: 'hero' | 'lead' | 'thumb'; eager?: boolean }
+const { project, variant, eager = false } = Astro.props;
+const { device, shots, title, summary, accent, live } = project.data;
+const shot = shots[0];
+const widths = variant === 'thumb' ? [240, 480] : [640, 960, 1280, 1920];
+const host = live ? new URL(live).host : '';
+---
+<figure
+  class={`frame frame--${device} frame--${variant}`}
+  data-shot-slug={project.id}
+  data-variant={variant}
+  style={[accent && `--frame-tint:${accent}`, variant === 'hero' && 'view-transition-name: shot'].filter(Boolean).join(';')}
+>
+  <div class="bezel" aria-hidden={shot ? undefined : 'true'}>
+    {device === 'browser' && <div class="chrome">{host}</div>}
+    <div class="screen">
+      {shot ? (
+        <Image
+          src={shot.src}
+          alt={shot.alt}
+          widths={widths}
+          sizes={variant === 'thumb' ? '240px' : '(min-width: 1024px) 60vw, 100vw'}
+          loading={eager ? 'eager' : 'lazy'}
+          fetchpriority={eager ? 'high' : 'auto'}
+        />
+      ) : (
+        <div class="placeholder">
+          <strong>{title}</strong>
+          <span>{summary}</span>
+        </div>
+      )}
+    </div>
+  </div>
+</figure>
+
+<style>
+  /* Backdrop: docs/design-addendum.md §6.5. Fixed aspect ratios so there is
+     zero CLS; the device bezel sits inside and is cropped by the backdrop's
+     own overflow, a static clip that never animates. */
+  .frame {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--frame-tint, var(--c-bg-2));
+  }
+  .frame--hero {
+    aspect-ratio: 16 / 9;
+  }
+  @media (max-width: 599px) {
+    .frame--hero {
+      aspect-ratio: 4 / 5;
+    }
+  }
+  .frame--lead {
+    aspect-ratio: 16 / 10;
+  }
+  .frame--thumb {
+    aspect-ratio: 4 / 3;
+  }
+
+  .bezel {
+    position: absolute;
+    border: 1px solid var(--c-rule);
+    background: var(--c-bg);
+    overflow: hidden;
+  }
+  .frame--browser .bezel {
+    width: 88%;
+    left: 6%;
+    top: 8%;
+    border-radius: 8px;
+  }
+  .frame--phone .bezel {
+    height: 88%;
+    aspect-ratio: 9 / 19.5;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    border-radius: 28px;
+    padding: 6px;
+  }
+
+  .chrome {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding-inline: 12px;
+    background: var(--c-bg);
+    border-bottom: 1px solid var(--c-rule);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+
+  .screen {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    /* Placeholder text below sizes off the screen's own width, not the
+       viewport, so it fits a 64px work-row thumb and a 1920px hero alike. */
+    container-type: inline-size;
+  }
+  .frame--phone .screen {
+    aspect-ratio: auto;
+    height: 100%;
+    border-radius: 22px;
+  }
+  .screen :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+
+  .placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(2px, 2cqi, 8px);
+    padding: clamp(8px, 6cqi, 24px);
+    background: var(--c-bg);
+    font-family: var(--font-device);
+    font-size: clamp(0.6rem, 3.4cqi, var(--step--1));
+    color: var(--c-ink-2);
+  }
+  .placeholder strong {
+    color: var(--c-ink);
+    font-size: clamp(0.7rem, 6cqi, var(--step-1));
+    line-height: 1.2;
+    font-family: var(--font-device);
+    overflow-wrap: anywhere;
+  }
+
+  /* Phone bezels are narrow (9:19.5): the summary never fits, so show only
+     the title, centered. Browser hero/lead placeholders keep the summary
+     and use the container-scaled sizing above so they never clip either. */
+  .frame--phone .placeholder {
+    align-items: center;
+    text-align: center;
+  }
+  .frame--phone .placeholder span {
+    display: none;
+  }
+
+  /* Thumb bezels (WorkList's 64px column) are too small for any placeholder
+     copy: render a plain frame with, at most, the title's first letter. */
+  .frame--thumb .placeholder {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+  }
+  .frame--thumb .placeholder strong {
+    font-size: 0;
+    line-height: 1;
+  }
+  .frame--thumb .placeholder strong::first-letter {
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    color: var(--c-ink-2);
+  }
+  .frame--thumb .placeholder span {
+    display: none;
+  }
+</style>

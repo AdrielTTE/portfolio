@@ -1,0 +1,46 @@
+---
+// SchemaCard: data model tables from frontmatter. Spec §3.3 item 3.
+// Card visuals: docs/design-addendum.md §7.4 ("Data model" row) — table name
+// mono 500 step-0, fields mono step--1 ink-2, bg-2 fill, 1px rule, radius 4,
+// padding space-4.
+interface Props { schema: { table: string; fields: string[] }[] }
+const { schema } = Astro.props;
+---
+<div class="schema">
+  {schema.map((t) => (
+    <div class="table">
+      <p class="name">{t.table}</p>
+      <ul>{t.fields.map((f) => <li>{f}</li>)}</ul>
+    </div>
+  ))}
+</div>
+<style>
+  .schema {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-4);
+  }
+  .table {
+    background: var(--c-bg-2);
+    border: 1px solid var(--c-rule);
+    border-radius: 4px;
+    padding: var(--space-4);
+  }
+  .name {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--step-0);
+    color: var(--c-ink);
+    margin-bottom: var(--space-2);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+</style>

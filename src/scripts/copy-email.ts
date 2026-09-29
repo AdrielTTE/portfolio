@@ -6,6 +6,7 @@ const label = button?.querySelector('span');
 
 if (button && label && status) {
   const email = button.dataset.email ?? '';
+  const idle = label.textContent ?? 'Copy';
   let resetTimer: ReturnType<typeof setTimeout> | undefined;
 
   const showCopied = () => {
@@ -13,7 +14,7 @@ if (button && label && status) {
     status.textContent = 'Email address copied';
     clearTimeout(resetTimer);
     resetTimer = setTimeout(() => {
-      label.textContent = 'Copy';
+      label.textContent = idle;
     }, 2000);
   };
 

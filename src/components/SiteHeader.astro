@@ -13,10 +13,13 @@ const { current } = Astro.props;
   <div class="container bar">
     <a href="/" class="name">Adriel Tang</a>
     <nav aria-label="Main" class="nav">
-      <a href="/#work" class="nav-link work-link" aria-current={current === 'work' ? 'page' : undefined}>Work</a>
+      <a href="/#work" class="nav-link" aria-current={current === 'work' ? 'page' : undefined}>Work</a>
       <a href="/about" class="nav-link" aria-current={current === 'about' ? 'page' : undefined}>About</a>
       <a href="/contact" class="nav-link" aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
       <ThemeToggle />
+      <a href="#site-footer" class="menu" data-palette-open aria-haspopup="dialog">
+        Menu <kbd class="menu-hint" data-kbd-mod aria-hidden="true">⌘K</kbd>
+      </a>
     </nav>
   </div>
   <ProgressBar />
@@ -27,7 +30,7 @@ const { current } = Astro.props;
     position: sticky;
     top: 0;
     z-index: 10;
-    background: var(--c-paper);
+    background: var(--c-bg);
   }
   .bar {
     height: var(--header-h);
@@ -69,8 +72,34 @@ const { current } = Astro.props;
     height: 1px;
     background: var(--c-ink);
   }
-  @media (max-width: 379px) {
-    .work-link {
+  .menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding-inline: 12px;
+    border: 1px solid var(--c-rule);
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: var(--step-0);
+    text-decoration: none;
+    color: var(--c-ink);
+  }
+  .menu-hint {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  @media (pointer: coarse) {
+    .menu {
+      min-height: 44px;
+    }
+    .menu-hint {
+      display: none;
+    }
+  }
+  @media (max-width: 599px) {
+    .nav-link {
       display: none;
     }
   }

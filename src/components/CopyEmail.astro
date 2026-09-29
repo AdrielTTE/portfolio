@@ -1,13 +1,16 @@
 ---
-// docs/design-spec.md §5.4.
+// docs/design-spec.md §5.4. `variant="button"` is the home secondary button
+// (docs/design-addendum.md §6.1): same 48px box as the primary CTA.
 interface Props {
   email: string;
+  label?: string;
+  variant?: 'inline' | 'button';
 }
-const { email } = Astro.props;
+const { email, label = 'Copy', variant = 'inline' } = Astro.props;
 ---
-<span class="copy-email">
+<span class={`copy-email copy-email--${variant}`}>
   <button type="button" class="copy-button" id="copy-email-btn" data-email={email}>
-    <span>Copy</span>
+    <span>{label}</span>
   </button>
   <span class="visually-hidden" role="status" aria-live="polite" id="copy-email-status"></span>
 </span>
@@ -17,16 +20,28 @@ const { email } = Astro.props;
     font-family: var(--font-mono);
     font-size: var(--step--1);
     background: none;
-    border: 1px solid var(--c-field-border);
+    border: 1px solid var(--c-ink-2);
     padding-inline: 12px;
     height: 36px;
     min-height: 44px;
     cursor: pointer;
     margin-left: 8px;
   }
+  .copy-email--button .copy-button {
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 500;
+    color: var(--c-ink);
+    height: auto;
+    min-height: 48px;
+    padding-inline: 20px;
+    border-radius: 4px;
+    margin-left: 0;
+    white-space: nowrap;
+  }
   @media (hover: hover) and (pointer: fine) {
     .copy-button:hover {
-      background: var(--c-paper-2);
+      background: var(--c-bg-2);
     }
   }
   .copy-button:active {
