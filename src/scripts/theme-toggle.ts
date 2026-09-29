@@ -8,7 +8,7 @@ function currentState(): ThemeState {
   return stored === 'light' || stored === 'dark' ? stored : 'auto';
 }
 
-const PAPER = { light: '#F6F6F3', dark: '#111110' };
+const PAPER = { light: '#F4F5F6', dark: '#0E0F11' };
 
 function updateMetaThemeColor(state: ThemeState) {
   const light = document.querySelector('meta[name="theme-color"][media*="light"]');

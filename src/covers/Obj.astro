@@ -31,7 +31,7 @@ const style = `--x:${x};--y:${y};--w:${w};--h:${h};--r:${r}deg${extraStyle ? `;$
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .obj {
-      transition: translate var(--dur-hover) var(--ease-settle), rotate var(--dur-hover) var(--ease-settle);
+      transition: translate var(--dur-base) var(--ease-enter), rotate var(--dur-base) var(--ease-enter);
     }
   }
 </style>

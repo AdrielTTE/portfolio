@@ -40,10 +40,10 @@ const { projects } = Astro.props;
   }
   @media (prefers-reduced-motion: no-preference) {
     .index-preview {
-      transition: opacity 120ms var(--ease-out);
+      transition: opacity 120ms var(--ease-enter);
     }
     .preview-inner {
-      transition: translate 180ms var(--ease-settle);
+      transition: translate 180ms var(--ease-enter);
     }
   }
   template {
