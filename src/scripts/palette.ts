@@ -26,6 +26,44 @@ if (dialog) {
   const hl = dialog.querySelector<HTMLElement>('.hl')!;
   const closeBtn = dialog.querySelector<HTMLButtonElement>('.close-btn');
   const all: Command[] = JSON.parse(document.getElementById('palette-data')!.textContent || '[]');
+
+  // Exit animation (spec §5.3 item 8; addendum §7.6): .closing plays the
+  // opacity + slight scale-down over --dur-fast, then the dialog really
+  // closes on animationend. Instant under reduced motion. A timer backs up
+  // animationend in case the animation never runs.
+  let closing = false;
+  let closeTimer = 0;
+  const finishClose = () => {
+    if (!closing) return;
+    closing = false;
+    clearTimeout(closeTimer);
+    dialog.classList.remove('closing');
+    dialog.close();
+  };
+  const closeAnimated = () => {
+    if (!dialog.open || closing) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      dialog.close();
+      return;
+    }
+    closing = true;
+    dialog.classList.add('closing');
+    closeTimer = window.setTimeout(finishClose, 400);
+  };
+  dialog.addEventListener('animationend', (e) => {
+    if (e.animationName.endsWith('pal-out')) finishClose();
+  });
+  // Esc: take over the native instant close so it animates too.
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeAnimated();
+  });
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeAnimated();
+    }
+  });
   let results: Command[] = all;
   let active = 0;
 
@@ -124,7 +162,7 @@ if (dialog) {
       } catch {
         // Clipboard access can fail (permissions, insecure context); swallow silently.
       }
-      dialog.close();
+      closeAnimated();
     } else if (c.action === 'toggle-theme') {
       dialog.close();
       document.getElementById('theme-toggle')?.click();
@@ -132,6 +170,13 @@ if (dialog) {
   };
 
   const open = () => {
+    if (closing) {
+      // Reopened mid-exit: cancel the exit and keep the dialog open.
+      closing = false;
+      clearTimeout(closeTimer);
+      dialog.classList.remove('closing');
+      return;
+    }
     if (dialog.open) return;
     input.value = '';
     dialog.showModal();
@@ -162,9 +207,9 @@ if (dialog) {
   // repositions the highlight and is not a page scroll listener.
   list.addEventListener('scroll', moveHl, { passive: true });
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
+    if (e.target === dialog) closeAnimated();
   });
-  closeBtn?.addEventListener('click', () => dialog.close());
+  closeBtn?.addEventListener('click', closeAnimated);
 
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement).closest('input, textarea, [contenteditable="true"]');

@@ -85,6 +85,25 @@ const commands: Command[] = [
       background: rgb(0 0 0 / 0.6);
     }
   }
+  /* Exit (palette.ts adds .closing, closes on animationend). `forwards`
+     holds the end state for the frame before dialog.close(). */
+  dialog.closing {
+    animation: pal-out var(--dur-fast) var(--ease-exit) forwards;
+  }
+  dialog.closing::backdrop {
+    animation: fade-out var(--dur-fast) var(--ease-exit) forwards;
+  }
+  @keyframes pal-out {
+    to {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
   @keyframes pal-in {
     from {
       opacity: 0;

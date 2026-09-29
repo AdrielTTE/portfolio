@@ -9,6 +9,7 @@ import PrevNext from '../../components/PrevNext.astro';
 import CaseSection from '../../components/CaseSection.astro';
 import ArchDiagram from '../../components/ArchDiagram.astro';
 import SchemaCard from '../../components/SchemaCard.astro';
+import MagneticLink from '../../components/MagneticLink.astro';
 import { getPrevNext } from '../../lib/work';
 
 export async function getStaticPaths() {
@@ -64,7 +65,9 @@ const descriptions: Record<string, string> = {
     <CaseSection id="decision" title="A decision worth explaining" text={project.data.decision} />
     <CaseSection id="change" title="What I'd change" text={project.data.change} />
     <Prose><Content /></Prose>
-    <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou} />
+    <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou}>
+      <p class="cta"><MagneticLink href="/contact/">Start a project</MagneticLink></p>
+    </CaseSection>
     <PrevNext prev={prev} next={next} />
   </div>
 </BaseLayout>
@@ -82,6 +85,11 @@ const descriptions: Record<string, string> = {
   h1 {
     font-size: var(--step-5);
     font-weight: 600;
+  }
+  /* The one in-page CTA closes "What this means for your project"
+     (addendum §7.4), space-5 above. */
+  .cta {
+    margin-top: var(--space-5);
   }
   .summary {
     font-size: var(--step-3);

@@ -56,7 +56,37 @@ if (button) {
 
   button.addEventListener('click', () => {
     const next = STATES[(STATES.indexOf(currentState()) + 1) % STATES.length];
-    apply(next);
+    // Spec §5.3 item 9: circular reveal from the toggle on desktop; plain
+    // crossfade on touch; instant under reduced motion.
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const root = document.documentElement;
+    if (typeof document.startViewTransition === 'function' && !reduced) {
+      if (fine) {
+        const r = button.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const radius = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
+        // Scopes the "animation: none" on the root snapshots to this
+        // transition only (global.css), so navigations keep their crossfade.
+        root.classList.add('theme-vt');
+        const vt = document.startViewTransition(() => apply(next));
+        vt.ready
+          .then(() => {
+            root.animate(
+              { clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radius}px at ${cx}px ${cy}px)`] },
+              { duration: 450, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+            );
+          })
+          .catch(() => {});
+        vt.finished.catch(() => {}).finally(() => root.classList.remove('theme-vt'));
+      } else {
+        // Default root crossfade from global.css (opacity only).
+        document.startViewTransition(() => apply(next));
+      }
+    } else {
+      apply(next);
+    }
     if (textEl) textEl.textContent = label(next);
     button.setAttribute('aria-label', `Colour theme: ${label(next)}`);
   });

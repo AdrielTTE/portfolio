@@ -31,4 +31,15 @@
   .theme-toggle:active {
     translate: 0 1px;
   }
+  /* 44x44 tap target on touch and narrow screens (addendum §7.1). */
+  @media (pointer: coarse), (max-width: 599px) {
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 8px;
+    }
+  }
 </style>

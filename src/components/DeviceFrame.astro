@@ -136,6 +136,11 @@ const host = live ? new URL(live).host : '';
   .frame--thumb .placeholder {
     padding: 6px;
   }
+  .frame--thumb .placeholder strong {
+    font-size: var(--step--1);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
   .frame--thumb .placeholder span {
     display: none;
   }
