@@ -106,7 +106,7 @@ The design-agent finalises this within these constraints:
 
 ### 5.3 Moments
 1. **Load.** The intro reveals line by line (overflow-hidden line wrapper, child `translateY(100%)`→0 with opacity, 40ms stagger). It runs once per session (sessionStorage flag, in a try/catch).
-2. **Page transitions.** Astro View Transitions (`<ClientRouter />`). A work row's or lead's screenshot morphs into the case-study hero via a shared `view-transition-name: shot-<slug>`. Everything else gets a short crossfade. Browsers without support fall back to normal navigation.
+2. **Page transitions.** Native cross-document View Transitions: CSS `@view-transition { navigation: auto }`, plus the existing inline `vt.ts` pageswap/pagereveal naming. There is no `<ClientRouter />`, so there is no router JS. A work row's or lead's screenshot morphs into the case-study hero via a shared `view-transition-name: shot-<slug>`. Everything else gets a short crossfade. Browsers without support fall back to normal navigation.
 3. **Offer switcher.** The active indicator slides via `transform: translateX() scaleX()`. The panel crossfades with a 6px y shift. It is interruptible: rapid switching cancels running animations instead of queueing them.
 4. **Work rows (desktop only).** One fixed-size preview element follows the cursor with lerp, as a `transform` updated in a rAF loop that runs only while the pointer is inside the list. Row text shifts 4px on hover.
 5. **Scroll reveals.** Sections fade and rise 12px once on first intersection. They never re-animate.
