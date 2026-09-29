@@ -13,7 +13,7 @@ export const site = {
   // Colophon (home page). The availability line intentionally does not name an
   // employer - see docs/open-items.md.
   desk: 'Developing in-house software.',
-  availability: 'Happy to hear about side projects.',
+  availability: 'Taking on freelance projects.',
 } as const;
 
 export function whatsappUrl(): string {
