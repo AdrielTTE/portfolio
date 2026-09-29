@@ -9,7 +9,7 @@ const { project, variant, eager = false } = Astro.props;
 const { device, shots, title, summary, accent, live } = project.data;
 const shot = shots[0];
 const widths = variant === 'thumb' ? [240, 480] : [640, 960, 1280, 1920];
-const host = live ? new URL(live).host : 'localhost:3000';
+const host = live ? new URL(live).host : '';
 ---
 <figure
   class={`frame frame--${device} frame--${variant}`}
