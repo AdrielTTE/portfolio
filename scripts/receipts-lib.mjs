@@ -8,6 +8,27 @@ const escape = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': 
 
 const dropHidden = (attrs) => attrs.replace(/\s+hidden(?=[\s>]|$)/, '');
 
+const SKIP_SCRIPT_TYPES = /^(application\/json|application\/ld\+json)$/i;
+
+// Extracts inline <script> bodies from one HTML page, for the js-kb measurement.
+// Skips scripts with a src (already counted as files) and structured-data
+// scripts (JSON/ld+json), which aren't executable JS. Returns one entry per
+// <script> tag found - the caller dedupes identical bodies across pages.
+export function inlineScripts(html) {
+  const out = [];
+  const re = /<script((?:\s+[^>]*)?)>([\s\S]*?)<\/script>/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    const [, attrs, body] = m;
+    if (/\bsrc\s*=/i.test(attrs)) continue;
+    const typeMatch = /\btype\s*=\s*["']([^"']+)["']/i.exec(attrs);
+    if (typeMatch && SKIP_SCRIPT_TYPES.test(typeMatch[1])) continue;
+    const trimmed = body.trim();
+    if (trimmed) out.push(trimmed);
+  }
+  return out;
+}
+
 // Fills every empty placeholder for each key and un-hides its wrapper. Tolerates
 // extra attributes (Astro's data-astro-cid-*) anywhere after the key attribute.
 export function injectReceipts(html, values) {

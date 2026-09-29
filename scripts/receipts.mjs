@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from '
 import { join, extname } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { execSync } from 'node:child_process';
-import { formatKB, injectReceipts } from './receipts-lib.mjs';
+import { formatKB, injectReceipts, inlineScripts } from './receipts-lib.mjs';
 
 const DIST = 'dist';
 const walk = (dir) => readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? walk(join(dir, f)) : [join(dir, f)]));
@@ -14,7 +14,17 @@ const values = {};
 try {
   const files = walk(DIST);
   const js = files.filter((f) => extname(f) === '.js');
-  values['js-kb'] = formatKB(js.reduce((n, f) => n + gz(f), 0));
+  const externalBytes = js.reduce((n, f) => n + gz(f), 0);
+
+  // Astro inlines most page scripts rather than emitting separate .js files,
+  // so also count the executable inline <script> bodies. The same component
+  // script repeats verbatim across pages, so dedupe by body before gzipping.
+  const uniqueInline = new Set();
+  for (const f of files.filter((f) => f.endsWith('.html'))) {
+    for (const body of inlineScripts(readFileSync(f, 'utf8'))) uniqueInline.add(body);
+  }
+  const inlineBytes = uniqueInline.size ? gzipSync(Buffer.from([...uniqueInline].join('\n'), 'utf8')).length : 0;
+  values['js-kb'] = formatKB(externalBytes + inlineBytes);
 
   const index = readFileSync(join(DIST, 'index.html'), 'utf8');
   const linked = [...index.matchAll(/(?:href|src)="(\/[^"]+\.(?:css|js))"/g)].map((m) => join(DIST, m[1]));
