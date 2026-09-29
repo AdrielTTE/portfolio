@@ -1,0 +1,138 @@
+---
+// docs/design-spec.md §5.3.
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import SkillGroups from '../components/SkillGroups.astro';
+import photo from '../assets/tempProfile.jpg';
+import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '../data/about';
+---
+<BaseLayout
+  title="About: Adriel Tang"
+  description="Background, timeline, and skills for Adriel Tang, a full stack developer at Bantu2U Holdings in Kuala Lumpur, with a BIT (Honours) from TAR UMT."
+  current="about"
+>
+  <div class="container about-layout">
+    <div class="top-text">
+      <h1>Adriel Tang Thien Ern</h1>
+      <p class="role-line">{heroRoleLine}</p>
+      <div class="bio">
+        <p class="bio-1">{bio[0]}</p>
+        <p class="bio-2">{bio[1]}</p>
+      </div>
+    </div>
+
+    <div class="photo-col">
+      <Picture
+        src={photo}
+        alt={photoAlt}
+        formats={['avif', 'webp']}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 1024px) 25vw, 100vw"
+        loading="eager"
+        class="photo"
+      />
+    </div>
+
+    <div class="lower-content">
+      <section class="timeline-section">
+        <h2>Education and work</h2>
+        <Timeline items={timeline} />
+      </section>
+
+      <section class="skills-section">
+        <h2>Skills</h2>
+        <SkillGroups groups={skills} />
+      </section>
+
+      <section class="music-section">
+        <h2>Sound and music</h2>
+        <p>{musicParagraph}</p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-layout {
+    padding-block: 32px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'top' 'photo' 'lower';
+    row-gap: 32px;
+  }
+  .top-text {
+    grid-area: top;
+  }
+  .lower-content {
+    grid-area: lower;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .photo-col {
+    grid-area: photo;
+  }
+  .photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 45% 35%;
+    border-radius: 0;
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 500;
+  }
+  .role-line {
+    font-size: var(--step-2);
+    margin-top: 12px;
+  }
+  .bio {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .bio-1 {
+    font-size: var(--step-2);
+    max-width: 58ch;
+  }
+  .bio-2 {
+    font-size: var(--step-1);
+    max-width: 58ch;
+  }
+  h2 {
+    font-size: var(--step-2);
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .music-section p {
+    font-size: var(--step-1);
+    max-width: 58ch;
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .photo-col {
+      width: 62.5%; /* cols 1-5 of 8 */
+    }
+  }
+  @media (min-width: 1024px) {
+    .about-layout {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      grid-template-areas: 'photo top' 'photo lower';
+      column-gap: var(--gutter);
+      row-gap: 64px;
+      padding-block: 48px;
+    }
+    .photo-col {
+      position: sticky;
+      top: 88px;
+      align-self: start;
+      width: auto;
+    }
+    .lower-content {
+      gap: 64px;
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+// docs/design-spec.md §5.1.4. The "Colophon" heading is visually hidden.
+import LiveClock from './LiveClock.astro';
+import { site } from '../data/site';
+
+interface Props {
+  desk: string;
+  availability: string;
+}
+const { desk, availability } = Astro.props;
+---
+<div class="colophon" aria-labelledby="colophon-h">
+  <h2 id="colophon-h" class="visually-hidden">Colophon</h2>
+  <p>Kuala Lumpur, <LiveClock /></p>
+  <p>{desk}</p>
+  <p>{availability}</p>
+  <p class="links">
+    <a class="breakable" href={`mailto:${site.email}`}>{site.email}</a>
+    <a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow">↗</span></a>
+    <a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow">↗</span></a>
+  </p>
+</div>
+
+<style>
+  .colophon p {
+    font-size: var(--step-2);
+    margin-bottom: 8px;
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 16px;
+  }
+  .links a {
+    font-size: var(--step-0);
+    text-decoration: none;
+  }
+  .links a:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+// docs/design-spec.md §5.3. Plain lists, no icons, no blurbs.
+interface Group {
+  name: string;
+  items: string[];
+}
+interface Props {
+  groups: Group[];
+}
+const { groups } = Astro.props;
+---
+<div class="skill-groups">
+  {
+    groups.map((group) => (
+      <div class="skill-group">
+        <h3>{group.name}</h3>
+        <ul>
+          {group.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .skill-groups {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 24px;
+  }
+  @media (min-width: 768px) {
+    .skill-groups {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  h3 {
+    font-weight: 500;
+    font-size: var(--step-0);
+    margin-bottom: 8px;
+  }
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  li {
+    font-size: var(--step-0);
+  }
+</style>

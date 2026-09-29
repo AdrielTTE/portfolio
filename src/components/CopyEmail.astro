@@ -1,0 +1,37 @@
+---
+// docs/design-spec.md §5.4.
+interface Props {
+  email: string;
+}
+const { email } = Astro.props;
+---
+<span class="copy-email">
+  <button type="button" class="copy-button" id="copy-email-btn" data-email={email}>
+    <span>Copy</span>
+  </button>
+  <span class="visually-hidden" role="status" aria-live="polite" id="copy-email-status"></span>
+</span>
+
+<style>
+  .copy-button {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    background: none;
+    border: 1px solid var(--c-field-border);
+    padding-inline: 12px;
+    height: 36px;
+    min-height: 44px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .copy-button:hover {
+      background: var(--c-paper-2);
+    }
+  }
+  .copy-button:active {
+    translate: 0 1px;
+  }
+</style>
+
+<script src="../scripts/copy-email.ts"></script>

@@ -1,0 +1,75 @@
+---
+// docs/design-spec.md §5.2. Styles the rendered Markdown body of a case study.
+---
+<div class="prose">
+  <slot />
+</div>
+
+<style is:global>
+  .prose {
+    max-width: 64ch;
+    font-size: var(--step-1);
+  }
+  .prose > * + * {
+    margin-top: 20px;
+  }
+  .prose h2 {
+    font-size: var(--step-2);
+    font-weight: 500;
+    margin-top: 48px;
+    margin-bottom: 12px;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.4em;
+  }
+  .prose li {
+    padding-left: 0.4em;
+  }
+  .prose ul {
+    list-style: none;
+  }
+  .prose ul li {
+    position: relative;
+  }
+  .prose ul li::before {
+    content: '–';
+    position: absolute;
+    left: -1.4em;
+  }
+  .prose em {
+    font-style: normal;
+    font-weight: 500;
+  }
+  .prose figure {
+    margin: 0;
+  }
+  .prose figure img {
+    width: 100%;
+  }
+  .prose figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    margin-top: 8px;
+  }
+  .prose figure.wide {
+    max-width: none;
+  }
+  @media (min-width: 1024px) {
+    .prose figure.wide {
+      grid-column: 2 / span 10;
+    }
+  }
+  .prose pre {
+    background: var(--c-paper-2);
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+</style>

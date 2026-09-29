@@ -1,0 +1,47 @@
+---
+// docs/design-spec.md §5.1.3. Generated from the data; renders nothing until
+// the archive is big enough to need filtering (Pentagram pattern).
+interface Props {
+  counts: { scope: string; n: number }[];
+  total: number;
+}
+const { counts, total } = Astro.props;
+const shouldRender = total >= 8 && counts.length >= 2;
+---
+{
+  shouldRender && (
+    <div class="scope-filters" role="group" aria-label="Filter by scope">
+      <button type="button" class="filter-btn" data-scope="all" aria-pressed="true">
+        All {total}
+      </button>
+      {counts.map((c) => (
+        <button type="button" class="filter-btn" data-scope={c.scope} aria-pressed="false">
+          {c.scope} {c.n}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .scope-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-bottom: 24px;
+  }
+  .filter-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    color: var(--c-ink-2);
+    cursor: pointer;
+    padding-block: 4px;
+  }
+  .filter-btn[aria-pressed='true'] {
+    color: var(--c-ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

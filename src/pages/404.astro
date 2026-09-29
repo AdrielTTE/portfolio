@@ -1,0 +1,38 @@
+---
+// docs/design-spec.md §5.5.
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page Not Found: Adriel Tang" description="This page doesn't exist. Head back to Adriel Tang's homepage for recent projects and contact details." noindex>
+  <div class="container not-found">
+    <h1>Page not found.</h1>
+    <p>
+      That page doesn't exist. Head back to the <a href="/">homepage</a> or the <a href="/#work">work list</a>.
+    </p>
+    <p class="path" id="not-found-path"></p>
+  </div>
+</BaseLayout>
+
+<script>
+  const el = document.getElementById('not-found-path');
+  if (el && location.pathname) el.textContent = location.pathname;
+</script>
+
+<style>
+  .not-found {
+    padding-block: 96px;
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 500;
+  }
+  p {
+    font-size: var(--step-2);
+    margin-top: 16px;
+    max-width: 50ch;
+  }
+  .path {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+</style>

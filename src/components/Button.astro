@@ -1,0 +1,69 @@
+---
+// docs/design-spec.md §8. No pills: radius never over 2px.
+interface Props {
+  as?: 'a' | 'button';
+  href?: string;
+  variant: 'primary' | 'text';
+  type?: 'button' | 'submit';
+  disabled?: boolean;
+  class?: string;
+}
+const { as = 'button', href, variant, type = 'button', disabled = false, class: className } = Astro.props;
+const Tag = as;
+---
+<Tag
+  href={as === 'a' ? href : undefined}
+  type={as === 'button' ? type : undefined}
+  disabled={as === 'button' ? disabled : undefined}
+  class={`btn btn--${variant} ${className ?? ''}`}
+>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--step-0);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn:active {
+    translate: 0 1px;
+  }
+  .btn--primary {
+    height: 48px;
+    padding-inline: 20px;
+    border: 1px solid var(--c-ink);
+    border-radius: 2px;
+    background: var(--c-ink);
+    color: var(--c-paper);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn--primary:hover {
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+  }
+  .btn--primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn--text {
+    border: none;
+    background: none;
+    padding: 0;
+    min-height: 44px;
+    text-underline-offset: 4px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn--text:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+</style>
