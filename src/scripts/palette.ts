@@ -1,7 +1,7 @@
 // Palette behaviour: open (⌘K, Ctrl+K, "/", or any [data-palette-open]),
 // filter, arrow/enter selection, sliding highlight (transform only).
 // Markup/ARIA/interfaces: task-8 brief. Visuals: docs/design-addendum.md §7.6.
-import { filterCommands, type Command } from '../lib/palette';
+import { filterCommands, groupHeadersFor, type Command } from '../lib/palette';
 
 // The header button and footer hint render "⌘K" server-side (Apple default).
 // Swap it for "Ctrl K" on non-Apple platforms so the hint stays accurate.
@@ -59,18 +59,26 @@ if (dialog) {
   };
 
   const render = () => {
-    results = filterCommands(all, input.value);
+    const query = input.value;
+    results = filterCommands(all, query);
     active = 0;
+    // Empty query: the list is still in source (group-contiguous) order, so
+    // it renders as Pages/Projects/Actions header rows with a path/action
+    // hint per item. A non-empty query lets ranking interleave groups, so
+    // there are no headers (groupHeadersFor returns none) - instead each row
+    // names its own group, the palette's original flat-list design.
+    const grouped = query.trim() === '';
+    const headers = groupHeadersFor(results, query);
     const frag = document.createDocumentFragment();
-    let lastGroup: Command['group'] | null = null;
-    for (const c of results) {
-      if (c.group !== lastGroup) {
+    let headerIndex = 0;
+    results.forEach((c, i) => {
+      if (grouped && headers[headerIndex]?.before === i) {
         const gh = document.createElement('li');
         gh.className = 'grp-label';
         gh.setAttribute('role', 'presentation');
-        gh.textContent = c.group;
+        gh.textContent = headers[headerIndex].group;
         frag.appendChild(gh);
-        lastGroup = c.group;
+        headerIndex++;
       }
       const li = document.createElement('li');
       li.id = `pal-${c.id}`;
@@ -79,21 +87,26 @@ if (dialog) {
       const label = document.createElement('span');
       label.className = 'label';
       label.textContent = c.label;
-      const hint = document.createElement('span');
-      hint.className = 'hint';
-      hint.setAttribute('aria-hidden', 'true');
-      hint.textContent = hintFor(c);
-      li.append(label, hint);
+      const right = document.createElement('span');
+      right.setAttribute('aria-hidden', 'true');
+      if (grouped) {
+        right.className = 'hint';
+        right.textContent = hintFor(c);
+      } else {
+        right.className = 'grp';
+        right.textContent = c.group;
+      }
+      li.append(label, right);
       li.addEventListener('pointermove', () => {
-        const i = results.indexOf(c);
-        if (active !== i) {
-          active = i;
+        const idx = results.indexOf(c);
+        if (active !== idx) {
+          active = idx;
           moveHl();
         }
       });
       li.addEventListener('click', () => run(c));
       frag.appendChild(li);
-    }
+    });
     list.replaceChildren(frag);
     empty.hidden = results.length > 0;
     moveHl();

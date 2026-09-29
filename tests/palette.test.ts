@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { filterCommands, type Command } from '../src/lib/palette';
+import { filterCommands, groupHeadersFor, type Command } from '../src/lib/palette';
 
 const cmds: Command[] = [
   { id: 'work', label: 'Work', group: 'Pages', href: '/#work' },
@@ -27,5 +27,27 @@ describe('filterCommands', () => {
   });
   it('no match returns empty', () => {
     expect(filterCommands(cmds, 'zzqq')).toEqual([]);
+  });
+});
+
+describe('groupHeadersFor', () => {
+  it('empty query: one header per contiguous group, in source order', () => {
+    expect(groupHeadersFor(cmds, '')).toEqual([
+      { before: 0, group: 'Pages' },
+      { before: 2, group: 'Projects' },
+      { before: 3, group: 'Actions' },
+    ]);
+  });
+  it('empty (whitespace) query: each group appears at most once', () => {
+    const headers = groupHeadersFor(cmds, '   ');
+    const groups = headers.map((h) => h.group);
+    expect(new Set(groups).size).toBe(groups.length);
+  });
+  it('non-empty query: no headers, even when results interleave groups', () => {
+    // 'h' matches Habitect (Projects, prefix) and "the" nothing else here, but
+    // against the full command set (via filterCommands) groups can interleave;
+    // the important invariant is simply: no headers when there's a query.
+    expect(groupHeadersFor(filterCommands(cmds, 'h'), 'h')).toEqual([]);
+    expect(groupHeadersFor(filterCommands(cmds, 'a'), 'a')).toEqual([]);
   });
 });
