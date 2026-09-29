@@ -12,15 +12,19 @@ interface Props {
 const { projects, currentSlug } = Astro.props;
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer">
+<footer class="site-footer" id="site-footer">
   <div class="container">
     <FooterStrip projects={projects} currentSlug={currentSlug} />
     <ul class="links-row">
+      <li><a href="/#work">Work</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
       <li><a class="breakable" href={`mailto:${site.email}`}>{site.email}</a></li>
       <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow">↗</span></a></li>
       <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow">↗</span></a></li>
       <li><a href="/sitemap-index.xml">Sitemap</a></li>
     </ul>
+    <p class="palette-hint">Press <kbd data-kbd-mod>⌘K</kbd> to jump anywhere</p>
     <p class="colophon-line">
       Built with Astro. Set in Hanken Grotesk and JetBrains Mono.
       <span class="copyright">© {year} Adriel Tang</span>
@@ -49,6 +53,17 @@ const year = new Date().getFullYear();
   }
   .links-row a:hover {
     text-decoration: underline;
+  }
+  .palette-hint {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  @media (pointer: coarse) {
+    .palette-hint {
+      display: none;
+    }
   }
   .colophon-line {
     margin-top: 16px;

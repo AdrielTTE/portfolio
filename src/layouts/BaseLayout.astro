@@ -9,6 +9,7 @@ import vtInline from '../scripts/vt.ts?raw';
 import SkipLink from '../components/SkipLink.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import CommandPalette from '../components/CommandPalette.astro';
 import { getCollection } from 'astro:content';
 
 interface Props {
@@ -60,5 +61,6 @@ const allWork = await getCollection('work');
       <slot />
     </main>
     <SiteFooter projects={allWork} currentSlug={currentSlug} />
+    <CommandPalette />
   </body>
 </html>
