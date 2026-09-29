@@ -177,6 +177,60 @@ h4,
   }
 }
 
+/* Theme toggle circular reveal (spec §5.3 item 9). theme-toggle.ts adds
+   .theme-vt only for the duration of its own transition and animates the
+   new snapshot's clip-path itself, so page navigations keep the crossfade
+   above. */
+html.theme-vt::view-transition-old(root),
+html.theme-vt::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Section reveals (spec §5.3 item 5). Hidden only under .js-reveal, which
+   head-inline.js sets when JS runs and motion is allowed, so no-JS and
+   reduced motion always show content. reveal-sections.ts adds .in once. */
+.js-reveal [data-reveal]:not(.in) {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.js-reveal [data-reveal] {
+  transition:
+    opacity var(--dur-slow) var(--ease-enter),
+    transform var(--dur-slow) var(--ease-enter);
+}
+
+/* Intro reveal (spec §5.3 item 1; addendum §8): each intro block rises once
+   per session (head-inline.js sets .intro-seen on later loads). Text lines
+   rise out of an overflow mask; the action row and colophon rise 12px
+   unmasked, because a mask would clip the focus ring and the magnetic lean.
+   `both` fill: nothing is parked hidden once the animation has run. */
+.js-reveal:not(.intro-seen) .line-mask {
+  display: block;
+  overflow: hidden;
+}
+.js-reveal:not(.intro-seen) .line-mask > span {
+  display: block;
+  animation: line-up var(--dur-slow) var(--ease-enter) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+.js-reveal:not(.intro-seen) .line-rise {
+  animation: line-rise var(--dur-slow) var(--ease-enter) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+@keyframes line-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+@keyframes line-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
 /* Reduced motion safety net --------------------------------------------------
    Component-specific rules still apply (progress bar keeps position feedback,
    just without the thickness animation); this only guards anything missed. */
@@ -186,7 +240,9 @@ h4,
   *::after {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 1ms !important;
+    transition-delay: 0s !important;
   }
   html {
     scroll-behavior: auto !important;

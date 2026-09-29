@@ -5,7 +5,17 @@
   root.classList.add('js');
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reduced) root.classList.add('js-reveal');
+  if (!reduced) {
+    root.classList.add('js-reveal');
+    // Intro reveal plays once per session (spec §5.3 item 1). Only the home
+    // page has an intro, so only a home load marks it seen.
+    try {
+      if (sessionStorage.getItem('introSeen')) root.classList.add('intro-seen');
+      else if (location.pathname === '/') sessionStorage.setItem('introSeen', '1');
+    } catch (e) {
+      /* storage blocked: play the intro every time */
+    }
+  }
 
   try {
     var theme = localStorage.getItem('theme');

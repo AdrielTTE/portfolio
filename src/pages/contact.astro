@@ -24,12 +24,14 @@ import { site, whatsappUrl } from '../data/site';
         <li><a href={whatsappUrl()} rel="noopener" target="_blank">Message on WhatsApp <span class="arrow">↗</span></a></li>
       </ul>
     </div>
-    <div class="contact-form-col">
+    <div class="contact-form-col" data-reveal>
       <h2>Or send a message</h2>
       <ContactForm endpoint={site.formspreeEndpoint} subject="Portfolio contact" />
     </div>
   </div>
 </BaseLayout>
+
+<script src="../scripts/reveal-sections.ts"></script>
 
 <style>
   .contact-layout {

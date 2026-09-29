@@ -18,6 +18,7 @@ const lines = [...entries].sort((a, b) => +b.date - +a.date).slice(0, limit ?? e
       </li>
     ))}
   </ol>
+  <slot />
 </section>
 
 <style>
@@ -28,7 +29,8 @@ const lines = [...entries].sort((a, b) => +b.date - +a.date).slice(0, limit ?? e
   .type { color: var(--c-ink-2); }
   .msg { font-family: var(--font-sans); font-size: var(--step-0); }
   @media (max-width: 480px) {
-    li { grid-template-columns: 8ch 7ch; row-gap: 4px; }
+    /* Date + type on line 1, message full width on line 2 (addendum §7.3). */
+    li { grid-template-columns: 8ch 1fr; row-gap: 4px; }
     .msg { grid-column: 1 / -1; }
   }
 </style>
