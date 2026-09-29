@@ -2,7 +2,6 @@
 // docs/design-spec.md §5.6. "Source" link is left out until the owner decides
 // whether to make the site repo public - see docs/open-items.md.
 import type { CollectionEntry } from 'astro:content';
-import FooterStrip from './FooterStrip.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -14,7 +13,6 @@ const year = new Date().getFullYear();
 ---
 <footer class="site-footer" id="site-footer">
   <div class="container">
-    <FooterStrip projects={projects} currentSlug={currentSlug} />
     <ul class="links-row">
       <li><a href="/#work">Work</a></li>
       <li><a href="/about">About</a></li>

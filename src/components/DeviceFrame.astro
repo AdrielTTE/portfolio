@@ -102,6 +102,9 @@ const host = live ? new URL(live).host : '';
   .screen {
     aspect-ratio: 16 / 10;
     overflow: hidden;
+    /* Placeholder text below sizes off the screen's own width, not the
+       viewport, so it fits a 64px work-row thumb and a 1920px hero alike. */
+    container-type: inline-size;
   }
   .frame--phone .screen {
     aspect-ratio: auto;
@@ -121,25 +124,48 @@ const host = live ? new URL(live).host : '';
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 8px;
-    padding: 24px;
+    gap: clamp(2px, 2cqi, 8px);
+    padding: clamp(8px, 6cqi, 24px);
     background: var(--c-bg);
     font-family: var(--font-device);
-    font-size: var(--step--1);
+    font-size: clamp(0.6rem, 3.4cqi, var(--step--1));
     color: var(--c-ink-2);
   }
   .placeholder strong {
     color: var(--c-ink);
-    font-size: var(--step-1);
+    font-size: clamp(0.7rem, 6cqi, var(--step-1));
+    line-height: 1.2;
     font-family: var(--font-device);
+    overflow-wrap: anywhere;
   }
+
+  /* Phone bezels are narrow (9:19.5): the summary never fits, so show only
+     the title, centered. Browser hero/lead placeholders keep the summary
+     and use the container-scaled sizing above so they never clip either. */
+  .frame--phone .placeholder {
+    align-items: center;
+    text-align: center;
+  }
+  .frame--phone .placeholder span {
+    display: none;
+  }
+
+  /* Thumb bezels (WorkList's 64px column) are too small for any placeholder
+     copy: render a plain frame with, at most, the title's first letter. */
   .frame--thumb .placeholder {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     padding: 6px;
   }
   .frame--thumb .placeholder strong {
+    font-size: 0;
+    line-height: 1;
+  }
+  .frame--thumb .placeholder strong::first-letter {
     font-size: var(--step--1);
-    line-height: 1.2;
-    overflow-wrap: anywhere;
+    font-family: var(--font-mono);
+    color: var(--c-ink-2);
   }
   .frame--thumb .placeholder span {
     display: none;
