@@ -1,8 +1,7 @@
 ---
-// Latest work as plain plate blocks (no cover composition, so it's cheap
-// even with a large archive). docs/design-spec.md §5.6.
+// Latest work as plain blocks (no cover composition, so it's cheap even
+// with a large archive). docs/design-spec.md §5.6.
 import type { CollectionEntry } from 'astro:content';
-import { plateFor, onPlate } from '../lib/plate';
 import { sortByOrder } from '../lib/work';
 
 interface Props {
@@ -18,13 +17,11 @@ const latest = sortByOrder(projects).reverse().slice(0, 8);
     <div class="blocks">
       {
         latest.map((project) => {
-          const plate = plateFor(project);
           const isCurrent = project.id === currentSlug;
           return (
             <a
               href={`/work/${project.id}`}
               class="block"
-              style={`--plate:${plate};--c-on-plate:${onPlate(plate)}`}
               aria-current={isCurrent ? 'page' : undefined}
             >
               <span class="block-name">{project.data.title}</span>
@@ -57,8 +54,8 @@ const latest = sortByOrder(projects).reverse().slice(0, 8);
   .block {
     flex: 0 0 42%;
     aspect-ratio: 4 / 3;
-    background: var(--plate);
-    color: var(--c-on-plate);
+    background: var(--c-bg-2);
+    color: var(--c-ink);
     position: relative;
     text-decoration: none;
     scroll-snap-align: start;

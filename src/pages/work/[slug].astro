@@ -2,7 +2,7 @@
 // docs/design-spec.md §5.2.
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Cover from '../../covers/Cover.astro';
+import DeviceFrame from '../../components/DeviceFrame.astro';
 import FactsRow from '../../components/FactsRow.astro';
 import Prose from '../../components/Prose.astro';
 import PrevNext from '../../components/PrevNext.astro';
@@ -44,7 +44,7 @@ const descriptions: Record<string, string> = {
       <p class="summary">{summary}</p>
     </div>
 
-    <Cover project={project} variant="hero" eager />
+    <DeviceFrame project={project} variant="hero" eager />
 
     <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} />
 
@@ -55,8 +55,6 @@ const descriptions: Record<string, string> = {
     <PrevNext prev={prev} next={next} />
   </div>
 </BaseLayout>
-
-<script src="../../scripts/reveal.ts"></script>
 
 <style>
   .case-study {
