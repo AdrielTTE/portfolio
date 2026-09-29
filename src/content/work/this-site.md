@@ -10,6 +10,16 @@ offers: ["websites"]
 device: "browser"
 featured: false
 order: 0
+problem: |-
+  A portfolio that claims to build fast, accessible sites has to prove it, not just say it. The
+  brief here was to keep the site itself measured: real page weight, real JS shipped, and a real
+  Lighthouse score, generated at every deploy, without adding runtime weight just to produce
+  the numbers.
+forYou: |-
+  This site is the clearest proof, since it's not a demo: it's measured on page weight,
+  JavaScript shipped, and Lighthouse score at every deploy. It shows the standard applied to a
+  client site: fast load times, accessible markup, and no unnecessary framework weight. The
+  build receipts are numbers from the actual build, not a claim.
 diagram:
   nodes:
     - id: content
