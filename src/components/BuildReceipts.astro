@@ -1,0 +1,36 @@
+---
+// Real numbers measured at build (scripts/receipts.mjs fills these in).
+// Each receipt stays hidden unless a value was injected. Spec §3.1 item 4.
+// Visuals per docs/design-addendum.md §7.2 "Built like this" row.
+const items = [
+  { key: 'page-kb', label: 'Home page, gzip', unit: 'KB' },
+  { key: 'js-kb', label: 'JavaScript, whole site', unit: 'KB' },
+  { key: 'lh-perf', label: 'Lighthouse performance, mobile', unit: '/100' },
+];
+---
+<section class="receipts" aria-labelledby="receipts-h">
+  <h2 id="receipts-h">Built like this</h2>
+  <dl>
+    {items.map((i) => (
+      <div class="receipt" data-receipt-wrap={i.key} hidden>
+        <dt>{i.label}</dt>
+        <dd><span data-receipt={i.key} hidden></span><span class="unit">{i.unit}</span></dd>
+      </div>
+    ))}
+    <div class="receipt" data-receipt-wrap="sha" hidden>
+      <dt>Built from commit</dt>
+      <dd><a data-receipt="sha" data-href-template="https://github.com/AdrielTTE/portfolio/commit/{v}" hidden></a></dd>
+    </div>
+  </dl>
+  <a class="more" href="/work/this-site/">How this site is built <span aria-hidden="true">→</span></a>
+</section>
+
+<script src="../scripts/count-up.ts"></script>
+
+<style>
+  h2 { font-size: var(--step-1); font-weight: 600; margin-bottom: 16px; }
+  dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; margin: 16px 0; }
+  dt { color: var(--c-ink-2); font-size: var(--step--1); }
+  dd { margin: 4px 0 0; font-family: var(--font-mono); font-weight: 500; font-size: var(--step-4); font-variant-numeric: tabular-nums; }
+  .unit { font-size: var(--step--1); color: var(--c-ink-2); margin-left: 4px; }
+</style>

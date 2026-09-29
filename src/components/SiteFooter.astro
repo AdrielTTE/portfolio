@@ -24,6 +24,7 @@ const year = new Date().getFullYear();
     <p class="colophon-line">
       Built with Astro. Set in Hanken Grotesk and JetBrains Mono.
       <span class="copyright">© {year} Adriel Tang</span>
+      <span class="sha" data-receipt-wrap="sha" hidden>Built from <a data-receipt="sha" data-href-template="https://github.com/AdrielTTE/portfolio/commit/{v}" hidden></a></span>
     </p>
   </div>
 </footer>
@@ -58,5 +59,10 @@ const year = new Date().getFullYear();
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 4px;
+  }
+  .sha {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
   }
 </style>
