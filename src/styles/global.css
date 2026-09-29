@@ -193,14 +193,6 @@ h4,
   }
 }
 
-/* Work section: Grid <-> Index, applied before paint via data-work-view ----*/
-html[data-work-view='index'] .grid-view {
-  display: none;
-}
-html:not([data-work-view='index']) .index-view {
-  display: none;
-}
-
 /* Theme toggle: suppress the one frame of colour transition on switch -------*/
 html.theme-switching * {
   transition: none !important;

@@ -1,0 +1,66 @@
+---
+// Work rows: name, one line, stack chips, year. Desktop hover shows a
+// cursor-follow screenshot; narrow screens show an inline thumb. Filters only
+// at 6+ projects. Spec §3.1 item 3, §5.3 item 4.
+import DeviceFrame from './DeviceFrame.astro';
+import { scopeCounts, type WorkEntry } from '../lib/work';
+
+interface Props { projects: WorkEntry[]; excludeId?: string }
+const { projects, excludeId } = Astro.props;
+const rows = [...projects]
+  .filter((p) => p.id !== excludeId)
+  .sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
+const scopes = rows.length >= 6 ? scopeCounts(rows) : [];
+---
+<section class="work" aria-labelledby="work-h" id="work">
+  <h2 id="work-h">Work</h2>
+  {scopes.length > 1 && (
+    <div class="filters" role="group" aria-label="Filter by scope">
+      <button type="button" aria-pressed="true" data-filter="*">All</button>
+      {scopes.map((s) => <button type="button" aria-pressed="false" data-filter={s.scope}>{s.scope} <span class="n">{s.n}</span></button>)}
+    </div>
+  )}
+  <ol id="work-list" class="rows">
+    {rows.map((p) => (
+      <li class="work-row" data-scope={p.data.scope} data-slug={p.id}>
+        <a href={`/work/${p.id}/`}>
+          <span class="thumb"><DeviceFrame project={p} variant="thumb" /></span>
+          <span class="name">{p.data.title}</span>
+          <span class="line">{p.data.summary}</span>
+          <span class="chips">{p.data.stack.map((s) => <span class="chip">{s}</span>)}</span>
+          <span class="year">{p.data.year}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <div class="preview" aria-hidden="true" hidden></div>
+</section>
+
+<script src="../scripts/shot-preview.ts"></script>
+
+<style>
+  .rows { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--c-rule); }
+  .work-row a { display: grid; grid-template-columns: 64px 1fr; gap: 4px 16px; padding-block: 16px; border-bottom: 1px solid var(--c-rule); color: inherit; text-decoration: none; }
+  .thumb { grid-row: span 3; }
+  .name { font-size: var(--step-2); }
+  .line { color: var(--c-ink-2); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip, .year { font-family: var(--font-mono); font-size: var(--step--1); color: var(--c-ink-2); }
+  .chip { border: 1px solid var(--c-rule); border-radius: 4px; padding: 1px 6px; }
+  .year { display: none; }
+  @media (min-width: 1024px) {
+    .work-row a { grid-template-columns: 4fr 5fr 3fr 1fr; align-items: baseline; padding-block: 20px; }
+    .thumb { display: none; }
+    .year { display: block; text-align: right; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .name, .line { transition: transform var(--dur-base) var(--ease-enter); }
+    .work-row a:hover .name, .work-row a:hover .line { transform: translateX(4px); }
+  }
+  .work-row a:focus-visible { outline: 2px solid var(--c-focus); outline-offset: 2px; }
+  .preview { position: fixed; top: 0; left: 0; width: 320px; pointer-events: none; z-index: 20; opacity: 0; transition: opacity var(--dur-fast) var(--ease-enter); will-change: transform; }
+  .preview.on { opacity: 1; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .filters button { font: inherit; font-family: var(--font-mono); font-size: var(--step--1); padding: 4px 10px; border: 1px solid var(--c-rule); border-radius: 999px; background: none; color: var(--c-ink); min-height: 32px; }
+  .filters button[aria-pressed='true'] { background: var(--c-ink); color: var(--c-bg); }
+</style>

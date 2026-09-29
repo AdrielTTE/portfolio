@@ -15,13 +15,4 @@
   } catch (e) {
     /* localStorage unavailable (private mode, etc.): fall back to system theme */
   }
-
-  try {
-    var view = localStorage.getItem('workView');
-    if (view === 'index') {
-      root.setAttribute('data-work-view', 'index');
-    }
-  } catch (e) {
-    /* ignore */
-  }
 })();
