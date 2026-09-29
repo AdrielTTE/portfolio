@@ -1,0 +1,146 @@
+---
+// Offer tabs: Websites · Web apps · Mobile apps, each backed by real projects.
+// Tabs without projects don't render. Spec §3.1 item 2, §5.3 item 3.
+// Visual spec: docs/design-addendum.md §6.2 (three equal-width tabs, a
+// transform-only sliding indicator, panels stacked in one grid cell for zero
+// CLS, and an interruptible opacity/translateY crossfade on the active
+// panel). Markup/ARIA below is the accessible-tabs interface.
+import { offersWithProjects } from '../lib/offers';
+import { offerCopy } from '../data/site';
+import type { WorkEntry } from '../lib/work';
+
+interface Props { projects: WorkEntry[] }
+const offers = offersWithProjects(Astro.props.projects);
+---
+{offers.length > 0 && (
+  <section class="offers" aria-labelledby="offers-h">
+    <h2 id="offers-h">What I build</h2>
+    <div class="tabs" role="tablist" aria-labelledby="offers-h">
+      {offers.map((o, i) => (
+        <button
+          role="tab"
+          id={`tab-${o.id}`}
+          aria-controls={`panel-${o.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+        >
+          {o.label}
+        </button>
+      ))}
+      <span class="indicator" aria-hidden="true"></span>
+    </div>
+    <div class="panels">
+      {offers.map((o, i) => (
+        <div
+          class={`panel${i === 0 ? ' is-active' : ''}`}
+          role="tabpanel"
+          id={`panel-${o.id}`}
+          aria-labelledby={`tab-${o.id}`}
+          inert={i !== 0 ? true : undefined}
+          tabindex="0"
+        >
+          <p class="line">{offerCopy[o.id].line}</p>
+          <p class="stack">{offerCopy[o.id].stack.join(' · ')}</p>
+          <ul class="proof">
+            {o.projects.map((p) => <li><a href={`/work/${p.id}/`}>{p.data.title} <span aria-hidden="true">→</span></a></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<script src="../scripts/offers.ts"></script>
+
+<style>
+  .tabs {
+    position: relative;
+    display: flex;
+    border-bottom: 1px solid var(--c-rule);
+  }
+  [role='tab'] {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font: inherit;
+    font-weight: 500;
+    font-size: var(--step-0);
+    background: none;
+    border: 0;
+    height: 44px;
+    padding-inline: 8px;
+    color: var(--c-ink-2);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  [role='tab'][aria-selected='true'] {
+    color: var(--c-ink);
+  }
+  [role='tab']:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: -2px;
+  }
+  .indicator {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 100px;
+    background: var(--c-accent);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-enter);
+  }
+
+  /* Panels stack in one grid cell so the container height is the tallest
+     panel and switching tabs never shifts layout (design-addendum §6.2). */
+  .panels {
+    display: grid;
+  }
+  .panel {
+    grid-area: 1 / 1;
+    padding-block: 24px;
+    opacity: 0;
+    visibility: hidden;
+    /* Exiting: fade out, then flip visibility once the fade finishes. */
+    transition: opacity var(--dur-base) var(--ease-enter), visibility 0s var(--dur-base);
+  }
+  .panel.is-active {
+    opacity: 1;
+    visibility: visible;
+    /* Entering: flip visibility immediately, fade in alongside it. */
+    transition: opacity var(--dur-base) var(--ease-enter), visibility 0s;
+  }
+  /* The active panel also gets a translateY entrance, restarted on rapid
+     switching (see src/scripts/offers.ts). Reduced motion is handled by the
+     global rule in src/styles/global.css. */
+  .panel.entering {
+    animation: panel-in var(--dur-base) var(--ease-enter);
+  }
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  .line {
+    font-size: var(--step-2);
+    max-width: 36ch;
+  }
+  .stack {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    margin-top: 8px;
+  }
+  .proof {
+    list-style: none;
+    padding: 0;
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+</style>
