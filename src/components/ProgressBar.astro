@@ -1,0 +1,109 @@
+---
+// The one colour device on the site: a scroll-position rule that is also a
+// draggable scrubber. docs/design-spec.md §6.4.
+---
+<div
+  class="progress"
+  id="progress"
+  role="scrollbar"
+  aria-controls="main"
+  aria-orientation="horizontal"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow="0"
+  aria-label="Page position"
+  tabindex="-1"
+  style="view-transition-name: progress"
+>
+  <div class="track"></div>
+  <div class="fill"></div>
+  <div class="knob"></div>
+</div>
+
+<script src="../scripts/progress.ts"></script>
+
+<style>
+  .progress {
+    position: relative;
+    container-type: inline-size;
+    height: 2px;
+    cursor: ew-resize;
+    touch-action: none;
+  }
+  .progress::before {
+    content: '';
+    position: absolute;
+    inset: -6px 0 -10px;
+  }
+  .track,
+  .fill {
+    transform-origin: left top;
+  }
+  .track {
+    position: absolute;
+    inset: 0;
+    background: var(--c-rule);
+  }
+  .fill {
+    position: absolute;
+    inset: 0;
+    background: var(--c-signal);
+    transform: scaleX(0);
+  }
+  .knob {
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    background: var(--c-signal);
+    opacity: 0;
+    translate: -5px -50%;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .fill {
+      animation: progress-fill linear both;
+      animation-timeline: scroll(root);
+    }
+    .knob {
+      animation: progress-knob linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+  @keyframes progress-fill {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes progress-knob {
+    from {
+      translate: -5px -50%;
+    }
+    to {
+      translate: calc(100cqw - 5px) -50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .track,
+    .fill {
+      transition: scale 160ms var(--ease-out);
+    }
+    .knob {
+      transition: opacity 160ms var(--ease-out);
+    }
+  }
+  .progress:hover .track,
+  .progress:hover .fill,
+  .progress.drag .track,
+  .progress.drag .fill {
+    scale: 1 2;
+  }
+  .progress:hover .knob,
+  .progress.drag .knob {
+    opacity: 1;
+  }
+</style>

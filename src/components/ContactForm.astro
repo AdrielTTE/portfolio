@@ -1,0 +1,105 @@
+---
+// docs/design-spec.md §5.4. Works without JS (plain POST to Formspree);
+// with JS, submits via fetch and swaps in inline states.
+import Button from './Button.astro';
+
+interface Props {
+  endpoint: string;
+  subject?: string;
+}
+const { endpoint, subject = 'Portfolio contact' } = Astro.props;
+---
+<form class="contact-form" id="contact-form" action={endpoint} method="POST" novalidate>
+  <p class="form-error" id="form-error" role="alert" hidden></p>
+
+  <div class="field">
+    <label for="cf-name">Name</label>
+    <input id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-error" />
+    <p class="field-error" id="cf-name-error" hidden>Enter your name.</p>
+  </div>
+
+  <div class="field">
+    <label for="cf-email">Email</label>
+    <input id="cf-email" name="email" type="email" autocomplete="email" required aria-describedby="cf-email-error" />
+    <p class="field-error" id="cf-email-error" hidden>Enter a valid email address.</p>
+  </div>
+
+  <div class="field">
+    <label for="cf-message">Message</label>
+    <textarea id="cf-message" name="message" rows="8" required minlength="10" aria-describedby="cf-message-error"></textarea>
+    <p class="field-error" id="cf-message-error" hidden>Message must be at least 10 characters.</p>
+  </div>
+
+  <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <input type="hidden" name="_subject" value={subject} />
+
+  <Button as="button" type="submit" variant="primary" class="submit-btn">
+    <span>Send message</span>
+  </Button>
+</form>
+
+<script src="../scripts/contact-form.ts"></script>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  label {
+    font-weight: 500;
+    font-size: var(--step-0);
+  }
+  input,
+  textarea {
+    height: 48px;
+    padding: 12px;
+    background: var(--c-paper);
+    border: 1px solid var(--c-field-border);
+    border-radius: 2px;
+    font-size: 16px;
+    color: var(--c-ink);
+  }
+  textarea {
+    height: auto;
+    resize: vertical;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    input:hover,
+    textarea:hover {
+      border-color: var(--c-ink);
+    }
+  }
+  input:invalid[data-touched],
+  textarea:invalid[data-touched] {
+    border-color: var(--c-error);
+    border-width: 2px;
+  }
+  .field-error {
+    color: var(--c-error);
+    font-size: var(--step-0);
+    margin: 0;
+  }
+  .form-error {
+    color: var(--c-error);
+    margin: 0;
+  }
+  .submit-btn {
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    .submit-btn {
+      width: auto;
+      align-self: flex-start;
+    }
+  }
+  .success-heading {
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+</style>

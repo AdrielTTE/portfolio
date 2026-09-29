@@ -1,0 +1,157 @@
+---
+// docs/design-spec.md §5.1.3. Grid (two tiers, paginated archive) <-> Index
+// (everything, grouped by year), plus scope filters generated from the data.
+import type { CollectionEntry } from 'astro:content';
+import ViewToggle from './ViewToggle.astro';
+import ScopeFilters from './ScopeFilters.astro';
+import WorkTile from './WorkTile.astro';
+import IndexList from './IndexList.astro';
+import IndexPreview from './IndexPreview.astro';
+import { getFeaturedTier, getArchiveTier, groupByYear, scopeCounts, numberFor } from '../lib/work';
+
+interface Props {
+  projects: CollectionEntry<'work'>[];
+  leadId: string;
+}
+const { projects, leadId } = Astro.props;
+
+const featuredTier = getFeaturedTier(projects, leadId);
+const archiveTier = getArchiveTier(projects);
+const groups = groupByYear(projects).map((g) => ({
+  year: g.year,
+  items: g.items.map((project) => ({ project, no: numberFor(project) })),
+}));
+const counts = scopeCounts(projects);
+const total = projects.length;
+---
+<section id="work" aria-labelledby="work-h" class="work-section">
+  <div class="work-header">
+    <h2 id="work-h">Work</h2>
+    <span class="work-count" id="work-count">{total}</span>
+    <ViewToggle />
+  </div>
+
+  <ScopeFilters counts={counts} total={total} />
+
+  <div class="grid-view">
+    <div class="featured-grid grid" id="featured-grid">
+      {
+        featuredTier.map((project, i) => (
+          <WorkTile project={project} variant="feature" slotIndex={((i % 4) + 1) as 1 | 2 | 3 | 4} index={i} />
+        ))
+      }
+    </div>
+
+    {
+      archiveTier.length > 0 && (
+        <div class="archive-block">
+          <h3 id="more-h" tabindex="-1">
+            More work · <span id="archive-total">{archiveTier.length}</span>
+          </h3>
+          <div class="archive-grid grid" id="archive-grid">
+            {archiveTier.map((project, i) => (
+              <WorkTile project={project} variant="archive" index={i} />
+            ))}
+          </div>
+          <div class="archive-controls">
+            <button type="button" id="show-more" class="control-btn" hidden>
+              Show 12 more
+            </button>
+            <button type="button" id="show-fewer" class="control-btn" hidden>
+              Show fewer
+            </button>
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="index-view">
+    <IndexList groups={groups} />
+    <IndexPreview projects={projects} />
+  </div>
+</section>
+
+<script src="../scripts/work-list.ts"></script>
+
+<style>
+  .work-section {
+    margin-top: var(--section);
+  }
+  .work-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    border-bottom: 1px solid var(--c-ink);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .work-header h2 {
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  .work-count {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  .work-header :global(.view-toggle) {
+    margin-left: auto;
+  }
+
+  .featured-grid {
+    row-gap: 48px;
+  }
+  @media (min-width: 768px) {
+    .featured-grid {
+      row-gap: 64px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .featured-grid {
+      row-gap: 96px;
+    }
+  }
+
+  .archive-block {
+    margin-top: 64px;
+  }
+  @media (min-width: 1024px) {
+    .archive-block {
+      margin-top: 96px;
+    }
+  }
+  #more-h {
+    font-weight: 500;
+    font-size: var(--step-0);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  #more-h::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--c-rule);
+  }
+  .archive-grid {
+    row-gap: 32px;
+  }
+  .archive-controls {
+    display: flex;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .control-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--step-0);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+    min-height: 44px;
+  }
+</style>

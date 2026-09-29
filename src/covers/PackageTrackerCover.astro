@@ -1,0 +1,123 @@
+---
+// Package Tracker: one parcel as seen by each of the app's three user types.
+// Printed content is an invented but plausible KL courier register (see
+// docs/copy.md §7). docs/design-spec.md §7.4.
+import '@fontsource-variable/archivo/wdth.css';
+import type { CollectionEntry } from 'astro:content';
+import Obj from './Obj.astro';
+import Barcode from './Barcode.astro';
+import CompactLabel from './CompactLabel.astro';
+
+interface Props {
+  project: CollectionEntry<'work'>;
+  compact?: boolean;
+}
+const { project, compact = false } = Astro.props;
+
+// Torn-bottom edge for the admin slip: a static zigzag clip-path (simpler and
+// more predictable across browsers than layering two mask-images).
+function tornEdgePolygon(teeth: number, depth: number): string {
+  const points = ['0% 0%', '100% 0%', '100% 100%'];
+  for (let i = teeth; i >= 0; i--) {
+    const x = (i / teeth) * 100;
+    const y = i % 2 === 0 ? 100 - depth : 100;
+    points.push(`${x}% ${y}%`);
+  }
+  return `polygon(${points.join(', ')})`;
+}
+const tornEdge = tornEdgePolygon(9, 7);
+---
+{
+  compact ? (
+    <CompactLabel title={project.data.title} />
+  ) : (
+    <div class="pt-comp" aria-hidden="true">
+      <Obj x={-16} y={-3} w={40} h={58} r={-4} class="waybill obj-1">
+        <div class="waybill-inner">
+          <p class="waybill-band">STANDARD</p>
+          <p class="waybill-weight">1.2 kg · 1 of 1</p>
+          <p class="waybill-heading">FROM</p>
+          <p class="waybill-address">Kedai Buku Rahman, 12 Jalan Genting Klang, 53300 Setapak, Kuala Lumpur</p>
+          <p class="waybill-heading">TO</p>
+          <p class="waybill-address">Lim Wei Jie, 8-3 Residensi Wangsa, Jalan 1/27A, 53300 Wangsa Maju, Kuala Lumpur</p>
+          <p class="waybill-tracking">PT 2025 0417 8832 MY</p>
+          <div class="waybill-barcode"><Barcode value="PT202504178832MY" /></div>
+          <p class="waybill-footer">Route KL-03 · Driver 07 · Hub Setapak</p>
+        </div>
+      </Obj>
+      <Obj x={-4} y={33} w={30} h={15} r={6} class="slip obj-2" style={`clip-path:${tornEdge}`}>
+        <div class="slip-inner">
+          <p class="slip-heading">SHIPMENT 8832 · STATUS LOG</p>
+          <p class="slip-line">09:12  Picked up         KL-01</p>
+          <p class="slip-line">10:03  At hub            Setapak</p>
+          <p class="slip-line">11:05  Out for delivery  Driver 07</p>
+          <p class="slip-line">--:--  Delivered</p>
+        </div>
+      </Obj>
+      <Obj x={23} y={-3} w={27} h={57} r={3} class="phone obj-3">
+        <div class="phone-bezel">
+          <div class="phone-screen">
+            <p class="phone-status">11:05</p>
+            <p class="phone-header">Stop 4 of 11</p>
+            <div class="phone-card">
+              <p class="phone-card-label">Out for delivery</p>
+              <p class="phone-card-address">8-3 Residensi Wangsa</p>
+              <p class="phone-card-address">Wangsa Maju</p>
+              <p class="phone-card-tracking">PT 2025 0417 8832 MY</p>
+            </div>
+            <ul class="phone-stops">
+              <li><span>10:40</span> Jalan Genting Klang <em>Delivered</em></li>
+              <li><span>11:05</span> Residensi Wangsa <em>Now</em></li>
+              <li><span>11:30</span> Taman Melati <em>Next</em></li>
+            </ul>
+            <p class="phone-button">Mark as delivered</p>
+          </div>
+        </div>
+      </Obj>
+    </div>
+  )
+}
+
+<style>
+  .pt-comp {
+    position: absolute;
+    inset: 0;
+    color: #121212;
+  }
+  :global(.obj-1) { --d: 0ms; }
+  :global(.obj-2) { --d: 110ms; }
+  :global(.obj-3) { --d: 200ms; }
+
+  /* Waybill ------------------------------------------------------------- */
+  :global(.waybill) { background: #fafaf7; overflow: hidden; }
+  .waybill-inner { width: 100%; height: 100%; padding: 2.4cqh 2cqh; font-family: var(--font-waybill); font-stretch: 100%; display: flex; flex-direction: column; gap: 0.9cqh; }
+  .waybill-band { font-weight: 700; font-stretch: 75%; font-size: 3.2cqh; margin: 0; letter-spacing: 0.02em; }
+  .waybill-weight { font-size: 1.7cqh; margin: 0 0 0.6cqh; border-bottom: 0.15cqh solid #121212; padding-bottom: 0.9cqh; }
+  .waybill-heading { font-weight: 700; font-stretch: 75%; font-size: 1.7cqh; margin: 0; }
+  .waybill-address { font-size: 1.7cqh; margin: 0 0 0.4cqh; line-height: 1.25; }
+  .waybill-tracking { font-weight: 700; font-stretch: 75%; font-size: 2.1cqh; margin: 1cqh 0 0.4cqh; letter-spacing: 0.03em; }
+  .waybill-barcode { color: #121212; height: 6cqh; margin-bottom: 0.6cqh; }
+  .waybill-footer { font-size: 1.4cqh; margin: auto 0 0; border-top: 0.15cqh solid #121212; padding-top: 0.8cqh; }
+
+  /* Admin status slip ------------------------------------------------------ */
+  :global(.slip) {
+    background: #fff;
+  }
+  .slip-inner { font-family: var(--font-mono); padding: 1.6cqh; font-size: 1.4cqh; line-height: 1.7; }
+  .slip-heading { font-weight: 500; margin: 0 0 0.8cqh; }
+  .slip-line { margin: 0; white-space: pre; }
+
+  /* Driver phone ------------------------------------------------------------*/
+  .phone-bezel { background: #151515; border-radius: 3.5cqh; padding: 1.1cqh; width: 100%; height: 100%; }
+  .phone-screen { background: #fff; border-radius: 2.6cqh; width: 100%; height: 100%; padding: 2.2cqh 1.8cqh; font-family: var(--font-device); position: relative; }
+  .phone-status { font-size: 1.5cqh; margin: 0 0 2cqh; }
+  .phone-header { font-weight: 600; font-size: 2.4cqh; margin: 0 0 1.6cqh; }
+  .phone-card { background: #f6f6f3; border-radius: 1cqh; padding: 1.4cqh; margin-bottom: 1.6cqh; }
+  .phone-card-label { font-size: 1.4cqh; color: #4a4a46; margin: 0 0 0.6cqh; }
+  .phone-card-address { font-size: 1.6cqh; margin: 0; }
+  .phone-card-tracking { font-family: var(--font-mono); font-size: 1.3cqh; margin: 0.6cqh 0 0; }
+  .phone-stops { list-style: none; margin: 0 0 1.6cqh; padding: 0; font-size: 1.3cqh; display: flex; flex-direction: column; gap: 0.9cqh; }
+  .phone-stops li span { font-family: var(--font-mono); margin-right: 0.6cqh; }
+  .phone-stops li em { font-style: normal; color: #4a4a46; float: right; }
+  .phone-button { background: #121212; color: #fff; text-align: center; border-radius: 0.8cqh; padding: 1.2cqh; font-size: 1.5cqh; margin: 0; }
+</style>

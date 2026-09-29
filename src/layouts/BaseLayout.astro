@@ -1,0 +1,64 @@
+---
+// docs/design-spec.md §8, §10. Shared head, skip link, header and footer for
+// every page.
+import '../styles/global.css';
+import hankenWoff2 from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
+import jetbrainsWoff2 from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
+import headInline from '../scripts/head-inline.js?raw';
+import vtInline from '../scripts/vt.ts?raw';
+import SkipLink from '../components/SkipLink.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noindex?: boolean;
+  current?: 'work' | 'about' | 'contact';
+  currentSlug?: string;
+}
+const { title, description, ogImage = '/og-default.png', noindex = false, current, currentSlug } = Astro.props;
+
+const site = Astro.site ?? new URL('https://adrieltang.vercel.app');
+const canonicalURL = new URL(Astro.url.pathname, site);
+const ogImageURL = new URL(ogImage, site);
+const allWork = await getCollection('work');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonicalURL} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#F6F6F3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+
+    <link rel="preload" as="font" type="font/woff2" href={hankenWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={jetbrainsWoff2} crossorigin />
+
+    <script is:inline set:html={headInline} />
+    <script is:inline set:html={vtInline} />
+  </head>
+  <body>
+    <SkipLink />
+    <SiteHeader current={current} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter projects={allWork} currentSlug={currentSlug} />
+  </body>
+</html>

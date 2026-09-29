@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Adriel Tang: portfolio
 
-## Getting Started
+Static [Astro](https://astro.build) site for Adriel Tang, deployed to [Vercel](https://vercel.com) as static output (no adapter). Content lives in Markdown/YAML content collections under `src/content/`; there's no CMS, and edits go through git.
 
-First, run the development server:
+See `docs/design-spec.md` for the full design spec, `docs/copy.md` for on-page copy, and `docs/open-items.md` for facts still open with the owner.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:4321
+npm run check    # astro check (TypeScript + template diagnostics)
+npm run build    # static build to dist/
+npm run preview  # serve the dist/ build locally
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/content/work/*.md` - one file per project (case study body + frontmatter facts)
+- `src/content/lately.yaml` - the home page's dated "Lately" log
+- `src/data/` - typed data that isn't a content collection (site links, about-page bio/timeline/skills)
+- `src/covers/` - the drawn placeholder cover compositions (per-project) and the shared `Cover.astro` resolver
+- `src/components/`, `src/layouts/` - Astro components and the shared page layout
+- `src/scripts/` - vanilla TypeScript, one file per behaviour (theme, progress bar, work list, view transitions, etc.)
+- `src/styles/` - design tokens and global CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploying
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploys to Vercel automatically from this repo (static build, no server runtime). `vercel.json` holds the redirects from the old Next.js site's URLs. See `docs/open-items.md` for the production URL, which is not yet confirmed - `astro.config.mjs`'s `site` value and the OG/canonical/sitemap URLs derived from it will need updating once it is.

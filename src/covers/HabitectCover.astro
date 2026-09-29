@@ -1,0 +1,164 @@
+---
+// Habitect: the Flutter app plus the paper habit checklist it replaces.
+// Printed content is invented but plausible (see docs/copy.md §7); swap for
+// real screenshots when available. docs/design-spec.md §7.3.
+import '@fontsource-variable/roboto/wght.css';
+import type { CollectionEntry } from 'astro:content';
+import Obj from './Obj.astro';
+import CompactLabel from './CompactLabel.astro';
+
+interface Props {
+  project: CollectionEntry<'work'>;
+  compact?: boolean;
+}
+const { project, compact = false } = Astro.props;
+---
+{
+  compact ? (
+    <CompactLabel title={project.data.title} />
+  ) : (
+    <div class="habitect-comp" aria-hidden="true">
+      <Obj x={-17} y={3} w={38} h={58} r={-5} class="checklist obj-1">
+        <div class="checklist-inner">
+          <p class="checklist-heading">Week of 8 Sep</p>
+          <div class="checklist-grid">
+            <div class="checklist-row checklist-row--head">
+              <span />
+              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+            </div>
+            <div class="checklist-row">
+              <span class="checklist-label">Drink 2 L water</span>
+              <span class="tick">✓</span><span class="tick">✓</span><span class="tick">✓</span><span class="box" /><span class="tick">✓</span><span class="box" /><span class="box" />
+            </div>
+            <div class="checklist-row">
+              <span class="checklist-label">Read 20 pages</span>
+              <span class="tick">✓</span><span class="box" /><span class="tick">✓</span><span class="tick">✓</span><span class="box" /><span class="box" /><span class="box" />
+            </div>
+            <div class="checklist-row checklist-row--struck">
+              <span class="checklist-label">Walk 6,000 steps</span>
+              <span class="box" /><span class="tick">✓</span><span class="box" /><span class="tick">✓</span><span class="box" /><span class="box" /><span class="box" />
+            </div>
+            <div class="checklist-row">
+              <span class="checklist-label">Sleep by 00:30</span>
+              <span class="tick">✓</span><span class="tick">✓</span><span class="box" /><span class="box" /><span class="tick">✓</span><span class="box" /><span class="box" />
+            </div>
+            <div class="checklist-row checklist-row--struck">
+              <span class="checklist-label">Guitar, 30 min</span>
+              <span class="box" /><span class="box" /><span class="tick">✓</span><span class="box" /><span class="box" /><span class="box" /><span class="box" />
+            </div>
+          </div>
+        </div>
+      </Obj>
+      <Obj x={12} y={-3} w={31} h={64} r={3} class="phone obj-2">
+        <div class="phone-bezel">
+          <div class="phone-screen">
+            <p class="phone-status">9:41</p>
+            <p class="phone-appbar">Today</p>
+            <p class="phone-date">Tue, 16 Sep</p>
+            <p class="phone-progress-line">3 of 5 done</p>
+            <div class="phone-progress-track"><div class="phone-progress-fill" /></div>
+            <ul class="phone-list">
+              <li><span class="phone-check phone-check--done">✓</span>Drink 2 L water · Done</li>
+              <li><span class="phone-check phone-check--done">✓</span>Read 20 pages · Done</li>
+              <li><span class="phone-check" />Walk 6,000 steps · 4,120</li>
+              <li><span class="phone-check" />Sleep by 00:30</li>
+              <li><span class="phone-check phone-check--done">✓</span>Guitar, 30 min · Done</li>
+            </ul>
+            <div class="phone-fab">+</div>
+            <p class="phone-nav"><span>Today</span><span>Habits</span><span>Stats</span></p>
+          </div>
+        </div>
+      </Obj>
+      <Obj x={27} y={26} w={26} h={15} r={-2} class="streak obj-3">
+        <div class="streak-card">
+          <p class="streak-label">Streak · 12 days</p>
+          <div class="streak-grid">
+            {Array.from({ length: 28 }).map((_, i) => (
+              <span class="streak-cell" style={`--o:${((i * 7) % 4) + 1}`} />
+            ))}
+          </div>
+          <p class="streak-rows"><span>Aug</span><span>Sep</span></p>
+        </div>
+      </Obj>
+    </div>
+  )
+}
+
+<style>
+  .habitect-comp {
+    position: absolute;
+    inset: 0;
+    font-family: var(--font-habitect);
+    color: #121212;
+  }
+  :global(.obj-1) { --d: 0ms; }
+  :global(.obj-2) { --d: 110ms; }
+  :global(.obj-3) { --d: 200ms; }
+
+  /* Paper checklist ------------------------------------------------------ */
+  :global(.checklist) { background: #fbfbf8; padding: 3cqh; overflow: hidden; }
+  .checklist-inner { width: 100%; height: 100%; }
+  .checklist-heading { font-weight: 700; font-size: 3.4cqh; margin-bottom: 2cqh; }
+  .checklist-grid { display: flex; flex-direction: column; gap: 1cqh; }
+  .checklist-row {
+    display: grid;
+    grid-template-columns: 11cqh repeat(7, 1fr);
+    align-items: center;
+    gap: 0.4cqh;
+    font-size: 1.6cqh;
+    border-bottom: 0.15cqh solid #c9c9c2;
+    padding-block: 0.6cqh;
+  }
+  .checklist-row--head { font-weight: 500; color: #4a4a46; border-bottom: none; }
+  .checklist-label { font-size: 1.7cqh; color: #121212; }
+  .tick { color: #121212; text-align: center; font-family: var(--font-mono); }
+  .box { width: 1.4cqh; height: 1.4cqh; border: 0.15cqh solid #4a4a46; margin-inline: auto; }
+  .checklist-row--struck { position: relative; }
+  .checklist-row--struck::after {
+    content: '';
+    position: absolute;
+    left: 11.4cqh;
+    right: 0;
+    top: 50%;
+    height: 0.3cqh;
+    background: #1b3fa0;
+    rotate: -1.5deg;
+  }
+
+  /* Phone ------------------------------------------------------------------ */
+  :global(.phone) { display: block; width: 100%; height: 100%; }
+  .phone-bezel { background: #0e0e0e; border-radius: 4cqh; padding: 1.2cqh; width: 100%; height: 100%; }
+  .phone-screen { background: #fff; border-radius: 3cqh; width: 100%; height: 100%; padding: 2.4cqh 2cqh; position: relative; overflow: hidden; }
+  .phone-status { font-size: 1.6cqh; font-weight: 500; margin: 0 0 2.4cqh; }
+  .phone-appbar { font-size: 2.6cqh; font-weight: 700; margin: 0; }
+  .phone-date { font-size: 1.5cqh; color: #4a4a46; margin: 0 0 1.6cqh; }
+  .phone-progress-line { font-size: 1.5cqh; margin: 0 0 0.6cqh; }
+  .phone-progress-track { height: 0.7cqh; background: #e4e4df; border-radius: 1cqh; overflow: hidden; margin-bottom: 2cqh; }
+  .phone-progress-fill { width: 60%; height: 100%; background: #24483a; }
+  .phone-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.6cqh; font-size: 1.5cqh; }
+  .phone-list li { display: flex; align-items: center; gap: 1cqh; }
+  .phone-check { width: 2cqh; height: 2cqh; border-radius: 50%; border: 0.15cqh solid #24483a; display: inline-flex; align-items: center; justify-content: center; font-size: 1.3cqh; font-family: var(--font-mono); color: #fff; flex-shrink: 0; }
+  .phone-check--done { background: #24483a; }
+  .phone-fab { position: absolute; right: 2cqh; bottom: 6cqh; width: 4cqh; height: 4cqh; background: #24483a; color: #fff; border-radius: 1cqh; display: flex; align-items: center; justify-content: center; font-size: 2.4cqh; }
+  .phone-nav { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-around; font-size: 1.3cqh; color: #121212; padding-block: 1cqh; margin: 0; border-top: 0.1cqh solid #e4e4df; }
+
+  /* Streak card -------------------------------------------------------------*/
+  :global(.streak) { display: block; width: 100%; height: 100%; }
+  .streak-card { background: #fff; border-radius: 1.5cqh; width: 100%; height: 100%; padding: 1.6cqh 1.6cqh 3.2cqh; }
+  .streak-label { font-weight: 500; font-size: 2cqh; margin: 0 0 1.2cqh; }
+  .streak-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5cqh; margin-bottom: 1cqh; }
+  .streak-cell { aspect-ratio: 1; background: #24483a; opacity: calc(var(--o, 1) * 0.22); border-radius: 0.3cqh; }
+  .streak-rows {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3cqh;
+    color: #121212;
+    /* Explicit background (redundant with .streak-card's) so axe-core's
+       contrast check resolves against it directly: with only the ancestor's
+       background, axe mis-samples through to the plate colour behind this
+       `container-type:size` composition. Verified by isolating the variable
+       with `container-type` toggled live: this fixes it, rotation does not. */
+    background: #fff;
+    margin: 0;
+  }
+</style>

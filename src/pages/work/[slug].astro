@@ -1,0 +1,103 @@
+---
+// docs/design-spec.md §5.2.
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Cover from '../../covers/Cover.astro';
+import FactsRow from '../../components/FactsRow.astro';
+import Prose from '../../components/Prose.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { getPrevNext } from '../../lib/work';
+
+export async function getStaticPaths() {
+  const allWork = await getCollection('work');
+  return allWork.map((project) => ({
+    params: { slug: project.id },
+    props: { project, allWork },
+  }));
+}
+
+const { project, allWork } = Astro.props;
+const { Content } = await render(project);
+const { title, summary, role, team, scope, stack, year, repo, live } = project.data;
+const { prev, next } = getPrevNext(allWork, project.id);
+
+const titles: Record<string, string> = {
+  habitect: 'Habitect: A Flutter Habit-Tracking App',
+  'package-tracker': 'Package Tracker: A Laravel Web App',
+};
+const descriptions: Record<string, string> = {
+  habitect:
+    'Habitect is a habit-tracking mobile app built with Flutter and Dart by a team of four at TAR UMT. See the stack and the code on GitHub.',
+  'package-tracker':
+    'Package Tracker is a Laravel, PHP, and MySQL web app for tracking deliveries across customer, admin, and driver logins. See the stack and the code.',
+};
+---
+<BaseLayout
+  title={titles[project.id] ?? `${title}: Adriel Tang`}
+  description={descriptions[project.id] ?? summary}
+  current="work"
+  currentSlug={project.id}
+>
+  <div class="container case-study">
+    <div class="title-block">
+      <h1>{title}</h1>
+      <p class="summary">{summary}</p>
+    </div>
+
+    <Cover project={project} variant="hero" eager />
+
+    <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} />
+
+    <Prose>
+      <Content />
+    </Prose>
+
+    <PrevNext prev={prev} next={next} />
+  </div>
+</BaseLayout>
+
+<script src="../../scripts/reveal.ts"></script>
+
+<style>
+  .case-study {
+    padding-block: 24px;
+  }
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: var(--step-5);
+    font-weight: 600;
+  }
+  .summary {
+    font-size: var(--step-3);
+    font-weight: 500;
+    max-width: 34ch;
+  }
+  @media (min-width: 768px) {
+    .case-study {
+      padding-block: 32px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .case-study {
+      padding-block: 48px;
+    }
+    .title-block {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: last baseline;
+      margin-bottom: 32px;
+    }
+    h1 {
+      grid-column: 1 / span 7;
+    }
+    .summary {
+      grid-column: 8 / span 5;
+    }
+  }
+</style>

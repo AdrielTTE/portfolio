@@ -1,0 +1,86 @@
+---
+// docs/design-spec.md §5.1.4.
+interface Entry {
+  date: Date;
+  text: string;
+}
+interface Props {
+  entries: Entry[];
+  limit?: number;
+}
+const { entries, limit = 6 } = Astro.props;
+const sorted = [...entries].sort((a, b) => b.date.getTime() - a.date.getTime());
+const visible = sorted.slice(0, limit);
+const rest = sorted.slice(limit);
+
+function formatEntry(date: Date) {
+  const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  const label = date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+  return { iso, label };
+}
+---
+<section aria-labelledby="lately-h">
+  <h2 id="lately-h">Lately</h2>
+  <ol class="lately-list">
+    {
+      visible.map((entry) => {
+        const { iso, label } = formatEntry(entry.date);
+        return (
+          <li>
+            <time datetime={iso}>{label}</time>
+            <p>{entry.text}</p>
+          </li>
+        );
+      })
+    }
+  </ol>
+  {
+    rest.length > 0 && (
+      <details class="lately-more">
+        <summary>Show all {sorted.length}</summary>
+        <ol class="lately-list">
+          {rest.map((entry) => {
+            const { iso, label } = formatEntry(entry.date);
+            return (
+              <li>
+                <time datetime={iso}>{label}</time>
+                <p>{entry.text}</p>
+              </li>
+            );
+          })}
+        </ol>
+      </details>
+    )
+  }
+</section>
+
+<style>
+  h2 {
+    font-size: var(--step-2);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .lately-list {
+    list-style: none;
+  }
+  .lately-list li {
+    display: grid;
+    grid-template-columns: 9ch 1fr;
+    gap: 16px;
+    border-top: 1px solid var(--c-rule);
+    padding-block: 12px;
+  }
+  .lately-list time {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  .lately-list p {
+    font-size: var(--step-0);
+  }
+  .lately-more summary {
+    cursor: pointer;
+    font-weight: 500;
+    padding-block: 12px;
+  }
+</style>

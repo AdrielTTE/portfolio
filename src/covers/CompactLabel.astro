@@ -1,0 +1,37 @@
+---
+// Shared compact rendering for every cover (registry composition or default):
+// plate + title only, so heavy composition DOM never repeats at archive/thumb
+// scale. See docs/design-spec.md §7.2 and §7.5.
+interface Props {
+  title: string;
+  size?: 'archive' | 'thumb' | 'preview';
+}
+const { title, size = 'archive' } = Astro.props;
+---
+<span class={`compact-label compact-label--${size}`} aria-hidden="true">{title}</span>
+
+<style>
+  .compact-label {
+    position: absolute;
+    left: 6cqh;
+    bottom: 6cqh;
+    right: 6cqh;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 14cqh;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--c-on-plate);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  .compact-label--thumb,
+  .compact-label--preview {
+    font-size: 22cqh;
+    left: 8cqh;
+    right: 8cqh;
+    bottom: 8cqh;
+  }
+</style>

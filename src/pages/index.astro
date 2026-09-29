@@ -1,0 +1,109 @@
+---
+// Home: intro, lead project, Work (Grid <-> Index), colophon + Lately.
+// docs/design-spec.md §5.1.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LeadProject from '../components/LeadProject.astro';
+import WorkSection from '../components/WorkSection.astro';
+import Colophon from '../components/Colophon.astro';
+import LatelyLog from '../components/LatelyLog.astro';
+import { getLead, numberFor } from '../lib/work';
+import { site } from '../data/site';
+
+const allWork = await getCollection('work');
+const lately = await getCollection('lately');
+const lead = getLead(allWork);
+---
+<BaseLayout
+  title="Adriel Tang: Full Stack Developer in Kuala Lumpur"
+  description="Full stack developer in Kuala Lumpur. Adriel Tang builds web and mobile apps with Next.js, Flutter, and Laravel. View recent projects and get in touch."
+  current="work"
+>
+  <div class="container">
+    <section class="intro">
+      <h1>Adriel Tang</h1>
+      <p class="role-line">
+        Full stack developer in Kuala Lumpur, building web and mobile applications with Next.js, Flutter, and
+        Laravel.
+      </p>
+    </section>
+
+    {lead && <LeadProject project={lead} no={numberFor(lead)} />}
+
+    <WorkSection projects={allWork} leadId={lead?.id ?? ''} />
+
+    <section class="colophon-lately" aria-labelledby="colophon-h">
+      <Colophon desk={site.desk} availability={site.availability} />
+      <LatelyLog entries={lately.map((e) => ({ date: e.data.date, text: e.data.text }))} />
+    </section>
+  </div>
+</BaseLayout>
+
+<script src="../scripts/reveal.ts"></script>
+<script src="../scripts/stress.ts"></script>
+
+<style>
+  .intro {
+    padding-block: 32px 24px;
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 500;
+  }
+  .role-line {
+    font-size: var(--step-2);
+    max-width: 40ch;
+    margin-top: 12px;
+  }
+  @media (min-width: 1024px) {
+    .intro {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: end;
+      padding-block: 48px 32px;
+    }
+    h1 {
+      grid-column: 1 / span 6;
+    }
+    .role-line {
+      grid-column: 8 / span 5;
+      margin-top: 0;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .intro {
+      padding-block: 40px 28px;
+    }
+    .role-line {
+      margin-top: 12px;
+    }
+  }
+
+  .colophon-lately {
+    margin-top: var(--section);
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  @media (min-width: 1024px) {
+    .colophon-lately {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: start;
+      gap: 0;
+    }
+    .colophon-lately > :global(:first-child) {
+      grid-column: 1 / span 4;
+    }
+    .colophon-lately > :global(:last-child) {
+      grid-column: 6 / span 7;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .colophon-lately {
+      gap: 64px;
+    }
+  }
+</style>

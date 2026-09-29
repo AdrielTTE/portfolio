@@ -1,0 +1,21 @@
+---
+// Server renders the GMT offset; JS swaps in the live time on minute
+// boundaries (no motion). docs/design-spec.md §5.1.4.
+interface Props {
+  timeZone?: string;
+  label?: string;
+}
+const { timeZone = 'Asia/Kuala_Lumpur', label = 'GMT+8' } = Astro.props;
+---
+<time class="live-clock" id="live-clock" datetime="" data-tz={timeZone}>{label}</time>
+
+<script src="../scripts/clock.ts"></script>
+
+<style>
+  .live-clock {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    min-width: 5ch;
+    display: inline-block;
+  }
+</style>

@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    { "source": "/projects", "destination": "/", "permanent": true },
+    { "source": "/projects/Habitect", "destination": "/work/habitect", "permanent": true },
+    { "source": "/projects/Package%20Tracker", "destination": "/work/package-tracker", "permanent": true },
+    { "source": "/projects/Package Tracker", "destination": "/work/package-tracker", "permanent": true },
+    { "source": "/projects/:slug", "destination": "/work/:slug", "permanent": true },
+    { "source": "/experience", "destination": "/about", "permanent": true }
+  ]
+}

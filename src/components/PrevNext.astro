@@ -1,0 +1,51 @@
+---
+// docs/design-spec.md §5.2. Plain text links, no coloured panel. Chronological
+// order, no wrap-around; a missing side is simply omitted.
+interface Props {
+  prev?: { title: string; slug: string };
+  next?: { title: string; slug: string };
+}
+const { prev, next } = Astro.props;
+---
+<nav class="prev-next" aria-label="More work">
+  <span class="side side-prev">
+    {prev && <a href={`/work/${prev.slug}`}>← {prev.title}</a>}
+  </span>
+  <a href="/#work" class="all-work">All work</a>
+  <span class="side side-next">
+    {next && <a href={`/work/${next.slug}`}>{next.title} →</a>}
+  </span>
+</nav>
+
+<style>
+  .prev-next {
+    border-top: 1px solid var(--c-ink);
+    padding-block: 32px;
+    margin-top: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .prev-next a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--step-3);
+  }
+  .all-work {
+    font-size: var(--step-0) !important;
+    justify-content: center;
+  }
+  @media (min-width: 768px) {
+    .prev-next {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .side-next a {
+      justify-content: flex-end;
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+// docs/design-spec.md §5.1.3. Every project, grouped by year descending.
+import type { CollectionEntry } from 'astro:content';
+import IndexRow from './IndexRow.astro';
+
+interface Props {
+  groups: { year: number; items: { project: CollectionEntry<'work'>; no: number }[] }[];
+}
+const { groups } = Astro.props;
+---
+<div class="index-list" id="index-list">
+  {
+    groups.map((group) => (
+      <section>
+        <h3>{group.year}</h3>
+        <ol>
+          {group.items.map((item) => (
+            <IndexRow project={item.project} no={item.no} />
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  section {
+    margin-bottom: 32px;
+  }
+  h3 {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    font-weight: 400;
+    border-top: 1px solid var(--c-ink);
+    padding-top: 8px;
+    margin-bottom: 8px;
+  }
+  ol {
+    list-style: none;
+  }
+</style>
