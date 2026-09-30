@@ -63,7 +63,7 @@ const commands: Command[] = [
   dialog {
     padding: 0;
     border: 1px solid var(--c-rule);
-    border-radius: 8px;
+    border-radius: 2px;
     width: min(640px, calc(100vw - 32px));
     /* Tall enough for every command (11 items + 3 group labels, ~590px) at a
        900px-tall desktop viewport; the list scrolls below that. */
@@ -78,7 +78,7 @@ const commands: Command[] = [
     transform-origin: top center;
   }
   dialog::backdrop {
-    background: rgb(17 19 22 / 0.4);
+    background: rgb(15 32 25 / 0.45);
     animation: fade var(--dur-base) var(--ease-enter);
   }
   :root[data-theme='dark'] dialog::backdrop {

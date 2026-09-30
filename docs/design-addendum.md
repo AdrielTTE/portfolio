@@ -3,6 +3,17 @@
 Date: 2026-09-29. Branch: `revamp-astro`. Author: design-agent (Task 0, Step 1).
 Binding parent: `docs/superpowers/specs/2026-09-29-dev-portfolio-design.md` (called "the spec" below). This file fixes the values the spec left open: references verified, colour tokens, font pair, type scale, layouts, and spacing rhythm. Where this file and the spec disagree, the spec wins, and QA should flag the conflict.
 
+## 0. Visual revision, 2026-09-30 (supersedes §1 "original", §2 values, the font pair, the ledger rail and the home layout below)
+
+Owner feedback: "too busy", "looks quite UI", "less AI". The visual layer was rebuilt; the content, truth rules, routes, palette, theme toggle, progress bar and form behaviour are unchanged.
+
+- **Direction:** a two-colour print job. Bottle-green ink on pale green-grey paper plus one spot colour, saffron, used only as a solid block (the site footer). Dark mode reverses it: green paper, saffron as the clickable/display colour.
+- **Tokens** (source of truth: `src/styles/tokens.css`, checked by `tests/contrast.test.ts`): light bg `#ECEEE6`, bg-2 `#E0E3D8`, ink `#0F2019`, ink-2 `#4A5A51`, rule `#C9CFC2`, accent `#11513A`. Dark bg `#0F2A20`, bg-2 `#16362A`, ink `#E8EDE3`, ink-2 `#A3B4A9`, rule `#2B4A3D`, accent `#F2BE22`. Block `#F2BE22` with ink `#0F2019` / `#3D4A3F` in both themes.
+- **Type:** one family, Archivo Variable (Fontsource, `wdth` file: weight 100-900, width 62-125%, one 90KB latin woff2). Condensed 68%/800 is the display voice (`.display`); normal width is the text. Code uses system mono; no mono micro-labels.
+- **Home:** masthead name → pitch and role → type-led work index → "What I build" as a plain statement (the offer switcher, facts strip, receipts, Lately log and closing block are gone). The hire moment is the saffron footer on every page except /contact.
+- **References:** henry.codes (full-width condensed masthead, big condensed titles), frankchimero.com (name-left / list-right index, quiet sublines, a non-default coloured ground), felixpeault.com (solid colour-blocked sections, Archivo). Screenshotted live 2026-09-30.
+- **Moved:** build receipts → the This site case study ("The numbers", `receipts: true` in frontmatter). Lately → /about. Case studies show real screenshots on a colour field only when they exist; no device frames.
+
 **Build type (unchanged):** static Astro site on Vercel. Content lives in git (Markdown collections plus YAML). No CMS and no stored data. Formspree handles the contact form.
 
 ---

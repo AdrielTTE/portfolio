@@ -1,256 +1,200 @@
 ---
-// Home: intro (facts strip, statement, actions, system map) → work index →
-// receipts → log → working together. Spec §3.1.
-// Intro borrows a top facts strip (gilhuybrecht.com) and a big statement with
-// a hanging first-line indent (maximiliankaspar.com); the "What I build" map
-// is the one interactive element, and it is the offer switcher. Later
-// sections sit on the ledger rail (addendum §5.1): heading cols 1-3, content
-// cols 4-12 at ≥1024. The work index runs full width for scale contrast.
+// Home: masthead → work → what I build. The hire moment is the saffron
+// footer (SiteFooter), so the page itself stays three calm parts.
+// Borrowed: the full-width condensed masthead from henry.codes; the quiet
+// two-column "who / what" under it from frankchimero.com's index (name on
+// the left, content on the right); scale and whitespace instead of rules.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import OfferSwitcher from '../components/OfferSwitcher.astro';
 import WorkList from '../components/WorkList.astro';
-import BuildReceipts from '../components/BuildReceipts.astro';
-import CommitLog from '../components/CommitLog.astro';
-import CopyEmail from '../components/CopyEmail.astro';
-import LiveClock from '../components/LiveClock.astro';
 import MagneticLink from '../components/MagneticLink.astro';
-import { site, home, projectSteps } from '../data/site';
+import { site, home, offerCopy } from '../data/site';
+import { offersWithProjects } from '../lib/offers';
 
 const allWork = await getCollection('work');
-const lately = await getCollection('lately');
+const offers = offersWithProjects(allWork);
 ---
 <BaseLayout title={home.title} description={home.description}>
   <div class="container home">
-    <section class="intro" aria-labelledby="intro-h" data-magnet-zone>
-      <div class="strip">
-        <h1 id="intro-h" class="line-mask"><span style="--i:0">{site.name}</span></h1>
-        <p class="role line-mask"><span style="--i:1">{home.roleLine}</span></p>
-        <p class="fact line-rise" style="--i:1"><LiveClock /> in {site.city}</p>
-        <p class="fact avail line-rise" style="--i:2"><span class="on" aria-hidden="true"></span>{site.availability}</p>
-      </div>
-      <p class="pitch line-mask"><span style="--i:2">{home.pitch}</span></p>
-      <div class="actions line-rise" style="--i:3">
-        <MagneticLink href="/contact/">Start a project</MagneticLink>
-        <CopyEmail email={site.email} label="Copy email" variant="button" />
+    <section class="intro" aria-labelledby="intro-h">
+      <h1 id="intro-h" class="masthead display">
+        <span class="line-mask"><span style="--i:0">Adriel</span></span>
+        <span class="line-mask"><span style="--i:1">Tang</span></span>
+      </h1>
+      <div class="under">
+        <div class="who line-rise" style="--i:2">
+          <p>{home.roleLine}</p>
+          <p class="aside">{home.aside}</p>
+        </div>
+        <div class="what">
+          <p class="pitch line-rise" style="--i:3">{home.pitch}</p>
+          <div class="actions line-rise" style="--i:4">
+            <MagneticLink href="/contact/">Start a project</MagneticLink>
+            <p class="avail">{site.availability}</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <div class="map line-rise" style="--i:4"><OfferSwitcher projects={allWork} /></div>
+    <div class="block" data-reveal><WorkList projects={allWork} /></div>
 
-    <div class="block block--work" data-reveal><WorkList projects={allWork} /></div>
-
-    <div class="rail rail--receipts" data-reveal><BuildReceipts /></div>
-
-    <div class="rail rail--log" data-reveal>
-      <CommitLog entries={lately.map((e) => e.data)} limit={5} heading="Lately">
-        <a class="full-log" href="/about/#log">Full log <span class="arrow" aria-hidden="true">→</span></a>
-      </CommitLog>
-    </div>
-
-    {/* Closing block: one more rail section, not a full-width CTA band. */}
-    <div class="rail rail--next" data-reveal>
-      <section aria-labelledby="next-h">
-        <h2 id="next-h">Working together</h2>
-        <p class="next-lede">{site.availability} {site.replyTime}</p>
-        <p class="next-how">{projectSteps.join(' ')}</p>
-        <div class="next-cta"><MagneticLink href="/contact/">Start a project</MagneticLink></div>
-      </section>
-    </div>
+    {/* What I build: a plain statement, not a widget. Each line names the
+        tools and links the projects that show it. */}
+    <section class="block build" aria-labelledby="build-h" data-reveal>
+      <h2 id="build-h" class="display">What I build</h2>
+      <div class="build-body">
+        {offers.map((o) => (
+          <p>
+            {offerCopy[o.id].line}{' '}
+            <span class="how">
+              {offerCopy[o.id].stack.join(', ')}. See{' '}
+              {o.projects.map((p, i) => (
+                <>
+                  {i > 0 && (i === o.projects.length - 1 ? ' and ' : ', ')}
+                  <a href={`/work/${p.id}/`}>{p.data.title}</a>
+                </>
+              ))}.
+            </span>
+          </p>
+        ))}
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
 <script src="../scripts/reveal-sections.ts"></script>
-<script src="../scripts/stress.ts"></script>
 
 <style>
   .intro {
-    padding-top: clamp(var(--space-6), 2.96vw + 37.3px, var(--space-8));
+    padding-top: clamp(var(--space-5), 2.5vw + 16px, var(--space-8));
   }
 
-  /* Facts strip: who, what, where, availability. Stacked on phones, four
-     equal columns on wide screens. */
-  .strip {
+  /* The masthead: two stacked words on phones, one line across the full
+     measure from 600px. Sized off the viewport so it always fills, never
+     overflows. */
+  /* Measured: at 68% width "ADRIEL" sets 2.69em wide and "ADRIEL TANG"
+     (with the 0.18em gap) 4.88em, so these factors fill the measure with
+     a hair to spare. Recheck them if the face, width or copy changes. */
+  .masthead {
+    font-size: calc((100vw - 2 * var(--margin)) * 0.36);
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    color: var(--c-display);
+    text-transform: uppercase;
+  }
+  .masthead > .line-mask {
+    display: block;
+  }
+  /* The rise-in mask would clip the tails of the condensed caps' baseline
+     overshoot; a little bottom padding keeps them whole. */
+  .masthead :global(.line-mask) {
+    padding-bottom: 0.04em;
+  }
+  @media (min-width: 600px) {
+    .masthead {
+      font-size: calc((100vw - 2 * var(--margin)) * 0.2);
+      display: flex;
+      gap: 0.18em;
+      white-space: nowrap;
+    }
+  }
+  @media (min-width: 1600px) {
+    .masthead {
+      font-size: calc((1600px - 2 * var(--margin)) * 0.2);
+    }
+  }
+
+  .under {
+    margin-top: clamp(var(--space-6), 3vw + 16px, var(--space-8));
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-2) var(--gutter);
-    font-size: var(--step-0);
-    line-height: 1.45;
+    gap: var(--space-6);
   }
-  h1 {
-    grid-column: 1 / -1;
-    font-size: var(--step-0);
-    font-weight: 600;
-    line-height: 1.45;
-  }
-  .role {
-    grid-column: 1 / -1;
+  .who {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
     color: var(--c-ink-2);
-    max-width: 44ch;
+    max-width: 34ch;
   }
-  .fact {
-    color: var(--c-ink-2);
-    font-size: var(--step--1);
-    margin-top: var(--space-2);
-  }
-  .avail {
+  .who p:first-child {
     color: var(--c-ink);
-  }
-  /* A static status dot: data, not decoration, so it never pulses. */
-  .on {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    margin-right: 7px;
-    border-radius: 50%;
-    background: var(--c-accent);
-    vertical-align: 0.05em;
-  }
-  @media (min-width: 1024px) {
-    .strip {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-    }
-    h1 { grid-column: 1 / span 3; }
-    .role { grid-column: 4 / span 4; }
-    .fact { grid-column: span 2; margin-top: 0; font-size: var(--step-0); }
-    .avail { grid-column: 10 / span 3; }
-    .fact:not(.avail) { grid-column: 8 / span 2; }
-  }
-
-  /* The statement: set big, first line hung three columns in on wide screens
-     so it starts under the role line. */
-  .pitch {
-    margin-top: clamp(var(--space-7), 2vw + 40px, var(--space-8));
-    font-size: clamp(34px, 3.4vw + 21.8px, 70px);
     font-weight: 500;
-    line-height: 1.04;
-    letter-spacing: -0.035em;
-    max-width: 22ch;
-    text-wrap: balance;
   }
-  @media (min-width: 1024px) {
-    .pitch {
-      max-width: none;
-      padding-right: 6%;
-      text-indent: calc((100% + var(--gutter)) / 12 * 3);
-      text-wrap: pretty;
-    }
+  .pitch {
+    font-size: var(--step-4);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    max-width: 22ch;
+    text-wrap: pretty;
   }
   .actions {
     margin-top: var(--space-6);
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+  }
+  .avail {
+    color: var(--c-ink-2);
   }
   @media (min-width: 1024px) {
-    .actions {
-      margin-left: calc((100% + var(--gutter)) / 12 * 3);
-    }
-  }
-  /* Below 340px the two buttons stack full width (addendum §7.3). */
-  @media (max-width: 339px) {
-    .actions > :global(*),
-    .actions :global(.copy-button),
-    .actions :global(.magnetic) {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-
-  /* System map: right under the actions, no rule, so it reads as part of
-     the intro. Map cols 1-8 and the offer copy cols 9-12 on wide screens. */
-  .map {
-    margin-top: clamp(var(--space-7), 1.5vw + 42px, var(--space-8));
-  }
-  @media (min-width: 1024px) {
-    .map :global(.offers) {
-      display: grid;
+    .under {
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--gutter);
-      align-items: center;
     }
-    .map :global(.offers > h2) { grid-column: 1 / -1; }
-    .map :global(.sys) { grid-column: 1 / span 8; }
-    .map :global(.panels) { grid-column: 9 / span 4; margin-top: 0; }
+    .who {
+      grid-column: 1 / span 3;
+      padding-top: 0.45em;
+    }
+    .what {
+      grid-column: 5 / span 8;
+    }
   }
 
   .block {
     margin-top: var(--section);
-    padding-top: var(--space-4);
   }
 
-  /* Ledger rail (addendum §5.1, §5.3): full-width hairline, --section above,
-     space-4 below, then heading + content. */
-  .rail {
-    margin-top: var(--section);
-    border-top: 1px solid var(--c-rule);
-    padding-top: var(--space-4);
+  .build h2 {
+    font-size: var(--step-4);
   }
-  .rail > :global(section) > :global(h2) {
-    font-size: var(--step-1);
-    font-weight: 600;
-    line-height: 1.55;
-    margin: 0 0 var(--space-4);
+  .build-body {
+    margin-top: var(--space-5);
+    display: grid;
+    gap: var(--space-5);
+    max-width: 34em;
+  }
+  .build-body p {
+    font-size: var(--step-2);
+    line-height: 1.35;
+  }
+  .how {
+    color: var(--c-ink-2);
+  }
+  .how a {
+    color: var(--c-ink);
+    text-decoration-thickness: 1px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .how a:hover {
+      color: var(--c-accent);
+      text-decoration-thickness: 2px;
+    }
   }
   @media (min-width: 1024px) {
-    .rail > :global(section) {
+    .build {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--gutter);
       align-items: start;
     }
-    .rail > :global(section) > :global(*) {
-      grid-column: 4 / -1;
+    .build h2 {
+      grid-column: 1 / span 4;
     }
-    .rail > :global(section) > :global(h2) {
-      grid-column: 1 / span 3;
-      margin: 0;
-    }
-  }
-
-  /* Closing block: availability, how a project runs, one CTA. */
-  .next-lede {
-    font-size: var(--step-2);
-    font-weight: 500;
-    line-height: 1.3;
-    max-width: 36ch;
-  }
-  .next-how {
-    margin-top: var(--space-3);
-    color: var(--c-ink-2);
-    max-width: 60ch;
-  }
-  .next-cta {
-    margin-top: var(--space-5);
-  }
-  @media (min-width: 1024px) {
-    .rail--next :global(section) > :global(*) {
-      grid-column: 4 / span 7;
-    }
-  }
-
-  .full-log {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 44px;
-    margin-top: var(--space-3);
-    text-decoration: none;
-  }
-  .full-log .arrow {
-    transition: transform var(--dur-fast) var(--ease-enter);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .full-log:hover {
-      color: var(--c-accent);
-    }
-    .full-log:hover .arrow {
-      transform: translateX(3px);
-    }
-  }
-  @media (min-width: 1024px) {
-    .rail--log :global(.full-log) {
-      justify-self: start;
+    .build-body {
+      grid-column: 5 / span 8;
+      margin-top: 0;
     }
   }
 </style>

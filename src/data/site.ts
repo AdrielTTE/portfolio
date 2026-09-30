@@ -10,10 +10,10 @@ export const site = {
   whatsappNumber: '60163231053',
   whatsappMessage: 'Hello there, I am interested in your services',
   formspreeEndpoint: 'https://formspree.io/f/mwpgnwzl',
-  // Colophon and closing block (home page). The availability line intentionally
+  // Footer hire block (every page). The availability line intentionally
   // does not name an employer - see docs/open-items.md.
   availability: 'Taking on freelance projects.',
-  // Response-time promise shown on home and /contact. Owner to confirm.
+  // Response-time promise shown in the footer and on /contact. Owner to confirm.
   replyTime: 'I reply within 1 working day.',
   city: 'Kuala Lumpur',
   country: 'MY',
@@ -30,17 +30,19 @@ export const home = {
     'Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.',
   roleLine: 'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart.',
   pitch: 'I build full stack applications: web apps, the APIs and databases behind them, and mobile apps for iOS and Android.',
+  // One human line under the role (source: about.ts musicParagraph).
+  aside: 'Off the clock I play guitar live and run AV production.',
 };
 
-// How a project runs, in three plain steps. Shown as prose in the home page's
-// closing block and as "What happens next" on /contact. Owner to confirm.
+// How a project runs, in three plain steps. Shown as
+// "What happens next" on /contact. Owner to confirm.
 export const projectSteps = [
   'We talk through what you need, by message or a short call.',
   'I send a written scope and timeline, so we agree on the work before it starts.',
   'I build in small steps you can see and try, then hand it over with the logins and a short guide.',
 ];
 
-// OfferSwitcher panel copy per offer. Source: docs/copy-dev.md §2.
+// "What I build" copy per offer on the home page. Source: docs/copy-dev.md §2.
 // Stacks lead with the core tools; the rest are ones the proof projects use.
 export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {
   webapps: {

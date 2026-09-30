@@ -1,14 +1,16 @@
 ---
-// docs/design-spec.md §5.2.
+// Case study: way out → title → facts → real screenshots (only if they
+// exist) → the write-up in one reading column → prev/next and contact.
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import DeviceFrame from '../../components/DeviceFrame.astro';
+import Shots from '../../components/Shots.astro';
 import FactsRow from '../../components/FactsRow.astro';
 import Prose from '../../components/Prose.astro';
 import PrevNext from '../../components/PrevNext.astro';
 import CaseSection from '../../components/CaseSection.astro';
 import ArchDiagram from '../../components/ArchDiagram.astro';
 import SchemaCard from '../../components/SchemaCard.astro';
+import BuildReceipts from '../../components/BuildReceipts.astro';
 import { getPrevNext } from '../../lib/work';
 
 export async function getStaticPaths() {
@@ -29,7 +31,6 @@ const { prev, next } = getPrevNext(allWork, project.id);
   description={seoDescription ?? summary}
   ogType="article"
   current="work"
-  currentSlug={project.id}
 >
   <div class="container case-study">
     {/* The way out sits first, above the title, so it's in view without
@@ -37,22 +38,25 @@ const { prev, next } = getPrevNext(allWork, project.id);
     <nav class="crumbs" aria-label="Breadcrumb">
       <ol>
         <li><a href="/#work" class="crumb-back"><span class="arrow" aria-hidden="true">←</span> All work</a></li>
-        <li aria-current="page"><span class="sep" aria-hidden="true">/</span> {title}</li>
+        <li aria-current="page" class="visually-hidden">{title}</li>
       </ol>
     </nav>
-    <div class="title-block">
-      <h1>{title}</h1>
+    <header class="title-block">
+      <h1 class="display">{title}</h1>
       <p class="summary">{summary}</p>
-    </div>
-
-    <DeviceFrame project={project} variant="hero" eager />
+    </header>
 
     <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} />
+
+    <div class="shots-wrap"><Shots project={project} /></div>
 
     {/* The Markdown body (what it is, who it's for) comes first, so a reader
         knows what the project is before the decisions. */}
     <CaseSection id="overview" title="Overview" show={Boolean(project.body?.trim())}>
       <Prose><Content /></Prose>
+    </CaseSection>
+    <CaseSection id="numbers" title="The numbers" show={project.data.receipts}>
+      <BuildReceipts />
     </CaseSection>
     <CaseSection id="problem" title="The problem" text={project.data.problem} />
     <CaseSection id="built" title="How it's built" show={Boolean(project.data.diagram)}>
@@ -63,7 +67,6 @@ const { prev, next } = getPrevNext(allWork, project.id);
     </CaseSection>
     <CaseSection id="decision" title="A decision worth explaining" text={project.data.decision} />
     <CaseSection id="change" title="What I'd change" text={project.data.change} />
-    {/* The contact CTA now closes the page inside PrevNext's end block. */}
     <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou} />
     <PrevNext prev={prev} next={next} />
   </div>
@@ -71,41 +74,16 @@ const { prev, next } = getPrevNext(allWork, project.id);
 
 <style>
   .case-study {
-    padding-block: 24px;
-  }
-  .title-block {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-  h1 {
-    font-size: var(--step-5);
-    font-weight: 600;
+    padding-top: var(--space-4);
   }
   .crumbs ol {
     list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0 10px;
-    margin-bottom: var(--space-4);
   }
-  .crumbs li[aria-current] {
-    color: var(--c-ink-2);
-  }
-  .sep {
-    margin-right: 6px;
-  }
-  /* A 44px target that reads as a control, not body text. */
   .crumb-back {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     min-height: 44px;
-    padding-inline: 12px 14px;
-    border: 1px solid var(--c-rule);
-    border-radius: 4px;
     font-weight: 500;
     text-decoration: none;
   }
@@ -114,38 +92,47 @@ const { prev, next } = getPrevNext(allWork, project.id);
   }
   @media (hover: hover) and (pointer: fine) {
     .crumb-back:hover {
-      border-color: var(--c-ink);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
     }
     .crumb-back:hover .arrow {
       transform: translateX(-3px);
     }
   }
+  .title-block {
+    margin-top: clamp(var(--space-6), 4vw, var(--space-9));
+    display: grid;
+    gap: var(--space-5);
+  }
+  h1 {
+    font-size: clamp(64px, 11vw, 176px);
+    line-height: 0.82;
+    color: var(--c-display);
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
   .summary {
     font-size: var(--step-3);
     font-weight: 500;
-    max-width: 34ch;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 28ch;
   }
-  @media (min-width: 768px) {
-    .case-study {
-      padding-block: 32px;
-    }
+  .shots-wrap:has(:global(.shots)) {
+    margin-top: var(--space-7);
   }
   @media (min-width: 1024px) {
-    .case-study {
-      padding-block: 48px;
-    }
     .title-block {
-      display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--gutter);
-      align-items: last baseline;
-      margin-bottom: 32px;
+      align-items: end;
     }
     h1 {
-      grid-column: 1 / span 7;
+      grid-column: 1 / span 8;
     }
     .summary {
-      grid-column: 8 / span 5;
+      grid-column: 9 / span 4;
     }
   }
 </style>

@@ -1,86 +1,180 @@
 ---
-// docs/design-spec.md §5.6. "Source" link is left out until the owner decides
-// whether to make the site repo public - see docs/open-items.md.
-import type { CollectionEntry } from 'astro:content';
+// Site footer, and the one colour block on the site: a solid saffron back
+// cover (the spot colour, the same in both themes). On every page but
+// /contact it opens with the hire moment, so no page needs its own CTA band.
+// Borrowed: the solid colour field from felixpeault.com's colour-blocked
+// sections; the "back cover" idea from print. "Source" link is left out until
+// the owner decides whether to make the site repo public (docs/open-items.md).
+import MagneticLink from './MagneticLink.astro';
+import CopyEmail from './CopyEmail.astro';
 import { site } from '../data/site';
 
 interface Props {
-  projects: CollectionEntry<'work'>[];
-  currentSlug?: string;
+  hire?: boolean;
 }
-const { projects, currentSlug } = Astro.props;
+const { hire = true } = Astro.props;
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer" id="site-footer">
+<footer class:list={['site-footer', { slim: !hire }]} id="site-footer">
   <div class="container">
-    <ul class="links-row">
-      <li><a href="/#work">Work</a></li>
-      <li><a href="/about/">About</a></li>
-      <li><a href="/contact/">Contact</a></li>
-      <li><a class="breakable" href={`mailto:${site.email}`}>{site.email}</a></li>
-      <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
-      <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
-      <li><a href="/sitemap-index.xml">Sitemap</a></li>
-    </ul>
-    <p class="palette-hint">Press <kbd data-kbd-mod>⌘K</kbd> to jump anywhere</p>
-    <p class="colophon-line">
-      Built with Astro. Set in Hanken Grotesk and JetBrains Mono.
-      <span class="copyright">© {year} Adriel Tang</span>
-      <span class="sha" data-receipt-wrap="sha" hidden>Built from <a data-receipt="sha" data-href-template="https://github.com/AdrielTTE/portfolio/commit/{v}" hidden></a></span>
-    </p>
+    {hire && (
+      <section class="hire" aria-labelledby="hire-h">
+        <h2 id="hire-h" class="display">{site.availability}</h2>
+        <div class="hire-body">
+          <p class="lede">Tell me what you need built: a web app, an API and its database, or a mobile app. {site.replyTime}</p>
+          <p class="mail">
+            <a class="breakable" href={`mailto:${site.email}`}>{site.email}</a>
+          </p>
+          <div class="actions">
+            <MagneticLink href="/contact/">Start a project</MagneticLink>
+            <CopyEmail email={site.email} label="Copy email" variant="button" />
+          </div>
+        </div>
+      </section>
+    )}
+    <div class="base">
+      <ul class="links-row">
+        <li><a href="/#work">Work</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href="/sitemap-index.xml">Sitemap</a></li>
+      </ul>
+      <p class="colophon-line">
+        <span>© {year} Adriel Tang, {site.city}.</span>
+        <span>Built with Astro, set in Archivo.</span>
+        <span class="palette-hint">Press <kbd data-kbd-mod>⌘K</kbd> to jump anywhere.</span>
+        <span class="sha" data-receipt-wrap="sha" hidden>Built from <a data-receipt="sha" data-href-template="https://github.com/AdrielTTE/portfolio/commit/{v}" hidden></a></span>
+      </p>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
     margin-top: var(--section);
-    padding-bottom: 48px;
-    border-top: 1px solid var(--c-ink);
-    padding-top: 32px;
+    background: var(--c-block);
+    color: var(--c-block-ink);
+    padding-block: var(--space-9) var(--space-6);
+    /* Everything inside reads on saffron in both themes. */
+    --c-ink: var(--c-block-ink);
+    --c-ink-2: var(--c-block-ink-2);
+    --c-focus: var(--c-block-ink);
+    --c-bg-2: color-mix(in oklab, var(--c-block) 82%, var(--c-block-ink));
+  }
+  .hire {
+    padding-bottom: var(--space-9);
+  }
+  /* No hire block (on /contact): just the base line on the saffron. */
+  .slim {
+    padding-top: var(--space-5);
+  }
+  .slim .base {
+    border-top: 0;
+    padding-top: 0;
+  }
+  h2 {
+    font-size: var(--step-6);
+    max-width: 12ch;
+  }
+  .hire-body {
+    margin-top: var(--space-6);
+    max-width: 44ch;
+  }
+  .lede {
+    font-size: var(--step-2);
+    line-height: 1.35;
+  }
+  .mail {
+    margin-top: var(--space-5);
+    font-size: var(--step-3);
+    font-weight: 600;
+  }
+  .mail a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  .actions {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  /* On the saffron block the primary button inverts to green ink. */
+  .actions :global(.magnetic) {
+    background: var(--c-block-ink);
+    color: var(--c-block);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .actions :global(.magnetic:hover) {
+      background: color-mix(in oklab, var(--c-block-ink) 80%, var(--c-block));
+    }
+  }
+  .actions :global(.copy-button) {
+    border-color: var(--c-block-ink);
+  }
+  @media (min-width: 1024px) {
+    .hire {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: end;
+    }
+    h2 {
+      grid-column: 1 / span 7;
+    }
+    .hire-body {
+      grid-column: 8 / span 5;
+      margin-top: 0;
+    }
+  }
+  @media (max-width: 339px) {
+    .actions > :global(*),
+    .actions :global(.copy-button),
+    .actions :global(.magnetic) {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .base {
+    border-top: 1px solid var(--c-block-ink);
+    padding-top: var(--space-4);
   }
   .links-row {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 0 24px;
-    margin-top: 36px;
-    font-size: var(--step-0);
   }
-  /* 44px tap targets; the row gap is folded into the box so the wrapped
-     rows sit about as close as before. */
   .links-row a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+    font-weight: 500;
     text-decoration: none;
   }
   .links-row a:hover {
     text-decoration: underline;
   }
-  .palette-hint {
-    margin-top: 16px;
-    font-family: var(--font-mono);
+  .colophon-line {
+    margin-top: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
     font-size: var(--step--1);
-    color: var(--c-ink-2);
+    color: var(--c-block-ink-2);
+  }
+  kbd {
+    font-family: inherit;
   }
   @media (pointer: coarse) {
     .palette-hint {
       display: none;
     }
-  }
-  .colophon-line {
-    margin-top: 16px;
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--c-ink-2);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 4px;
-  }
-  .sha {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--c-ink-2);
   }
 </style>

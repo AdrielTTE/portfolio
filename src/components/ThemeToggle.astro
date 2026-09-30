@@ -1,7 +1,6 @@
 ---
 // Cycles Auto -> Light -> Dark. See docs/design-spec.md §8 (Components table).
-// Same box as the header Menu button (36px visual, 1px rule, radius 4, a 44px
-// hit area). The glyph follows the root's data-theme in CSS, so it is right
+// Unboxed like the other header words, with a 44px hit area. The glyph follows the root's data-theme in CSS, so it is right
 // before any script runs: half-filled = Auto, open = Light, solid = Dark. The
 // text label shows from 600px up; below that the icon stands alone.
 ---
@@ -27,27 +26,21 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    height: 36px;
-    min-width: 36px;
-    padding-inline: 10px;
-    border: 1px solid var(--c-rule);
-    border-radius: 4px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0;
+    border: 0;
     background: none;
     font: inherit;
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
+    font-weight: 500;
     color: var(--c-ink);
     cursor: pointer;
   }
-  /* Hit area: 44px tall without growing the 36px box. */
-  .theme-toggle::after {
-    content: '';
-    position: absolute;
-    inset: -5px -4px;
-  }
   @media (hover: hover) and (pointer: fine) {
-    .theme-toggle:hover {
-      border-color: var(--c-ink-2);
+    .theme-toggle:hover .theme-label {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
     }
   }
   .theme-toggle:active {
@@ -80,14 +73,6 @@
   }
   /* Narrow screens: icon only, a true 44x44 box (addendum §7.1). */
   @media (max-width: 599px) {
-    .theme-toggle {
-      width: 44px;
-      height: 44px;
-      padding: 0;
-    }
-    .theme-toggle::after {
-      content: none;
-    }
     .theme-label {
       display: none;
     }

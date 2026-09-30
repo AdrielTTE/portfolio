@@ -1,5 +1,6 @@
 ---
-// docs/design-spec.md §5.2. Omits Team/Live when absent.
+// Case-study facts as a quiet colophon: plain labels over plain values, no
+// boxes. Omits Team/Live when absent.
 interface Props {
   role: string;
   team?: string;
@@ -10,54 +11,37 @@ interface Props {
   live?: string;
 }
 const { role, team, scope, stack, year, repo, live } = Astro.props;
+const facts = [
+  { k: 'Role', v: role },
+  team ? { k: 'Team', v: team } : null,
+  { k: 'Scope', v: `${scope}, ${year}` },
+  { k: 'Stack', v: stack.join(', ') },
+].filter((f): f is { k: string; v: string } => f !== null);
 ---
 <dl class="facts-row">
-  <div class="fact">
-    <dt>Role</dt>
-    <dd>{role}</dd>
-  </div>
-  {
-    team && (
-      <div class="fact">
-        <dt>Team</dt>
-        <dd>{team}</dd>
-      </div>
-    )
-  }
-  <div class="fact">
-    <dt>Scope</dt>
-    <dd>{scope}</dd>
-  </div>
-  <div class="fact">
-    <dt>Stack</dt>
-    <dd>{stack.join(', ')}</dd>
-  </div>
-  <div class="fact">
-    <dt>Year</dt>
-    <dd>{year}</dd>
-  </div>
-  <div class="fact fact-links">
-    <dt>Links</dt>
-    <dd>
-      {repo && <a href={repo} rel="noopener" target="_blank">Repository <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
-      {live && <a href={live} rel="noopener" target="_blank">Live <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
-    </dd>
-  </div>
+  {facts.map((f) => (
+    <div class="fact">
+      <dt>{f.k}</dt>
+      <dd>{f.v}</dd>
+    </div>
+  ))}
+  {(repo || live) && (
+    <div class="fact fact-links">
+      <dt>Links</dt>
+      <dd>
+        {repo && <a href={repo} rel="noopener" target="_blank">Code on GitHub <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
+        {live && <a href={live} rel="noopener" target="_blank">Live site <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
+      </dd>
+    </div>
+  )}
 </dl>
 
 <style>
   .facts-row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px 24px;
-    border-top: 1px solid var(--c-ink);
-    border-bottom: 1px solid var(--c-rule);
-    padding-block: 20px;
-    margin-top: 24px;
-    margin-bottom: 24px;
-  }
-  .fact-links {
-    grid-column: span 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5) var(--gutter);
+    margin-top: var(--space-7);
   }
   .fact-links dd {
     display: flex;
@@ -70,30 +54,19 @@ const { role, team, scope, stack, year, repo, live } = Astro.props;
     align-items: center;
     min-height: 44px;
     margin-block: -10px;
+    font-weight: 500;
   }
   dt {
-    font-family: var(--font-mono);
     font-size: var(--step--1);
     color: var(--c-ink-2);
-    margin-bottom: 4px;
-  }
-  dd {
-    font-size: var(--step-0);
-  }
-  @media (min-width: 768px) {
-    .facts-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .fact-links {
-      grid-column: span 3;
-    }
+    margin-bottom: 2px;
   }
   @media (min-width: 1024px) {
     .facts-row {
-      grid-template-columns: 2fr 2fr 2fr 3fr 1fr 2fr;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
     }
-    .fact-links {
-      grid-column: auto;
+    .fact {
+      grid-column: span 3;
     }
   }
 </style>

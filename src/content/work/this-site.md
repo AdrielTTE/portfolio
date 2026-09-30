@@ -9,7 +9,7 @@ year: 2026
 role: "Design and build"
 repo: "https://github.com/AdrielTTE/portfolio"
 offers: []
-device: "browser"
+receipts: true
 featured: false
 shots:
   - src: "../../assets/work/this-site/home-desktop.png"
@@ -27,7 +27,7 @@ problem: |-
 decision: |-
   Static Astro instead of a JS framework was the call, because a portfolio doesn't need
   client-side routing or app state. That keeps the JS budget close to zero by default, and the
-  few places that do need interactivity (palette, tabs, diagram) can each be built as a small,
+  few places that do need interactivity (palette, theme toggle, diagram) can each be built as a small,
   self-contained script instead of loading a framework runtime for the whole page.
 forYou: |-
   This site is the clearest proof, since it's not a demo: every build measures its page weight
@@ -59,7 +59,7 @@ diagram:
 ---
 
 The site is static Astro, deployed on Vercel from this repo's git history. There's no client
-framework: interactive pieces (the offer tabs, the command palette, the theme toggle) are
+framework: interactive pieces (the command palette, the theme toggle, the diagrams) are
 vanilla TypeScript, shipped only where they're needed. Page navigation uses native View
 Transitions instead of a JS router.
 
@@ -73,6 +73,6 @@ The budget each build is measured against:
 - Layout shift (CLS): under 0.02.
 
 A small build script measures the real gzip size of the shipped HTML, CSS, and JS after
-every build, plus the deploy commit, and writes those numbers into the build receipts strip
-on the home page. Lighthouse is run by hand against a production build, and the build shows
+every build, plus the deploy commit, and writes them into the next section of this page.
+Lighthouse is run by hand against a production build, and the build shows
 the latest saved score. If a number isn't available, it's hidden, not faked.

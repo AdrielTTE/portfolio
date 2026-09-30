@@ -1,51 +1,55 @@
-/* Design tokens: colour, type, space, grid, motion. See docs/design-spec.md. */
+/* Design tokens: colour, type, space, grid, motion.
+   Art direction (docs/design-addendum.md §0): a two-colour print job. Bottle
+   green ink on a pale green-grey paper, one spot colour (saffron) used as a
+   solid block, never as a tint or gradient. Dark mode is the same job
+   reversed: the paper becomes the green, saffron becomes the ink you click. */
 
-/* Metric-matched fallbacks (computed from the actual Fontsource woff2 files
-   against Arial / Courier New with fontkit, so the fallback occupies close to
-   the same box as the webfont and swap causes minimal layout shift). */
+/* Metric-matched fallback for Archivo (computed with fontkit from the
+   Fontsource woff2 against Arial: hhea 878/-210 on a 1000 upm, average
+   advance 1.02x Arial), so the swap shifts almost nothing. */
 @font-face {
-  font-family: 'Hanken Fallback';
+  font-family: 'Archivo Fallback';
   src: local('Arial');
-  ascent-override: 81%;
-  descent-override: 24.5%;
+  ascent-override: 86%;
+  descent-override: 20.6%;
   line-gap-override: 0%;
-  size-adjust: 123.5%;
-}
-@font-face {
-  font-family: 'JetBrains Mono Fallback';
-  src: local('Courier New');
-  ascent-override: 101.7%;
-  descent-override: 29.9%;
-  line-gap-override: 0%;
-  size-adjust: 100.3%;
+  size-adjust: 102%;
 }
 
 :root {
   color-scheme: light;
 
-  /* colour (spec §4, docs/design-addendum.md §2.1) */
-  --c-bg: #f4f5f6;
-  --c-bg-2: #e9ebed;
-  --c-ink: #111316;
-  --c-ink-2: #565b63;
-  --c-rule: #d5d8dc;
-  --c-accent: #2b34e5;
-  --c-accent-ink: #ffffff;
-  --c-focus: #2b34e5;
+  /* colour */
+  --c-bg: #eceee6;
+  --c-bg-2: #e0e3d8;
+  --c-ink: #0f2019;
+  --c-ink-2: #4a5a51;
+  --c-rule: #c9cfc2;
+  --c-accent: #11513a;
+  --c-accent-ink: #eef2e8;
+  --c-focus: #11513a;
   --c-error: #b42318;
+  /* The spot colour: a solid block (site footer), same in both themes. */
+  --c-block: #f2be22;
+  --c-block-ink: #0f2019;
+  --c-block-ink-2: #3d4a3f;
+  /* The masthead and big display words take the accent. */
+  --c-display: var(--c-accent);
 
-  /* type */
-  --font-sans: 'Hanken Grotesk Variable', 'Hanken Fallback', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono Fallback', ui-monospace, 'Cascadia Mono', Menlo, monospace;
-  --font-device: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* type: one variable family (weight 100-900, width 62-125%) does both the
+     condensed display voice and the text; code falls back to system mono. */
+  --font-sans: 'Archivo Variable', 'Archivo Fallback', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --display-stretch: 68%;
 
-  --step--1: clamp(12px, 0.09vw + 11.67px, 13px);
+  --step--1: clamp(13px, 0.09vw + 12.67px, 14px);
   --step-0: 16px;
   --step-1: clamp(17px, 0.19vw + 16.3px, 19px);
-  --step-2: clamp(19px, 0.46vw + 17.3px, 24px);
-  --step-3: clamp(22px, 0.93vw + 18.7px, 32px);
-  --step-4: clamp(30px, 1.67vw + 24px, 48px);
-  --step-5: clamp(36px, 3.7vw + 22.7px, 76px);
+  --step-2: clamp(20px, 0.46vw + 18.3px, 25px);
+  --step-3: clamp(24px, 0.93vw + 20.7px, 34px);
+  --step-4: clamp(32px, 1.67vw + 26px, 50px);
+  --step-5: clamp(44px, 3.7vw + 30.7px, 84px);
+  --step-6: clamp(56px, 6vw + 34px, 124px);
 
   /* space (4px base) */
   --space-1: 4px;
@@ -58,15 +62,14 @@
   --space-8: 64px;
   --space-9: 96px;
   --space-10: 128px;
-  --section: clamp(56px, 3.7vw + 42.7px, 96px);
-  --header-h: 56px;
+  --section: clamp(72px, 7.4vw + 45px, 160px);
+  --header-h: 60px;
 
   /* grid */
-  --cols: 4;
   --gutter: 16px;
   --margin: 16px;
 
-  /* motion (spec §5.2) */
+  /* motion */
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --dur-fast: 150ms;
@@ -76,14 +79,12 @@
 
 @media (min-width: 600px) {
   :root {
-    --cols: 8;
     --gutter: 20px;
     --margin: 24px;
   }
 }
 @media (min-width: 1024px) {
   :root {
-    --cols: 12;
     --gutter: 24px;
     --margin: 40px;
   }
@@ -92,26 +93,26 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --c-bg: #0e0f11;
-    --c-bg-2: #17191c;
-    --c-ink: #ecedef;
-    --c-ink-2: #9ca1a9;
-    --c-rule: #2a2d32;
-    --c-accent: #5c8dff;
-    --c-accent-ink: #0e0f11;
-    --c-focus: #5c8dff;
+    --c-bg: #0f2a20;
+    --c-bg-2: #16362a;
+    --c-ink: #e8ede3;
+    --c-ink-2: #a3b4a9;
+    --c-rule: #2b4a3d;
+    --c-accent: #f2be22;
+    --c-accent-ink: #0f2a20;
+    --c-focus: #f2be22;
     --c-error: #ff8a7a;
   }
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --c-bg: #0e0f11;
-  --c-bg-2: #17191c;
-  --c-ink: #ecedef;
-  --c-ink-2: #9ca1a9;
-  --c-rule: #2a2d32;
-  --c-accent: #5c8dff;
-  --c-accent-ink: #0e0f11;
-  --c-focus: #5c8dff;
+  --c-bg: #0f2a20;
+  --c-bg-2: #16362a;
+  --c-ink: #e8ede3;
+  --c-ink-2: #a3b4a9;
+  --c-rule: #2b4a3d;
+  --c-accent: #f2be22;
+  --c-accent-ink: #0f2a20;
+  --c-focus: #f2be22;
   --c-error: #ff8a7a;
 }

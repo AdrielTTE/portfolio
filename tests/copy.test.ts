@@ -26,7 +26,7 @@ it('home leads with ASP.NET and Flutter', () => {
   expect(home.description).toMatch(/Flutter/);
 });
 
-it('home colophon, closing block and offers never name the employer', () => {
+it('footer hire block, project steps and offers never name the employer', () => {
   expect(site.availability).not.toMatch(NO_EMPLOYER);
   expect(site.replyTime).not.toMatch(NO_EMPLOYER);
   for (const step of projectSteps) expect(step).not.toMatch(NO_EMPLOYER);
@@ -37,7 +37,7 @@ it('home colophon, closing block and offers never name the employer', () => {
   for (const o of OFFERS) expect(o.label).not.toMatch(NO_EMPLOYER);
 });
 
-it('Lately entries (shown on home) never name the employer', () => {
+it('Lately entries never name the employer (kept safe to show on home)', () => {
   // Plain line scan (no YAML dependency): every entry's `text:` line.
   const texts = readFileSync('src/content/lately.yaml', 'utf8')
     .split('\n')

@@ -1,8 +1,7 @@
 ---
 // SchemaCard: data model tables from frontmatter. Spec §3.3 item 3.
-// Card visuals: docs/design-addendum.md §7.4 ("Data model" row) — table name
-// mono 500 step-0, fields mono step--1 ink-2, bg-2 fill, 1px rule, radius 4,
-// padding space-4.
+// Each table is a flat bg-2 panel: the name in the text face, the fields in
+// mono because they are identifiers.
 interface Props { schema: { table: string; fields: string[] }[] }
 const { schema } = Astro.props;
 ---
@@ -26,13 +25,10 @@ const { schema } = Astro.props;
        anywhere rather than run into the card edge. */
     overflow-wrap: anywhere;
     background: var(--c-bg-2);
-    border: 1px solid var(--c-rule);
-    border-radius: 4px;
     padding: var(--space-4) var(--space-5) var(--space-4) var(--space-4);
   }
   .name {
-    font-family: var(--font-mono);
-    font-weight: 500;
+    font-weight: 600;
     font-size: var(--step-0);
     color: var(--c-ink);
     margin-bottom: var(--space-2);

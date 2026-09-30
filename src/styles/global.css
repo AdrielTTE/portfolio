@@ -1,5 +1,4 @@
-@import '@fontsource-variable/hanken-grotesk/wght.css';
-@import '@fontsource-variable/jetbrains-mono/wght.css';
+@import '@fontsource-variable/archivo/wdth.css';
 @import './tokens.css';
 
 /* Reset ------------------------------------------------------------------ */
@@ -23,6 +22,17 @@ body {
   font-size: var(--step-0);
   line-height: 1.5;
   font-synthesis: none;
+  font-weight: 400;
+}
+
+/* The display voice: Archivo pulled condensed and heavy. Used for the
+   masthead, work titles and section headings, never for running text. */
+.display {
+  font-stretch: var(--display-stretch);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 h1,
@@ -67,7 +77,6 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 .arrow {
-  font-family: var(--font-mono);
   display: inline-block;
 }
 
@@ -107,12 +116,6 @@ a:hover {
   padding-inline: var(--margin);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-  column-gap: var(--gutter);
-}
-
 main {
   display: block;
 }
@@ -129,24 +132,6 @@ h4,
 /* Cross-document View Transitions ------------------------------------------*/
 @view-transition {
   navigation: auto;
-}
-
-::view-transition-group(shot) {
-  animation-duration: var(--dur-slow);
-  animation-timing-function: var(--ease-enter);
-}
-::view-transition-image-pair(shot) {
-  overflow: clip;
-}
-::view-transition-old(shot) {
-  animation: none;
-  opacity: 0;
-}
-::view-transition-new(shot) {
-  animation: none;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 ::view-transition-old(root) {
@@ -196,7 +181,7 @@ h4,
 
 /* Intro reveal (spec §5.3 item 1; addendum §8): each intro block rises once
    per session (head-inline.js sets .intro-seen on later loads). Text lines
-   rise out of an overflow mask; the action row and colophon rise 12px
+   rise out of an overflow mask; the side column and action row rise 12px
    unmasked, because a mask would clip the focus ring and the magnetic lean.
    `both` fill: nothing is parked hidden once the animation has run. */
 .js-reveal:not(.intro-seen) .line-mask {

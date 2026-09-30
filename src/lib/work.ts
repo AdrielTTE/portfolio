@@ -9,25 +9,6 @@ export function sortByOrder(entries: WorkEntry[]): WorkEntry[] {
   return [...entries].sort((a, b) => a.data.order - b.data.order);
 }
 
-export function getLead(entries: WorkEntry[]): WorkEntry | undefined {
-  return sortByOrder(entries.filter((e) => e.data.featured))[0];
-}
-
-export interface ScopeCount {
-  scope: string;
-  n: number;
-}
-
-export function scopeCounts(entries: WorkEntry[]): ScopeCount[] {
-  const counts = new Map<string, number>();
-  for (const entry of entries) {
-    counts.set(entry.data.scope, (counts.get(entry.data.scope) ?? 0) + 1);
-  }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([scope, n]) => ({ scope, n }));
-}
-
 export interface AdjacentRef {
   title: string;
   slug: string;

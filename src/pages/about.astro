@@ -1,17 +1,17 @@
 ---
-// docs/design-spec.md §5.3.
+// About: name and bio beside the photo, then background, skills, music and
+// the Lately log (moved here from the home page). The hire moment is the
+// saffron footer, so this page has no CTA block of its own.
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Timeline from '../components/Timeline.astro';
 import SkillGroups from '../components/SkillGroups.astro';
-import CommitLog from '../components/CommitLog.astro';
-import MagneticLink from '../components/MagneticLink.astro';
 import { getCollection } from 'astro:content';
-import { site } from '../data/site';
 import photo from '../assets/tempProfile.jpg';
 import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '../data/about';
+import { toLatelyLine, newestFirst } from '../lib/lately';
 
-const lately = await getCollection('lately');
+const lately = newestFirst((await getCollection('lately')).map((e) => e.data)).map(toLatelyLine);
 ---
 <BaseLayout
   title="About: Adriel Tang"
@@ -20,7 +20,7 @@ const lately = await getCollection('lately');
 >
   <div class="container about-layout">
     <div class="top-text">
-      <h1>Adriel Tang Thien Ern</h1>
+      <h1 class="display">Adriel Tang Thien Ern</h1>
       <p class="role-line">{heroRoleLine}</p>
       <div class="bio">
         <p class="bio-1">{bio[0]}</p>
@@ -34,36 +34,38 @@ const lately = await getCollection('lately');
         alt={photoAlt}
         formats={['avif', 'webp']}
         widths={[480, 800, 1200]}
-        sizes="(min-width: 1024px) 25vw, 100vw"
+        sizes="(min-width: 1024px) 30vw, 100vw"
         loading="eager"
         class="photo"
       />
     </div>
 
     <div class="lower-content">
-      <section class="timeline-section" data-reveal>
-        <h2>Education and work</h2>
+      <section data-reveal aria-labelledby="edu-h">
+        <h2 id="edu-h" class="display">Education and work</h2>
         <Timeline items={timeline} />
       </section>
 
-      <section class="skills-section" data-reveal>
-        <h2>Skills</h2>
+      <section data-reveal aria-labelledby="skills-h">
+        <h2 id="skills-h" class="display">Skills</h2>
         <SkillGroups groups={skills} />
       </section>
 
-      <section class="music-section" data-reveal>
-        <h2>Sound and music</h2>
+      <section class="music-section" data-reveal aria-labelledby="music-h">
+        <h2 id="music-h" class="display">Sound and music</h2>
         <p>{musicParagraph}</p>
       </section>
 
-      <div id="log" class="log-section" data-reveal>
-        <CommitLog entries={lately.map((e) => e.data)} heading="Full log" />
-      </div>
-
-      <section class="next-section" aria-labelledby="next-h">
-        <h2 id="next-h">Work with me</h2>
-        <p>{site.availability} {site.replyTime}</p>
-        <p class="cta"><MagneticLink href="/contact/">Start a project</MagneticLink></p>
+      <section id="log" data-reveal aria-labelledby="log-h">
+        <h2 id="log-h" class="display">Lately</h2>
+        <ol class="lately">
+          {lately.map((l) => (
+            <li>
+              <time datetime={l.iso}>{l.label}</time>
+              <span>{l.text}</span>
+            </li>
+          ))}
+        </ol>
       </section>
     </div>
   </div>
@@ -73,99 +75,118 @@ const lately = await getCollection('lately');
 
 <style>
   .about-layout {
-    padding-block: 32px;
+    padding-top: clamp(var(--space-5), 2.5vw + 16px, var(--space-8));
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas: 'top' 'photo' 'lower';
-    row-gap: 32px;
+    row-gap: var(--space-7);
   }
   .top-text {
     grid-area: top;
+  }
+  .photo-col {
+    grid-area: photo;
   }
   .lower-content {
     grid-area: lower;
     display: flex;
     flex-direction: column;
-    gap: 48px;
-  }
-  .photo-col {
-    grid-area: photo;
+    gap: clamp(var(--space-8), 4vw + 24px, var(--space-9));
   }
   .photo {
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: 45% 35%;
-    border-radius: 0;
   }
   h1 {
-    font-size: var(--step-4);
-    font-weight: 500;
+    font-size: var(--step-6);
+    line-height: 0.84;
+    text-transform: uppercase;
+    color: var(--c-display);
+    max-width: 9ch;
   }
   .role-line {
     font-size: var(--step-2);
-    margin-top: 12px;
+    font-weight: 500;
+    margin-top: var(--space-5);
   }
   .bio {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-top: 32px;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    max-width: 58ch;
   }
   .bio-1 {
     font-size: var(--step-2);
-    max-width: 58ch;
+    line-height: 1.4;
   }
   .bio-2 {
     font-size: var(--step-1);
-    max-width: 58ch;
+    line-height: 1.55;
+    color: var(--c-ink-2);
   }
   h2 {
+    font-size: var(--step-4);
+    margin-bottom: var(--space-5);
+  }
+  .music-section p {
     font-size: var(--step-2);
-    font-weight: 500;
-    margin-bottom: 24px;
+    line-height: 1.4;
+    max-width: 44ch;
   }
-  /* The full log matches the other About section headings. */
-  .log-section :global(h2) {
-    font-size: var(--step-2);
-    font-weight: 500;
-    margin-bottom: 24px;
+  .lately {
+    list-style: none;
+    display: grid;
+    gap: var(--space-4);
+    max-width: 62ch;
   }
-  .music-section p,
-  .next-section p {
-    font-size: var(--step-1);
-    max-width: 58ch;
+  .lately li {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: var(--space-4);
   }
-  .next-section {
-    border-top: 1px solid var(--c-rule);
-    padding-top: var(--space-5);
+  .lately time {
+    color: var(--c-ink-2);
+    font-variant-numeric: tabular-nums;
   }
-  .next-section .cta {
-    margin-top: var(--space-5);
+  @media (max-width: 479px) {
+    .lately li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {
     .photo-col {
-      width: 62.5%; /* cols 1-5 of 8 */
+      width: 62.5%;
     }
   }
   @media (min-width: 1024px) {
     .about-layout {
-      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-      grid-template-areas: 'photo top' 'photo lower';
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-areas: none;
       column-gap: var(--gutter);
-      row-gap: 64px;
-      padding-block: 48px;
+      row-gap: var(--space-9);
     }
-    /* Photo stays in view beside the long text column; desktop only. */
+    .top-text {
+      grid-area: auto;
+      grid-column: 5 / span 8;
+      grid-row: 1;
+    }
     .photo-col {
+      grid-area: auto;
+      grid-column: 1 / span 3;
+      grid-row: 1 / span 2;
       position: sticky;
       top: calc(var(--header-h) + var(--space-6));
       align-self: start;
-      width: auto;
     }
     .lower-content {
-      gap: 64px;
+      grid-area: auto;
+      grid-column: 5 / span 8;
+      grid-row: 2;
     }
   }
 </style>

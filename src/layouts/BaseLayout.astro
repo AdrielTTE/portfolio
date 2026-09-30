@@ -2,15 +2,12 @@
 // docs/design-spec.md §8, §10. Shared head, skip link, header and footer for
 // every page.
 import '../styles/global.css';
-import hankenWoff2 from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
-import jetbrainsWoff2 from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
+import archivoWoff2 from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
 import headInline from '../scripts/head-inline.js?raw';
-import vtInline from '../scripts/vt.ts?raw';
 import SkipLink from '../components/SkipLink.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import CommandPalette from '../components/CommandPalette.astro';
-import { getCollection } from 'astro:content';
 import { site as facts, home } from '../data/site';
 
 interface Props {
@@ -20,14 +17,12 @@ interface Props {
   ogType?: 'website' | 'article';
   noindex?: boolean;
   current?: 'work' | 'about' | 'contact';
-  currentSlug?: string;
 }
-const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current, currentSlug } = Astro.props;
+const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current } = Astro.props;
 
 const site = Astro.site ?? new URL('https://adrieltang.vercel.app');
 const canonicalURL = new URL(Astro.url.pathname, site);
 const ogImageURL = new URL(ogImage, site);
-const allWork = await getCollection('work');
 
 // Structured data: who Adriel is and the freelance service. Every value comes
 // from src/data/site.ts or the configured `site` URL; nothing is invented here.
@@ -93,16 +88,14 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <meta property="og:type" content={ogType} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <meta name="theme-color" content="#F4F5F6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0E0F11" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ECEEE6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0F2A20" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.png" type="image/png" />
 
-    <link rel="preload" as="font" type="font/woff2" href={hankenWoff2} crossorigin />
-    <link rel="preload" as="font" type="font/woff2" href={jetbrainsWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={archivoWoff2} crossorigin />
 
     <script is:inline type="application/ld+json" set:html={jsonLdText} />
     <script is:inline set:html={headInline} />
-    <script is:inline set:html={vtInline} />
   </head>
   <body>
     <SkipLink />
@@ -110,7 +103,7 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <SiteFooter projects={allWork} currentSlug={currentSlug} />
+    <SiteFooter hire={current !== 'contact'} />
     <CommandPalette />
   </body>
 </html>
