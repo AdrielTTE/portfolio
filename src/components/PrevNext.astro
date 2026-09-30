@@ -1,9 +1,8 @@
 ---
 // End of a case study: never a dead end. Back to all work, the previous and
 // next project (chronological `order`, no wrap-around; a missing side is
-// omitted), and the one contact CTA. docs/design-spec.md §5.2.
-import MagneticLink from './MagneticLink.astro';
-
+// omitted), and the contact line. The saffron footer follows straight after
+// with the full hire block, so the contact here is one plain line.
 interface Props {
   prev?: { title: string; slug: string };
   next?: { title: string; slug: string };
@@ -11,102 +10,106 @@ interface Props {
 const { prev, next } = Astro.props;
 ---
 <nav class="end" aria-label="More work">
-  <a href="/#work" class="back"><span class="arrow" aria-hidden="true">←</span> Back to all work</a>
   {(prev || next) && (
     <ul class="adjacent">
       {prev && (
         <li class="prev">
           <a href={`/work/${prev.slug}/`}>
-            <span class="dir">Previous project</span>
-            <span class="t"><span class="arrow" aria-hidden="true">←</span> {prev.title}</span>
+            <span class="dir">Previous</span>
+            <span class="t display"><span class="arrow" aria-hidden="true">←</span> {prev.title}</span>
           </a>
         </li>
       )}
       {next && (
         <li class="next">
           <a href={`/work/${next.slug}/`}>
-            <span class="dir">Next project</span>
-            <span class="t">{next.title} <span class="arrow" aria-hidden="true">→</span></span>
+            <span class="dir">Next</span>
+            <span class="t display">{next.title} <span class="arrow" aria-hidden="true">→</span></span>
           </a>
         </li>
       )}
     </ul>
   )}
+  <p class="more">
+    <a href="/#work" class="back"><span class="arrow" aria-hidden="true">←</span> All work</a>
+    <a href="/contact/" class="talk">Need something like this built? Start a project <span class="arrow" aria-hidden="true">→</span></a>
+  </p>
 </nav>
-<div class="talk">
-  <p>Need something like this built?</p>
-  <MagneticLink href="/contact/">Start a project</MagneticLink>
-</div>
 
 <style>
   .end {
-    margin-top: var(--space-9);
+    margin-top: clamp(var(--space-8), 5vw + 24px, var(--space-10));
     border-top: 1px solid var(--c-ink);
-    padding-top: var(--space-5);
-  }
-  .back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 48px;
-    font-weight: 500;
-    font-size: var(--step-1);
-    text-decoration: none;
   }
   .adjacent {
     list-style: none;
-    margin-top: var(--space-4);
     display: grid;
+  }
+  .adjacent li + li {
     border-top: 1px solid var(--c-rule);
   }
   .adjacent a {
     display: grid;
-    gap: 2px;
-    padding-block: var(--space-4);
-    border-bottom: 1px solid var(--c-rule);
+    gap: var(--space-2);
+    padding-block: var(--space-6);
     text-decoration: none;
   }
   .dir {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
     color: var(--c-ink-2);
   }
   .t {
-    font-size: var(--step-3);
+    font-size: var(--step-5);
+    color: var(--c-display);
+    text-transform: uppercase;
+  }
+  .t .arrow {
+    font-stretch: 100%;
+    font-weight: 400;
+    font-size: 0.6em;
+  }
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    border-top: 1px solid var(--c-rule);
+    padding-top: var(--space-3);
+  }
+  .back,
+  .talk {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
     font-weight: 500;
-    line-height: 1.2;
+    font-size: var(--step-1);
+  }
+  .back {
+    text-decoration: none;
   }
   .arrow {
     transition: transform var(--dur-fast) var(--ease-enter);
   }
-  .talk {
-    margin-top: var(--space-7);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-4) var(--space-5);
-  }
-  .talk p {
-    font-size: var(--step-2);
-    font-weight: 500;
-  }
   @media (hover: hover) and (pointer: fine) {
-    .back:hover,
-    .adjacent a:hover .t {
-      color: var(--c-accent);
+    .back:hover {
+      text-decoration: underline;
     }
     .back:hover .arrow,
     .prev a:hover .arrow {
-      transform: translateX(-3px);
+      transform: translateX(-4px);
     }
-    .next a:hover .arrow {
-      transform: translateX(3px);
+    .next a:hover .arrow,
+    .talk:hover .arrow {
+      transform: translateX(4px);
     }
   }
   @media (min-width: 768px) {
     .adjacent {
       grid-template-columns: 1fr 1fr;
       column-gap: var(--gutter);
+    }
+    .adjacent li + li {
+      border-top: 0;
     }
     .next {
       grid-column: 2;

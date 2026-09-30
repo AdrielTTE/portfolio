@@ -49,6 +49,10 @@ const darkMediaBlock = extractBlock(
 );
 const darkMedia = extractVars(darkMediaBlock, NAMES);
 
+const block = extractVars(lightBlock, ['c-block', 'c-block-ink', 'c-block-ink-2']);
+const lightPanel = extractVars(lightBlock, ['c-ink-2', 'c-bg-2']);
+const darkPanel = extractVars(darkAttrBlock, ['c-ink-2', 'c-bg-2']);
+
 // --- WCAG 2.x relative luminance / contrast ratio -------------------------
 function hexToRgb(hex: string): [number, number, number] {
   let h = hex.replace('#', '');
@@ -100,6 +104,19 @@ describe('colour token contrast (design-addendum.md §2.2)', () => {
   });
   it('dark: accent-ink on accent passes 4.5:1 (text)', () => {
     expect(contrastRatio(darkAttr['c-accent-ink'], darkAttr['c-accent'])).toBeGreaterThanOrEqual(4.5);
+  });
+
+  // The saffron footer block is the same in both themes (defined once, in
+  // the light :root), and sets its own ink.
+  it('block: block-ink on block passes 4.5:1 (text)', () => {
+    expect(contrastRatio(block['c-block-ink'], block['c-block'])).toBeGreaterThanOrEqual(4.5);
+  });
+  it('block: block-ink-2 on block passes 4.5:1 (text)', () => {
+    expect(contrastRatio(block['c-block-ink-2'], block['c-block'])).toBeGreaterThanOrEqual(4.5);
+  });
+  it('ink-2 on bg-2 passes 4.5:1 in both themes (diagram and schema panels)', () => {
+    expect(contrastRatio(lightPanel['c-ink-2'], lightPanel['c-bg-2'])).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(darkPanel['c-ink-2'], darkPanel['c-bg-2'])).toBeGreaterThanOrEqual(4.5);
   });
 
   it('the prefers-color-scheme dark block matches the [data-theme="dark"] block', () => {

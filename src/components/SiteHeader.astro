@@ -1,6 +1,7 @@
 ---
 // Sticky site header: name, primary nav, theme toggle, and the scroll
-// progress rule as its bottom edge. docs/design-spec.md §5.0.
+// progress rule as its bottom edge. Plain words, no boxed controls: the
+// header is a masthead line, not a toolbar.
 import ThemeToggle from './ThemeToggle.astro';
 import ProgressBar from './ProgressBar.astro';
 
@@ -45,97 +46,63 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font-weight: 600;
-    font-size: var(--step-0);
+    font-weight: 700;
+    font-size: var(--step-1);
+    font-stretch: var(--display-stretch);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
     text-decoration: none;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .name:hover {
-      text-decoration: underline;
-    }
+    white-space: nowrap;
   }
   .nav {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 4px 24px;
   }
-  @media (min-width: 600px) {
-    .nav {
-      gap: 24px;
-    }
-  }
-  .nav-link {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding-block: 12px;
-    font-weight: 500;
-    font-size: var(--step-0);
-    text-decoration: none;
-    position: relative;
-  }
-  .nav-link[aria-current]::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 12px;
-    height: 1px;
-    background: var(--c-ink);
-  }
+  .nav-link,
   .menu {
-    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 36px;
-    padding-inline: 12px;
-    border: 1px solid var(--c-rule);
-    border-radius: 4px;
+    min-height: 44px;
     font-weight: 500;
     font-size: var(--step-0);
     text-decoration: none;
     color: var(--c-ink);
   }
-  /* 44px hit area around the 36px box (addendum §6.1 keeps the box 36px). */
-  .menu::after {
-    content: '';
-    position: absolute;
-    inset: -5px -4px;
+  .nav-link[aria-current] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nav-link:hover,
+    .menu:hover,
+    .name:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
   }
   .menu-hint {
-    font-family: var(--font-mono);
+    font-family: inherit;
     font-size: var(--step--1);
     color: var(--c-ink-2);
   }
   @media (pointer: coarse) {
-    .menu {
-      min-height: 44px;
-    }
-    .menu::after {
-      content: none;
-    }
     .menu-hint {
       display: none;
     }
   }
-  /* Phones: the palette is the nav (addendum §7.1), but Contact stays in
-     view as the one direct route. */
-  .name {
-    white-space: nowrap;
-  }
+  /* Phones: the palette is the nav, but Contact stays in view as the one
+     direct route. */
   @media (max-width: 599px) {
     .nav {
-      gap: 8px;
+      gap: 14px;
     }
-    .menu-hint {
-      display: none;
-    }
+    .menu-hint,
     .nav-link--wide {
       display: none;
-    }
-    .nav-link {
-      padding-inline: 4px;
     }
   }
 </style>

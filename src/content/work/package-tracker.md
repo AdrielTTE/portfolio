@@ -10,7 +10,6 @@ role: "Member of a five-person team"
 team: "Group of 5, coursework"
 repo: "https://github.com/AdrielTTE/Integrative-Programming-Assignment"
 offers: ["webapps", "apis"]
-device: "browser"
 featured: true
 order: 2
 problem: |-

@@ -1,0 +1,70 @@
+---
+// Real screenshots of a project, laid out as one justified row on a solid
+// colour field (the accent: green in light, saffron in dark). No device
+// bezels or fake browser chrome: the screenshots are shown as what they are.
+// Each image's flex-grow is its aspect ratio, so a phone shot takes a narrow
+// slot beside the desktop ones and every image in the row shares one height.
+// Renders nothing for a project without screenshots.
+import { Image } from 'astro:assets';
+import type { WorkEntry } from '../lib/work';
+
+interface Props { project: WorkEntry }
+const { shots } = Astro.props.project.data;
+---
+{shots.length > 0 && (
+  <div class="shots">
+    {shots.map((s, i) => {
+      const ratio = s.src.width / s.src.height;
+      return (
+        <figure class={ratio < 1 ? 'tall' : undefined} style={`--r:${ratio.toFixed(3)}`}>
+          <Image
+            src={s.src}
+            alt={s.alt}
+            widths={ratio < 1 ? [320, 640] : [640, 960, 1440]}
+            sizes={ratio < 1 ? '(min-width: 1024px) 14vw, 45vw' : '(min-width: 1024px) 40vw, 90vw'}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'auto'}
+          />
+        </figure>
+      );
+    })}
+  </div>
+)}
+
+<style>
+  /* Phones: one column; a tall (phone) shot is held to a readable width. */
+  .shots {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    padding: clamp(12px, 2.5vw, 40px);
+    background: var(--c-accent);
+  }
+  figure {
+    margin: 0;
+    width: 100%;
+    aspect-ratio: var(--r);
+    min-width: 0;
+  }
+  figure.tall {
+    width: 58%;
+  }
+  figure :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  /* Wider: one justified row, every image the same height. */
+  @media (min-width: 600px) {
+    .shots {
+      display: flex;
+      align-items: flex-start;
+    }
+    figure,
+    figure.tall {
+      width: auto;
+      flex: var(--r) 1 calc(var(--r) * 100px);
+    }
+  }
+</style>

@@ -9,8 +9,8 @@ import { layoutDiagram } from '../lib/diagram';
 interface Props { diagram: { nodes: { id: string; label: string; note: string }[]; edges: [string, string][] } }
 const { nodes, edges } = Astro.props.diagram;
 const { pos, cols, rows } = layoutDiagram(nodes, edges);
-// Nodes size to their labels: JetBrains Mono at 13px is 0.6em per glyph
-// (7.8px), plus 16px padding a side. Every node in a column shares that
+// Nodes size to their labels: Archivo at 14px, 88% width, averages under
+// 7.8px a glyph, plus 16px padding a side. Every node in a column shares that
 // column's widest box so edges line up. H = 60 keeps a rendered node at least
 // 44px tall (tap size) down to a 0.73 scale; the svg's min-width stops it
 // shrinking further, and .svg-wrap scrolls instead.
@@ -37,7 +37,7 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
       </g>
       {nodes.map((n) => (
         <g class="node" data-id={n.id} tabindex="0" role="button" aria-describedby={`note-${n.id}`} transform={`translate(${x(n.id)} ${y(n.id)})`}>
-          <rect width={w(n.id)} height={H} rx="8" />
+          <rect width={w(n.id)} height={H} rx="2" />
           <text x={w(n.id) / 2} y={H / 2} dominant-baseline="middle" text-anchor="middle">{n.label}</text>
         </g>
       ))}
@@ -76,16 +76,14 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
   .list li {
     display: grid;
     gap: 2px;
-    padding: 12px;
-    border: 1px solid var(--c-rule);
-    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--c-bg-2);
   }
   .list .to,
   .list span {
     color: var(--c-ink-2);
   }
   .list .to {
-    font-family: var(--font-mono);
     font-size: var(--step--1);
   }
   @media (min-width: 720px) {
@@ -113,13 +111,15 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
     transition: opacity var(--dur-base) var(--ease-enter);
   }
   .node rect {
-    fill: var(--c-bg);
-    stroke: var(--c-rule);
+    fill: var(--c-bg-2);
+    stroke: transparent;
+    stroke-width: 2;
   }
   .node text {
     fill: var(--c-ink);
-    font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: 88%;
   }
   .node {
     cursor: pointer;
@@ -129,7 +129,6 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
   .node:focus-visible rect,
   .node.on rect {
     stroke: var(--c-accent);
-    stroke-width: 2;
   }
   .arch.focus .node:not(.lit),
   .arch.focus path:not(.lit) {
