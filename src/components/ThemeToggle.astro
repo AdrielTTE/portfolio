@@ -1,5 +1,9 @@
 ---
 // Cycles Auto -> Light -> Dark. See docs/design-spec.md §8 (Components table).
+// Same box as the header Menu button (36px visual, 1px rule, radius 4, a 44px
+// hit area). The glyph follows the root's data-theme in CSS, so it is right
+// before any script runs: half-filled = Auto, open = Light, solid = Dark. The
+// text label shows from 600px up; below that the icon stands alone.
 ---
 <button
   type="button"
@@ -7,39 +11,85 @@
   id="theme-toggle"
   aria-label="Colour theme: Auto"
 >
-  <span aria-hidden="true">Auto</span>
+  <svg class="theme-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+    <circle cx="8" cy="8" r="6.25" />
+    <path class="half" d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" />
+  </svg>
+  <span class="theme-label" aria-hidden="true">Auto</span>
 </button>
 
 <script src="../scripts/theme-toggle.ts"></script>
 
 <style>
   .theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    min-width: 36px;
+    padding-inline: 10px;
+    border: 1px solid var(--c-rule);
+    border-radius: 4px;
     background: none;
-    border: none;
-    padding-block: 12px;
-    min-height: 44px;
     font: inherit;
     font-family: var(--font-mono);
     font-size: var(--step--1);
     color: var(--c-ink);
     cursor: pointer;
   }
-  .theme-toggle:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+  /* Hit area: 44px tall without growing the 36px box. */
+  .theme-toggle::after {
+    content: '';
+    position: absolute;
+    inset: -5px -4px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .theme-toggle:hover {
+      border-color: var(--c-ink-2);
+    }
   }
   .theme-toggle:active {
     translate: 0 1px;
   }
-  /* 44x44 tap target on touch and narrow screens (addendum §7.1). */
-  @media (pointer: coarse), (max-width: 599px) {
+  /* "Light" is one glyph longer than "Auto"/"Dark": reserve it so the nav
+     never shifts on toggle. */
+  .theme-label {
+    min-width: 5ch;
+    text-align: left;
+  }
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+  .theme-icon circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+  .theme-icon .half {
+    fill: currentColor;
+  }
+  :global(:root[data-theme='light']) .theme-icon .half {
+    fill: none;
+  }
+  :global(:root[data-theme='dark']) .theme-icon circle {
+    fill: currentColor;
+  }
+  /* Narrow screens: icon only, a true 44x44 box (addendum §7.1). */
+  @media (max-width: 599px) {
     .theme-toggle {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
-      padding: 0 8px;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+    }
+    .theme-toggle::after {
+      content: none;
+    }
+    .theme-label {
+      display: none;
     }
   }
 </style>

@@ -25,6 +25,7 @@ if (dialog) {
   const empty = document.getElementById('palette-empty') as HTMLElement;
   const hl = dialog.querySelector<HTMLElement>('.hl')!;
   const closeBtn = dialog.querySelector<HTMLButtonElement>('.close-btn');
+  const status = document.getElementById('palette-status');
   const all: Command[] = JSON.parse(document.getElementById('palette-data')!.textContent || '[]');
 
   // Exit animation (spec §5.3 item 8; addendum §7.6): .closing plays the
@@ -146,7 +147,9 @@ if (dialog) {
       frag.appendChild(li);
     });
     list.replaceChildren(frag);
-    empty.hidden = results.length > 0;
+    // Live region (role="status"): text only when nothing matches, so the
+    // miss is announced; cleared, not hidden, so it keeps working.
+    empty.textContent = results.length > 0 ? '' : `No match for "${query.trim()}"`;
     moveHl();
   };
 
@@ -157,12 +160,24 @@ if (dialog) {
       if (/^https?:/.test(c.href)) window.open(c.href, '_blank', 'noopener');
       else location.href = c.href;
     } else if (c.action === 'copy-email') {
+      // Visible and announced feedback in the row itself, then close after a
+      // beat. A failed copy (permissions, insecure context) keeps the palette
+      // open and shows the address so it can be copied by hand.
+      const email = document.getElementById('palette-email')!.textContent!.trim();
+      const row = document.getElementById(`pal-${c.id}`);
+      const rowLabel = row?.querySelector('.label');
+      const rowHint = row?.querySelector('.hint, .grp');
+      let ok = true;
       try {
-        await navigator.clipboard.writeText(document.getElementById('palette-email')!.textContent!.trim());
+        await navigator.clipboard.writeText(email);
       } catch {
-        // Clipboard access can fail (permissions, insecure context); swallow silently.
+        ok = false;
       }
-      closeAnimated();
+      row?.classList.add('is-done');
+      if (rowLabel) rowLabel.textContent = ok ? 'Email address copied' : `Copy failed: ${email}`;
+      if (rowHint) rowHint.textContent = ok ? 'Copied' : '';
+      if (status) status.textContent = ok ?'Email address copied' : `Copy failed. The address is ${email}`;
+      if (ok) window.setTimeout(closeAnimated, 700);
     } else if (c.action === 'toggle-theme') {
       dialog.close();
       document.getElementById('theme-toggle')?.click();
@@ -179,6 +194,7 @@ if (dialog) {
     }
     if (dialog.open) return;
     input.value = '';
+    if (status) status.textContent = '';
     dialog.showModal();
     render();
     input.focus();

@@ -3,7 +3,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CopyEmail from '../components/CopyEmail.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { site, whatsappUrl } from '../data/site';
+import { site, whatsappUrl, projectSteps } from '../data/site';
 ---
 <BaseLayout
   title="Contact: Adriel Tang"
@@ -23,9 +23,16 @@ import { site, whatsappUrl } from '../data/site';
         <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow">↗</span></a></li>
         <li><a href={whatsappUrl()} rel="noopener" target="_blank">Message on WhatsApp <span class="arrow">↗</span></a></li>
       </ul>
+      <section class="next-steps" aria-labelledby="next-h">
+        <h2 id="next-h">What happens next</h2>
+        <ol role="list">
+          {projectSteps.map((step) => <li>{step}</li>)}
+        </ol>
+      </section>
     </div>
     <div class="contact-form-col" data-reveal>
       <h2>Or send a message</h2>
+      <p class="reply-time">{site.replyTime}</p>
       <ContactForm endpoint={site.formspreeEndpoint} subject="Portfolio contact" />
     </div>
   </div>
@@ -74,6 +81,10 @@ import { site, whatsappUrl } from '../data/site';
   }
   .links-list a {
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    flex: 1;
   }
   .links-list a:hover {
     text-decoration: underline;
@@ -81,7 +92,30 @@ import { site, whatsappUrl } from '../data/site';
   .contact-form-col h2 {
     font-size: var(--step-2);
     font-weight: 500;
-    margin-bottom: 24px;
+  }
+  .reply-time {
+    margin: 8px 0 24px;
+    color: var(--c-ink-2);
+  }
+  /* Three plain lines between rules, matching the links list; the order is
+     carried by the <ol> semantics, not by drawn numbers. */
+  .next-steps {
+    margin-top: 48px;
+  }
+  .next-steps h2 {
+    font-size: var(--step-1);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .next-steps ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 52ch;
+  }
+  .next-steps li {
+    border-top: 1px solid var(--c-rule);
+    padding-block: 12px;
   }
 
   @media (min-width: 1024px) {

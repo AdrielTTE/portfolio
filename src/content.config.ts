@@ -20,6 +20,9 @@ const work = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      // Page <title> and meta description; fall back to `${title}: Adriel Tang` and `summary`.
+      seoTitle: z.string().max(60).optional(),
+      seoDescription: z.string().max(160).optional(),
       summary: z.string().max(160),
       scope: z.string(),
       stack: z.array(z.string()).min(1),

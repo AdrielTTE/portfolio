@@ -11,27 +11,44 @@ const preview = document.querySelector<HTMLElement>('.work .preview');
 const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-if (list && preview && fine) {
+// Preview box (WorkList.astro): 320x200. It sits above the hovered row
+// (below it near the top of the viewport), never over the row being read,
+// and follows the cursor horizontally, clamped inside the viewport.
+const PW = 320, PH = 200, GAP = 12, EDGE = 8;
+
+// Only rows with a real screenshot get a preview; with none, nothing is made.
+if (list && preview && fine && list.querySelector('.work-row .thumb img')) {
   preview.hidden = false;
   let tx = 0, ty = 0, x = 0, y = 0, raf = 0, current = '';
   const tick = () => {
     x = reduced ? tx : lerp(x, tx, 0.18);
     y = reduced ? ty : lerp(y, ty, 0.18);
-    preview.style.transform = `translate3d(${x + 24}px, ${y - 120}px, 0)`;
+    preview.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     raf = requestAnimationFrame(tick);
   };
+  const target = (e: PointerEvent, row: HTMLElement | null) => {
+    tx = Math.min(e.clientX + 24, innerWidth - PW - EDGE);
+    if (!row) return;
+    const r = row.getBoundingClientRect();
+    ty = r.top - PH - GAP >= EDGE ? r.top - PH - GAP : r.bottom + GAP;
+  };
   list.addEventListener('pointerenter', (e) => {
-    x = tx = e.clientX; y = ty = e.clientY;
+    target(e, (e.target as HTMLElement).closest<HTMLElement>('.work-row'));
+    x = tx; y = ty;
     if (!raf) raf = requestAnimationFrame(tick);
   });
   list.addEventListener('pointermove', (e) => {
-    tx = e.clientX; ty = e.clientY;
     const row = (e.target as HTMLElement).closest<HTMLElement>('.work-row');
+    target(e, row);
     if (row && row.dataset.slug !== current) {
       current = row.dataset.slug ?? '';
-      const frame = row.querySelector('.frame');
-      preview.replaceChildren(frame ? frame.cloneNode(true) : document.createTextNode(''));
-      preview.classList.add('on');
+      const frame = row.querySelector('.thumb .frame');
+      if (frame) {
+        preview.replaceChildren(frame.cloneNode(true));
+        preview.classList.add('on');
+      } else {
+        preview.classList.remove('on');
+      }
     }
   });
   list.addEventListener('pointerleave', () => {

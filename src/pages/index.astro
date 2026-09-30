@@ -14,13 +14,13 @@ import CopyEmail from '../components/CopyEmail.astro';
 import Colophon from '../components/Colophon.astro';
 import MagneticLink from '../components/MagneticLink.astro';
 import { getLead } from '../lib/work';
-import { site, home } from '../data/site';
+import { site, home, projectSteps } from '../data/site';
 
 const allWork = await getCollection('work');
 const lately = await getCollection('lately');
 const lead = getLead(allWork);
 ---
-<BaseLayout title={home.title} description={home.description} current="work">
+<BaseLayout title={home.title} description={home.description}>
   <div class="container home">
     <section class="intro" aria-labelledby="intro-h" data-magnet-zone>
       <div class="who">
@@ -43,7 +43,7 @@ const lead = getLead(allWork);
       <WorkList projects={allWork} excludeId={lead?.id}>
         {lead && (
           <a slot="lead" class="lead" href={`/work/${lead.id}/`}>
-            <span class="lead-shot"><DeviceFrame project={lead} variant="lead" eager /></span>
+            <div class="lead-shot"><DeviceFrame project={lead} variant="lead" eager /></div>
             <span class="cap">
               <span class="cap-top">
                 <strong class="cap-name">{lead.data.title} <span class="arrow" aria-hidden="true">→</span></strong>
@@ -63,6 +63,16 @@ const lead = getLead(allWork);
       <CommitLog entries={lately.map((e) => e.data)} limit={5} heading="Lately">
         <a class="full-log" href="/about/#log">Full log <span class="arrow" aria-hidden="true">→</span></a>
       </CommitLog>
+    </div>
+
+    {/* Closing block: one more rail section, not a full-width CTA band. */}
+    <div class="rail rail--next" data-reveal>
+      <section aria-labelledby="next-h">
+        <h2 id="next-h">Working together</h2>
+        <p class="next-lede">{site.availability} {site.replyTime}</p>
+        <p class="next-how">{projectSteps.join(' ')}</p>
+        <div class="next-cta"><MagneticLink href="/contact/">Start a project</MagneticLink></div>
+      </section>
     </div>
   </div>
 </BaseLayout>
@@ -244,6 +254,27 @@ const lead = getLead(allWork);
     }
     .cap {
       grid-column: 7 / span 3;
+    }
+  }
+
+  /* Closing block: availability, how a project runs, one CTA. */
+  .next-lede {
+    font-size: var(--step-2);
+    font-weight: 500;
+    line-height: 1.3;
+    max-width: 36ch;
+  }
+  .next-how {
+    margin-top: var(--space-3);
+    color: var(--c-ink-2);
+    max-width: 60ch;
+  }
+  .next-cta {
+    margin-top: var(--space-5);
+  }
+  @media (min-width: 1024px) {
+    .rail--next :global(section) > :global(*) {
+      grid-column: 4 / span 7;
     }
   }
 

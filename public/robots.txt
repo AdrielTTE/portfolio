@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adrieltang.vercel.app/sitemap-index.xml

@@ -3,7 +3,7 @@
 - id: "2026-09"
   date: 2026-09-01
   type: ship
-  text: "Rebuilt this site in Astro, replacing the old Next.js build and dropping the placeholder weather app project."
+  text: "Rebuilt this site in Astro to replace the old Next.js version, with a written case study for each project."
 - id: "2026-05"
   date: 2026-05-01
   type: life

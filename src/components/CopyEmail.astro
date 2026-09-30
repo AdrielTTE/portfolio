@@ -1,6 +1,8 @@
 ---
 // docs/design-spec.md §5.4. `variant="button"` is the home secondary button
 // (docs/design-addendum.md §6.1): same 48px box as the primary CTA.
+// Both labels share one grid cell, so the box is as wide as the longer one
+// and never jumps on "Copied". No ids: the script wires every instance.
 interface Props {
   email: string;
   label?: string;
@@ -9,20 +11,24 @@ interface Props {
 const { email, label = 'Copy', variant = 'inline' } = Astro.props;
 ---
 <span class={`copy-email copy-email--${variant}`}>
-  <button type="button" class="copy-button" id="copy-email-btn" data-email={email}>
-    <span>{label}</span>
+  <button type="button" class="copy-button" data-email={email} aria-label={label === 'Copy' ? 'Copy email address' : `${label} address`}>
+    <span class="labels" aria-hidden="true">
+      <span class="idle">{label}</span>
+      <span class="done">Copied</span>
+    </span>
   </button>
-  <span class="visually-hidden" role="status" aria-live="polite" id="copy-email-status"></span>
+  <span class="visually-hidden copy-status" role="status" aria-live="polite"></span>
 </span>
 
 <style>
   .copy-button {
     font-family: var(--font-mono);
     font-size: var(--step--1);
+    color: var(--c-ink);
     background: none;
     border: 1px solid var(--c-ink-2);
+    border-radius: 2px;
     padding-inline: 12px;
-    height: 36px;
     min-height: 44px;
     cursor: pointer;
     margin-left: 8px;
@@ -31,13 +37,25 @@ const { email, label = 'Copy', variant = 'inline' } = Astro.props;
     font-family: var(--font-sans);
     font-size: var(--step-0);
     font-weight: 500;
-    color: var(--c-ink);
-    height: auto;
     min-height: 48px;
     padding-inline: 20px;
     border-radius: 4px;
     margin-left: 0;
     white-space: nowrap;
+  }
+  .labels {
+    display: inline-grid;
+  }
+  .labels > span {
+    grid-area: 1 / 1;
+    transition: opacity var(--dur-fast) var(--ease-enter);
+  }
+  .done,
+  .copy-button.is-copied .idle {
+    opacity: 0;
+  }
+  .copy-button.is-copied .done {
+    opacity: 1;
   }
   @media (hover: hover) and (pointer: fine) {
     .copy-button:hover {

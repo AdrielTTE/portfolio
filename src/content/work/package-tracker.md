@@ -1,5 +1,7 @@
 ---
 title: "Package Tracker"
+seoTitle: "Package Tracker: A Laravel Web App"
+seoDescription: "Package Tracker is a Laravel, PHP, and MySQL web app for tracking deliveries across customer, admin, and driver logins. See the stack and the code."
 summary: "A Laravel web app for tracking package deliveries across customer, admin, and driver logins."
 scope: "Web app"
 stack: ["Laravel", "PHP", "MySQL"]
@@ -64,6 +66,4 @@ schema:
     fields: [admin_id, action, target_type, target_id, old_values, new_values, ip_address]
 ---
 
-## What it is
-
-Package Tracker is a web app for tracking deliveries, built with Laravel, PHP, and MySQL. It has three logins: customer, admin, and delivery driver. It was built in 2025 as TAR UMT coursework, with a team of five including Adriel.
+Package Tracker is a web app for tracking deliveries, built with Laravel, PHP, and MySQL. It has three logins: customer, admin, and delivery driver. Five of us built it in 2025 as TAR UMT coursework, and I was one of the team.

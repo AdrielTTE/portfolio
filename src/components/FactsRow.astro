@@ -39,8 +39,8 @@ const { role, team, scope, stack, year, repo, live } = Astro.props;
   <div class="fact fact-links">
     <dt>Links</dt>
     <dd>
-      {repo && <a href={repo} rel="noopener" target="_blank">Repository <span class="arrow">↗</span></a>}
-      {live && <a href={live} rel="noopener" target="_blank">Live <span class="arrow">↗</span></a>}
+      {repo && <a href={repo} rel="noopener" target="_blank">Repository <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
+      {live && <a href={live} rel="noopener" target="_blank">Live <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
     </dd>
   </div>
 </dl>
@@ -61,7 +61,15 @@ const { role, team, scope, stack, year, repo, live } = Astro.props;
   }
   .fact-links dd {
     display: flex;
-    gap: 16px;
+    flex-wrap: wrap;
+    column-gap: 16px;
+  }
+  /* 44px tap target; the negative block margin keeps the row's height. */
+  .fact-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -10px;
   }
   dt {
     font-family: var(--font-mono);

@@ -18,7 +18,10 @@ file records what was decided and what is still genuinely open.
 3. **Availability line.** Must not name the employer. Home page colophon now
    reads "Happy to hear about side projects." with no company mentioned. The
    "On the desk" line was also trimmed to "Developing in-house software."
-   (dropped "at Bantu2U Holdings") for the same reason. The About page's
+   (dropped "at Bantu2U Holdings") for the same reason; it has since been
+   removed from the site entirely. `tests/copy.test.ts` now fails the build's
+   tests if the availability line, the home closing block, offer copy or any
+   Lately entry names the employer. The About page's
    timeline and bio still name Bantu2U Holdings - that page is explicitly
    exempted, per the correction. **A QA pass after this was first applied
    found two places it had leaked through and fixed them**: the home page's
@@ -73,7 +76,28 @@ file records what was decided and what is still genuinely open.
     in `astro.config.mjs` (one line) and rebuild - nothing else references a
     hardcoded domain.
 
+11. **Contact promises (proposed, not yet confirmed).** "I reply within 1
+    working day." (`site.replyTime` in `src/data/site.ts`) and the three
+    "how a project runs" steps (`projectSteps`: talk, written scope and
+    timeline, build in small steps and hand over with logins and a guide) are
+    shown on home, /about and /contact. **Action needed**: confirm both are
+    promises Adriel will keep, or edit them there.
+12. **Lighthouse receipt.** `receipts/lighthouse.json` was generated with
+    `npm run lighthouse` against a local `astro preview` of the build at
+    commit 08fa652 (mobile, simulated throttling: performance 100). It is a
+    manual run, not a per-deploy one, and the site copy now says so. Re-run it
+    against the real deployment once the production URL exists.
+13. **Trailing slashes.** Convention is trailing slash (`/about/`,
+    `/work/<slug>/`), matching the build's `<route>/index.html` output and
+    canonical URLs. `SiteHeader.astro` and `SiteFooter.astro` still link
+    `/about` and `/contact` without the slash and should be updated to match.
+
 ## QA fixes (second pass)
+
+These notes describe the first (cover-based) design. `WorkSection`,
+`LeadProject`, `WorkTile`, the cover components and the Roboto face no longer
+exist; the developer-home rebuild replaced them with `WorkList`,
+`DeviceFrame` and Hanken Grotesk + JetBrains Mono only. Kept as history.
 
 A round of measured QA (Playwright, axe-core, CDP-sampled view-transition
 frames) found and fixed real bugs beyond the copy issue above:

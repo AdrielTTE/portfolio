@@ -1,5 +1,7 @@
 ---
 title: "Habitect"
+seoTitle: "Habitect: A Flutter Habit-Tracking App"
+seoDescription: "Habitect is a habit-tracking mobile app built with Flutter and Dart by a team of four at TAR UMT. See the stack and the code on GitHub."
 summary: "A habit-tracking mobile app for setting habits and checking them off day by day."
 scope: "Mobile app"
 stack: ["Flutter", "Dart"]
@@ -62,10 +64,8 @@ schema:
     fields: [name, email]
 ---
 
-## What it is
+Habitect is a habit-tracking mobile app built with Flutter and Dart. It lets someone set habits and mark them off day by day, with the aim of making a routine easy to see and stick to. It was a 2025 TAR UMT team project with four of us; I built the habit tracking part.
 
-Habitect is a habit-tracking mobile app built with Flutter and Dart. It lets someone set habits and mark them off day by day, with the aim of making a routine easy to see and stick to. It was built in 2025 as a team project with three other TAR UMT students.
-
-## Who it's for
+### Who it's for
 
 Anyone who wants a plain way to track daily habits without extra social or gamification features attached.

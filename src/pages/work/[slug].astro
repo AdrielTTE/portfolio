@@ -22,26 +22,13 @@ export async function getStaticPaths() {
 
 const { project, allWork } = Astro.props;
 const { Content } = await render(project);
-const { title, summary, role, team, scope, stack, year, repo, live } = project.data;
+const { title, summary, role, team, scope, stack, year, repo, live, seoTitle, seoDescription } = project.data;
 const { prev, next } = getPrevNext(allWork, project.id);
-
-const titles: Record<string, string> = {
-  habitect: 'Habitect: A Flutter Habit-Tracking App',
-  'package-tracker': 'Package Tracker: A Laravel Web App',
-  'this-site': 'This Site: A Static Astro Build',
-};
-const descriptions: Record<string, string> = {
-  habitect:
-    'Habitect is a habit-tracking mobile app built with Flutter and Dart by a team of four at TAR UMT. See the stack and the code on GitHub.',
-  'package-tracker':
-    'Package Tracker is a Laravel, PHP, and MySQL web app for tracking deliveries across customer, admin, and driver logins. See the stack and the code.',
-  'this-site':
-    'How this portfolio is built: Astro static output, a 25KB JS budget, and real build receipts (page weight, JS shipped, Lighthouse) measured at every deploy.',
-};
 ---
 <BaseLayout
-  title={titles[project.id] ?? `${title}: Adriel Tang`}
-  description={descriptions[project.id] ?? summary}
+  title={seoTitle ?? `${title}: Adriel Tang`}
+  description={seoDescription ?? summary}
+  ogType="article"
   current="work"
   currentSlug={project.id}
 >
@@ -55,6 +42,11 @@ const descriptions: Record<string, string> = {
 
     <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} />
 
+    {/* The Markdown body (what it is, who it's for) comes first, so a reader
+        knows what the project is before the decisions. */}
+    <CaseSection id="overview" title="Overview" show={Boolean(project.body?.trim())}>
+      <Prose><Content /></Prose>
+    </CaseSection>
     <CaseSection id="problem" title="The problem" text={project.data.problem} />
     <CaseSection id="built" title="How it's built" show={Boolean(project.data.diagram)}>
       {project.data.diagram && <ArchDiagram diagram={project.data.diagram} />}
@@ -64,7 +56,6 @@ const descriptions: Record<string, string> = {
     </CaseSection>
     <CaseSection id="decision" title="A decision worth explaining" text={project.data.decision} />
     <CaseSection id="change" title="What I'd change" text={project.data.change} />
-    <Prose><Content /></Prose>
     <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou}>
       <p class="cta"><MagneticLink href="/contact/">Start a project</MagneticLink></p>
     </CaseSection>

@@ -9,25 +9,36 @@ import { layoutDiagram } from '../lib/diagram';
 interface Props { diagram: { nodes: { id: string; label: string; note: string }[]; edges: [string, string][] } }
 const { nodes, edges } = Astro.props.diagram;
 const { pos, cols, rows } = layoutDiagram(nodes, edges);
-const W = 160, H = 56, GX = 72, GY = 28;
-const x = (id: string) => pos[id].col * (W + GX);
+// Nodes size to their labels: JetBrains Mono at 13px is 0.6em per glyph
+// (7.8px), plus 16px padding a side. Every node in a column shares that
+// column's widest box so edges line up. H = 60 keeps a rendered node at least
+// 44px tall (tap size) down to a 0.73 scale; the svg's min-width stops it
+// shrinking further, and .svg-wrap scrolls instead.
+const CH = 7.8, PAD = 32, MIN_W = 96, H = 60, GX = 56, GY = 24;
+const colW = Array.from({ length: cols }, (_, c) =>
+  Math.max(MIN_W, ...nodes.filter((n) => pos[n.id].col === c).map((n) => Math.ceil(n.label.length * CH + PAD)))
+);
+const colX = colW.map((_, c) => colW.slice(0, c).reduce((sum, cw) => sum + cw + GX, 0));
+const w = (id: string) => colW[pos[id].col];
+const x = (id: string) => colX[pos[id].col];
 const y = (id: string) => pos[id].row * (H + GY);
-const width = cols * W + (cols - 1) * GX;
+const width = colX[cols - 1] + colW[cols - 1];
 const height = rows * H + (rows - 1) * GY;
+const minWidth = Math.ceil(((width + 4) * 44) / H);
 const label = (id: string) => nodes.find((n) => n.id === id)!.label;
 ---
 <figure class="arch" data-edges={JSON.stringify(edges)}>
   <div class="svg-wrap">
-    <svg viewBox={`-2 -2 ${width + 4} ${height + 4}`} role="group" aria-label="Architecture diagram">
+    <svg viewBox={`-2 -2 ${width + 4} ${height + 4}`} style={`min-width:${minWidth}px`} role="group" aria-label="Architecture diagram">
       <g class="edges" aria-hidden="true">
         {edges.filter(([a, b]) => a !== b).map(([a, b]) => (
-          <path data-from={a} data-to={b} d={`M${x(a) + W} ${y(a) + H / 2} C${x(a) + W + GX / 2} ${y(a) + H / 2}, ${x(b) - GX / 2} ${y(b) + H / 2}, ${x(b)} ${y(b) + H / 2}`} />
+          <path data-from={a} data-to={b} d={`M${x(a) + w(a)} ${y(a) + H / 2} C${x(a) + w(a) + GX / 2} ${y(a) + H / 2}, ${x(b) - GX / 2} ${y(b) + H / 2}, ${x(b)} ${y(b) + H / 2}`} />
         ))}
       </g>
       {nodes.map((n) => (
         <g class="node" data-id={n.id} tabindex="0" role="button" aria-describedby={`note-${n.id}`} transform={`translate(${x(n.id)} ${y(n.id)})`}>
-          <rect width={W} height={H} rx="8" />
-          <text x={W / 2} y={H / 2} dominant-baseline="middle" text-anchor="middle">{n.label}</text>
+          <rect width={w(n.id)} height={H} rx="8" />
+          <text x={w(n.id) / 2} y={H / 2} dominant-baseline="middle" text-anchor="middle">{n.label}</text>
         </g>
       ))}
     </svg>
@@ -122,7 +133,7 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
   }
   .arch.focus .node:not(.lit),
   .arch.focus path:not(.lit) {
-    opacity: 0.2;
+    opacity: 0.4;
   }
   .note {
     font-size: var(--step-0);

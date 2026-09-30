@@ -1,4 +1,4 @@
-// Site-wide facts: identity, contact links and the two short colophon lines.
+// Site-wide facts: identity, contact links and the availability line.
 // Keep this file the single source for anything reused across pages.
 import type { OfferId } from '../lib/offers';
 
@@ -10,10 +10,13 @@ export const site = {
   whatsappNumber: '60163231053',
   whatsappMessage: 'Hello there, I am interested in your services',
   formspreeEndpoint: 'https://formspree.io/f/mwpgnwzl',
-  // Colophon (home page). The availability line intentionally does not name an
-  // employer - see docs/open-items.md.
-  desk: 'Developing in-house software.',
+  // Colophon and closing block (home page). The availability line intentionally
+  // does not name an employer - see docs/open-items.md.
   availability: 'Taking on freelance projects.',
+  // Response-time promise shown on home and /contact. Owner to confirm.
+  replyTime: 'I reply within 1 working day.',
+  city: 'Kuala Lumpur',
+  country: 'MY',
 } as const;
 
 export function whatsappUrl(): string {
@@ -29,14 +32,22 @@ export const home = {
   pitch: 'I build business websites, custom web apps, and mobile apps: fast, maintainable, and handed over properly.',
 };
 
+// How a project runs, in three plain steps. Shown as prose in the home page's
+// closing block and as "What happens next" on /contact. Owner to confirm.
+export const projectSteps = [
+  'We talk through what you need, by message or a short call.',
+  'I send a written scope and timeline, so we agree on the work before it starts.',
+  'I build in small steps you can see and try, then hand it over with the logins and a short guide.',
+];
+
 // OfferSwitcher panel copy per offer. Source: docs/copy-dev.md §2.
 export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {
   websites: {
-    line: 'Fast, content-driven business sites that load quickly and rank well.',
+    line: 'Business sites that load quickly on any phone and are built to rank in search.',
     stack: ['Astro', 'Next.js', 'Tailwind CSS'],
   },
   webapps: {
-    line: 'Custom web apps with logins, dashboards, and real business logic.',
+    line: 'Custom web apps with user logins, dashboards, and the workflows your team runs every day.',
     stack: ['Laravel', 'ASP.NET Core', 'Node.js', 'MySQL'],
   },
   mobile: {
