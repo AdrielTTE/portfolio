@@ -11,7 +11,7 @@ interface Props {
   subject?: string;
 }
 const { endpoint, subject = 'Portfolio contact' } = Astro.props;
-const projectTypes = ['Website', 'Web app', 'Mobile app', 'Not sure'];
+const projectTypes = ['Web app', 'API or database', 'Mobile app', 'Website', 'Not sure'];
 // Shown under "Message sent." after a successful submit.
 const successNote = `${site.replyTime} Look out for an email from ${site.email}, usually with a few questions or a time for a short call.`;
 ---

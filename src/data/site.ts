@@ -25,11 +25,11 @@ export function whatsappUrl(): string {
 
 // Home meta and intro copy. Source: docs/copy-dev.md §1.
 export const home = {
-  title: 'Adriel Tang: Full Stack Developer in Kuala Lumpur',
+  title: 'Adriel Tang: Full Stack Developer, ASP.NET and Flutter',
   description:
-    'Adriel Tang is a full stack developer in Kuala Lumpur who builds business websites, web apps, and mobile apps for freelance clients. See recent projects.',
-  roleLine: 'Full stack developer in Kuala Lumpur, building web and mobile applications with Next.js, Flutter, and Laravel.',
-  pitch: 'I build business websites, custom web apps, and mobile apps: fast, maintainable, and handed over properly.',
+    'Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.',
+  roleLine: 'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart.',
+  pitch: 'I build full stack applications: web apps, the APIs and databases behind them, and mobile apps for iOS and Android.',
 };
 
 // How a project runs, in three plain steps. Shown as prose in the home page's
@@ -41,17 +41,18 @@ export const projectSteps = [
 ];
 
 // OfferSwitcher panel copy per offer. Source: docs/copy-dev.md §2.
+// Stacks lead with the core tools; the rest are ones the proof projects use.
 export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {
-  websites: {
-    line: 'Business sites that load quickly on any phone and are built to rank in search.',
-    stack: ['Astro', 'Next.js', 'Tailwind CSS'],
-  },
   webapps: {
-    line: 'Custom web apps with user logins, dashboards, and the workflows your team runs every day.',
-    stack: ['Laravel', 'ASP.NET Core', 'Node.js', 'MySQL'],
+    line: 'Web apps with user logins, dashboards, and the workflows your team runs every day.',
+    stack: ['ASP.NET Core', 'C#', 'Laravel'],
+  },
+  apis: {
+    line: 'Backend APIs and the databases behind them, with tables and rules that keep the data correct.',
+    stack: ['ASP.NET Core', 'REST APIs', 'SQL', 'MySQL', 'Firestore'],
   },
   mobile: {
     line: 'Cross-platform mobile apps built once in Flutter, shipped to iOS and Android.',
-    stack: ['Flutter', 'Dart'],
+    stack: ['Flutter', 'Dart', 'Firebase'],
   },
 };

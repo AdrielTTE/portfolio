@@ -9,7 +9,7 @@ year: 2025
 role: "Habit tracking features"
 team: "Group of 4, coursework"
 repo: "https://github.com/AdrielTTE/Habitect"
-offers: ["mobile"]
+offers: ["mobile", "apis"]
 device: "phone"
 featured: true
 order: 1

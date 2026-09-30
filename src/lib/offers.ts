@@ -3,11 +3,11 @@
 import type { WorkEntry } from './work';
 import { sortByOrder } from './work';
 
-export type OfferId = 'websites' | 'webapps' | 'mobile';
+export type OfferId = 'webapps' | 'apis' | 'mobile';
 
 export const OFFERS: { id: OfferId; label: string }[] = [
-  { id: 'websites', label: 'Websites' },
   { id: 'webapps', label: 'Web apps' },
+  { id: 'apis', label: 'APIs & data' },
   { id: 'mobile', label: 'Mobile apps' },
 ];
 

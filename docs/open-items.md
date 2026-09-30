@@ -91,6 +91,18 @@ file records what was decided and what is still genuinely open.
     `/work/<slug>/`), matching the build's `<route>/index.html` output and
     canonical URLs. `SiteHeader.astro` and `SiteFooter.astro` still link
     `/about` and `/contact` without the slash and should be updated to match.
+14. **Positioning: ASP.NET and Flutter lead (2026-09-30).** The site now leads
+    with ASP.NET Core / C# and Flutter / Dart as full stack application work
+    (web apps, backend APIs and database design, mobile apps). Offer tabs are
+    now Web apps · APIs & data · Mobile apps; "Websites" is no longer a tab
+    (it survives as a contact-form option and one clause in the About bio),
+    and This site is no longer linked from the switcher. **Strongest missing
+    proof: an ASP.NET Core case study with screenshots.** Today Flutter is
+    proven by Habitect, but nothing on the site shows ASP.NET work (Package
+    Tracker is Laravel and must stay labelled as such). Add one as soon as a
+    shareable ASP.NET project exists. **Owner to confirm**: whether business
+    websites should come back as a tab, and whether `SQL Server` (About skills)
+    is still accurate.
 
 ## QA fixes (second pass)
 

@@ -31,7 +31,7 @@ const work = defineCollection({
       team: z.string().optional(),
       repo: z.url().optional(),
       live: z.url().optional(),
-      offers: z.array(z.enum(['websites', 'webapps', 'mobile'])).default([]),
+      offers: z.array(z.enum(['webapps', 'apis', 'mobile'])).default([]),
       device: z.enum(['phone', 'browser']).default('browser'),
       shots: z.array(z.object({ src: image(), alt: z.string() })).default([]),
       accent: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
