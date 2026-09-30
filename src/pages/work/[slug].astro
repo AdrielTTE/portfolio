@@ -9,7 +9,6 @@ import PrevNext from '../../components/PrevNext.astro';
 import CaseSection from '../../components/CaseSection.astro';
 import ArchDiagram from '../../components/ArchDiagram.astro';
 import SchemaCard from '../../components/SchemaCard.astro';
-import MagneticLink from '../../components/MagneticLink.astro';
 import { getPrevNext } from '../../lib/work';
 
 export async function getStaticPaths() {
@@ -33,6 +32,14 @@ const { prev, next } = getPrevNext(allWork, project.id);
   currentSlug={project.id}
 >
   <div class="container case-study">
+    {/* The way out sits first, above the title, so it's in view without
+        scrolling on a 360px phone. */}
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/#work" class="crumb-back"><span class="arrow" aria-hidden="true">←</span> All work</a></li>
+        <li aria-current="page"><span class="sep" aria-hidden="true">/</span> {title}</li>
+      </ol>
+    </nav>
     <div class="title-block">
       <h1>{title}</h1>
       <p class="summary">{summary}</p>
@@ -56,9 +63,8 @@ const { prev, next } = getPrevNext(allWork, project.id);
     </CaseSection>
     <CaseSection id="decision" title="A decision worth explaining" text={project.data.decision} />
     <CaseSection id="change" title="What I'd change" text={project.data.change} />
-    <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou}>
-      <p class="cta"><MagneticLink href="/contact/">Start a project</MagneticLink></p>
-    </CaseSection>
+    {/* The contact CTA now closes the page inside PrevNext's end block. */}
+    <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou} />
     <PrevNext prev={prev} next={next} />
   </div>
 </BaseLayout>
@@ -77,10 +83,42 @@ const { prev, next } = getPrevNext(allWork, project.id);
     font-size: var(--step-5);
     font-weight: 600;
   }
-  /* The one in-page CTA closes "What this means for your project"
-     (addendum §7.4), space-5 above. */
-  .cta {
-    margin-top: var(--space-5);
+  .crumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 10px;
+    margin-bottom: var(--space-4);
+  }
+  .crumbs li[aria-current] {
+    color: var(--c-ink-2);
+  }
+  .sep {
+    margin-right: 6px;
+  }
+  /* A 44px target that reads as a control, not body text. */
+  .crumb-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding-inline: 12px 14px;
+    border: 1px solid var(--c-rule);
+    border-radius: 4px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .crumb-back .arrow {
+    transition: transform var(--dur-fast) var(--ease-enter);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .crumb-back:hover {
+      border-color: var(--c-ink);
+    }
+    .crumb-back:hover .arrow {
+      transform: translateX(-3px);
+    }
   }
   .summary {
     font-size: var(--step-3);

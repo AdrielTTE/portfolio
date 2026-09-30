@@ -1,51 +1,116 @@
 ---
-// docs/design-spec.md §5.2. Plain text links, no coloured panel. Chronological
-// order, no wrap-around; a missing side is simply omitted.
+// End of a case study: never a dead end. Back to all work, the previous and
+// next project (chronological `order`, no wrap-around; a missing side is
+// omitted), and the one contact CTA. docs/design-spec.md §5.2.
+import MagneticLink from './MagneticLink.astro';
+
 interface Props {
   prev?: { title: string; slug: string };
   next?: { title: string; slug: string };
 }
 const { prev, next } = Astro.props;
 ---
-<nav class="prev-next" aria-label="More work">
-  <span class="side side-prev">
-    {prev && <a href={`/work/${prev.slug}/`}>← {prev.title}</a>}
-  </span>
-  <a href="/#work" class="all-work">All work</a>
-  <span class="side side-next">
-    {next && <a href={`/work/${next.slug}/`}>{next.title} →</a>}
-  </span>
+<nav class="end" aria-label="More work">
+  <a href="/#work" class="back"><span class="arrow" aria-hidden="true">←</span> Back to all work</a>
+  {(prev || next) && (
+    <ul class="adjacent">
+      {prev && (
+        <li class="prev">
+          <a href={`/work/${prev.slug}/`}>
+            <span class="dir">Previous project</span>
+            <span class="t"><span class="arrow" aria-hidden="true">←</span> {prev.title}</span>
+          </a>
+        </li>
+      )}
+      {next && (
+        <li class="next">
+          <a href={`/work/${next.slug}/`}>
+            <span class="dir">Next project</span>
+            <span class="t">{next.title} <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+        </li>
+      )}
+    </ul>
+  )}
 </nav>
+<div class="talk">
+  <p>Need something like this built?</p>
+  <MagneticLink href="/contact/">Start a project</MagneticLink>
+</div>
 
 <style>
-  .prev-next {
+  .end {
+    margin-top: var(--space-9);
     border-top: 1px solid var(--c-ink);
-    padding-block: 32px;
-    margin-top: 96px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    padding-top: var(--space-5);
   }
-  .prev-next a {
-    display: flex;
+  .back {
+    display: inline-flex;
     align-items: center;
+    gap: 8px;
     min-height: 48px;
-    text-decoration: none;
     font-weight: 500;
-    font-size: var(--step-3);
+    font-size: var(--step-1);
+    text-decoration: none;
   }
-  .all-work {
-    font-size: var(--step-0) !important;
-    justify-content: center;
+  .adjacent {
+    list-style: none;
+    margin-top: var(--space-4);
+    display: grid;
+    border-top: 1px solid var(--c-rule);
+  }
+  .adjacent a {
+    display: grid;
+    gap: 2px;
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--c-rule);
+    text-decoration: none;
+  }
+  .dir {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  .t {
+    font-size: var(--step-3);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .arrow {
+    transition: transform var(--dur-fast) var(--ease-enter);
+  }
+  .talk {
+    margin-top: var(--space-7);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-5);
+  }
+  .talk p {
+    font-size: var(--step-2);
+    font-weight: 500;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .back:hover,
+    .adjacent a:hover .t {
+      color: var(--c-accent);
+    }
+    .back:hover .arrow,
+    .prev a:hover .arrow {
+      transform: translateX(-3px);
+    }
+    .next a:hover .arrow {
+      transform: translateX(3px);
+    }
   }
   @media (min-width: 768px) {
-    .prev-next {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+    .adjacent {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--gutter);
     }
-    .side-next a {
-      justify-content: flex-end;
+    .next {
+      grid-column: 2;
+      text-align: right;
     }
   }
 </style>

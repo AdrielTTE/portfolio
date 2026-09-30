@@ -60,13 +60,22 @@
     translate: -5px -50%;
   }
 
+  /* animation-timeline lives in its own higher-specificity rule on purpose: the
+     build minifier folds it into the `animation` shorthand, which browsers
+     reject, leaving the bar dead. Keep the longhands split. */
   @supports (animation-timeline: scroll()) {
     .fill {
-      animation: progress-fill linear both;
-      animation-timeline: scroll(root);
+      animation-name: progress-fill;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
     }
     .knob {
-      animation: progress-knob linear both;
+      animation-name: progress-knob;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+    .progress .fill,
+    .progress .knob {
       animation-timeline: scroll(root);
     }
   }

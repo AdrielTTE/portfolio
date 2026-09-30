@@ -8,7 +8,7 @@ stack: ["Astro", "TypeScript", "CSS", "Vercel"]
 year: 2026
 role: "Design and build"
 repo: "https://github.com/AdrielTTE/portfolio"
-offers: ["websites"]
+offers: []
 device: "browser"
 featured: false
 shots:

@@ -1,61 +1,44 @@
 ---
-// Home: intro → offers → work → receipts → log. Spec §3.1.
-// Layout: docs/design-addendum.md §7.2 (1440) / §7.3 (360). Sections sit on
-// the ledger rail (§5.1): heading cols 1-3, content cols 4-12 at ≥1024,
-// stacked below. The rail is applied here, not in the components.
+// Home: intro (facts strip, statement, actions, system map) → work index →
+// receipts → log → working together. Spec §3.1.
+// Intro borrows a top facts strip (gilhuybrecht.com) and a big statement with
+// a hanging first-line indent (maximiliankaspar.com); the "What I build" map
+// is the one interactive element, and it is the offer switcher. Later
+// sections sit on the ledger rail (addendum §5.1): heading cols 1-3, content
+// cols 4-12 at ≥1024. The work index runs full width for scale contrast.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DeviceFrame from '../components/DeviceFrame.astro';
 import OfferSwitcher from '../components/OfferSwitcher.astro';
 import WorkList from '../components/WorkList.astro';
 import BuildReceipts from '../components/BuildReceipts.astro';
 import CommitLog from '../components/CommitLog.astro';
 import CopyEmail from '../components/CopyEmail.astro';
-import Colophon from '../components/Colophon.astro';
+import LiveClock from '../components/LiveClock.astro';
 import MagneticLink from '../components/MagneticLink.astro';
-import { getLead } from '../lib/work';
 import { site, home, projectSteps } from '../data/site';
 
 const allWork = await getCollection('work');
 const lately = await getCollection('lately');
-const lead = getLead(allWork);
 ---
 <BaseLayout title={home.title} description={home.description}>
   <div class="container home">
     <section class="intro" aria-labelledby="intro-h" data-magnet-zone>
-      <div class="who">
+      <div class="strip">
         <h1 id="intro-h" class="line-mask"><span style="--i:0">{site.name}</span></h1>
         <p class="role line-mask"><span style="--i:1">{home.roleLine}</span></p>
+        <p class="fact line-rise" style="--i:1"><LiveClock /> in {site.city}</p>
+        <p class="fact avail line-rise" style="--i:2"><span class="on" aria-hidden="true"></span>{site.availability}</p>
       </div>
-      <div class="lede">
-        <p class="pitch line-mask"><span style="--i:2">{home.pitch}</span></p>
-        <div class="actions line-rise" style="--i:3">
-          <MagneticLink href="/contact/">Start a project</MagneticLink>
-          <CopyEmail email={site.email} label="Copy email" variant="button" />
-        </div>
-        <div class="line-rise" style="--i:4"><Colophon availability={site.availability} /></div>
+      <p class="pitch line-mask"><span style="--i:2">{home.pitch}</span></p>
+      <div class="actions line-rise" style="--i:3">
+        <MagneticLink href="/contact/">Start a project</MagneticLink>
+        <CopyEmail email={site.email} label="Copy email" variant="button" />
       </div>
     </section>
 
-    <div class="rail rail--offers" data-reveal><OfferSwitcher projects={allWork} /></div>
+    <div class="map line-rise" style="--i:4"><OfferSwitcher projects={allWork} /></div>
 
-    <div class="rail rail--work" data-reveal>
-      <WorkList projects={allWork} excludeId={lead?.id}>
-        {lead && (
-          <a slot="lead" class="lead" href={`/work/${lead.id}/`}>
-            <div class="lead-shot"><DeviceFrame project={lead} variant="lead" eager /></div>
-            <span class="cap">
-              <span class="cap-top">
-                <strong class="cap-name">{lead.data.title} <span class="arrow" aria-hidden="true">→</span></strong>
-                <span class="cap-year">{lead.data.year}</span>
-              </span>
-              <span class="cap-line">{lead.data.summary}</span>
-              <span class="cap-chips">{lead.data.stack.map((s) => <span class="chip">{s}</span>)}</span>
-            </span>
-          </a>
-        )}
-      </WorkList>
-    </div>
+    <div class="block block--work" data-reveal><WorkList projects={allWork} /></div>
 
     <div class="rail rail--receipts" data-reveal><BuildReceipts /></div>
 
@@ -81,29 +64,77 @@ const lead = getLead(allWork);
 <script src="../scripts/stress.ts"></script>
 
 <style>
-  /* Intro: no top rule; space-8 (360) → space-9 (1440) below the header
-     (addendum §5.3). */
   .intro {
-    padding-top: clamp(var(--space-8), 2.96vw + 53.3px, var(--space-9));
+    padding-top: clamp(var(--space-6), 2.96vw + 37.3px, var(--space-8));
+  }
+
+  /* Facts strip: who, what, where, availability. Stacked on phones, four
+     equal columns on wide screens. */
+  .strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-2) var(--gutter);
+    font-size: var(--step-0);
+    line-height: 1.45;
   }
   h1 {
-    font-size: var(--step-1);
+    grid-column: 1 / -1;
+    font-size: var(--step-0);
     font-weight: 600;
-    line-height: 1.55;
+    line-height: 1.45;
   }
   .role {
+    grid-column: 1 / -1;
     color: var(--c-ink-2);
-    max-width: 40ch;
+    max-width: 44ch;
   }
-  .lede {
-    margin-top: var(--space-5);
+  .fact {
+    color: var(--c-ink-2);
+    font-size: var(--step--1);
+    margin-top: var(--space-2);
   }
+  .avail {
+    color: var(--c-ink);
+  }
+  /* A static status dot: data, not decoration, so it never pulses. */
+  .on {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background: var(--c-accent);
+    vertical-align: 0.05em;
+  }
+  @media (min-width: 1024px) {
+    .strip {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    h1 { grid-column: 1 / span 3; }
+    .role { grid-column: 4 / span 4; }
+    .fact { grid-column: span 2; margin-top: 0; font-size: var(--step-0); }
+    .avail { grid-column: 10 / span 3; }
+    .fact:not(.avail) { grid-column: 8 / span 2; }
+  }
+
+  /* The statement: set big, first line hung three columns in on wide screens
+     so it starts under the role line. */
   .pitch {
-    font-size: var(--step-4);
+    margin-top: clamp(var(--space-7), 2vw + 40px, var(--space-8));
+    font-size: clamp(34px, 3.4vw + 21.8px, 70px);
     font-weight: 500;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    max-width: 24ch;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  @media (min-width: 1024px) {
+    .pitch {
+      max-width: none;
+      padding-right: 6%;
+      text-indent: calc((100% + var(--gutter)) / 12 * 3);
+      text-wrap: pretty;
+    }
   }
   .actions {
     margin-top: var(--space-6);
@@ -111,8 +142,10 @@ const lead = getLead(allWork);
     flex-wrap: wrap;
     gap: var(--space-3);
   }
-  .lede > .line-rise:last-child {
-    margin-top: var(--space-5);
+  @media (min-width: 1024px) {
+    .actions {
+      margin-left: calc((100% + var(--gutter)) / 12 * 3);
+    }
   }
   /* Below 340px the two buttons stack full width (addendum §7.3). */
   @media (max-width: 339px) {
@@ -123,20 +156,27 @@ const lead = getLead(allWork);
       justify-content: center;
     }
   }
+
+  /* System map: right under the actions, no rule, so it reads as part of
+     the intro. Map cols 1-8 and the offer copy cols 9-12 on wide screens. */
+  .map {
+    margin-top: clamp(var(--space-7), 1.5vw + 42px, var(--space-8));
+  }
   @media (min-width: 1024px) {
-    .intro {
+    .map :global(.offers) {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--gutter);
-      align-items: start;
+      align-items: center;
     }
-    .who {
-      grid-column: 1 / span 3;
-    }
-    .lede {
-      grid-column: 4 / span 8;
-      margin-top: 0;
-    }
+    .map :global(.offers > h2) { grid-column: 1 / -1; }
+    .map :global(.sys) { grid-column: 1 / span 8; }
+    .map :global(.panels) { grid-column: 9 / span 4; margin-top: 0; }
+  }
+
+  .block {
+    margin-top: var(--section);
+    padding-top: var(--space-4);
   }
 
   /* Ledger rail (addendum §5.1, §5.3): full-width hairline, --section above,
@@ -165,95 +205,6 @@ const lead = getLead(allWork);
     .rail > :global(section) > :global(h2) {
       grid-column: 1 / span 3;
       margin: 0;
-    }
-    /* Offers: tabs cols 4-9, panel copy cols 4-10 (addendum §7.2). */
-    .rail--offers :global(.tabs) {
-      grid-column: 4 / span 6;
-    }
-    .rail--offers :global(.panels) {
-      grid-column: 4 / span 7;
-    }
-    /* The rail's hairline already closes the previous section. */
-    .rail--offers :global(.panel) {
-      padding-bottom: 0;
-    }
-  }
-
-  /* Lead project: frame then caption on mobile; frame cols 4-9 with the
-     caption in cols 10-12, bottom-aligned, at ≥1024. */
-  .lead {
-    display: grid;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
-    color: inherit;
-    text-decoration: none;
-  }
-  .lead:focus-visible {
-    outline: 2px solid var(--c-focus);
-    outline-offset: 4px;
-  }
-  .cap {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-  .cap-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-4);
-  }
-  .cap-name {
-    font-size: var(--step-2);
-    font-weight: 500;
-    line-height: 1.3;
-    letter-spacing: -0.005em;
-  }
-  .cap-name .arrow {
-    font-size: var(--step-0);
-    transition: transform var(--dur-fast) var(--ease-enter);
-  }
-  .cap-year,
-  .chip {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    color: var(--c-ink-2);
-    font-variant-numeric: tabular-nums;
-  }
-  .cap-line {
-    color: var(--c-ink-2);
-    max-width: 48ch;
-  }
-  .cap-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-  .chip {
-    border: 1px solid var(--c-rule);
-    border-radius: 3px;
-    padding: 2px 6px;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .lead:hover .cap-name {
-      color: var(--c-accent);
-    }
-    .lead:hover .arrow {
-      transform: translateX(3px);
-    }
-  }
-  @media (min-width: 1024px) {
-    .lead {
-      grid-template-columns: repeat(9, minmax(0, 1fr));
-      column-gap: var(--gutter);
-      align-items: end;
-      margin-bottom: var(--space-6);
-    }
-    .lead-shot {
-      grid-column: 1 / span 6;
-    }
-    .cap {
-      grid-column: 7 / span 3;
     }
   }
 
