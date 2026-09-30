@@ -18,8 +18,8 @@ export interface SkillGroup {
 export const heroRoleLine = 'Full stack developer in Kuala Lumpur, working at Bantu2U Holdings.';
 
 export const bio = [
-  "Adriel Tang Thien Ern is a full stack developer based in Kuala Lumpur, Malaysia. He works across web and mobile: React and Next.js on the front end, Node.js, ASP.NET Core, and Laravel on the back end, and Flutter for cross-platform apps.",
-  'He completed a Bachelor of Information Technology (Honours) in Software Systems Development at TAR UMT in April 2026, with First Class Honours, CGPA 3.78. He joined Bantu2U Holdings as a Software Development Executive Intern in October 2025 and now works there full-time as a Software Developer, developing in-house software.',
+  "I'm a full stack developer based in Kuala Lumpur, Malaysia. I work across web and mobile: React and Next.js on the front end, Node.js, ASP.NET Core, and Laravel on the back end, and Flutter for cross-platform apps. I also take on freelance projects: business websites, web apps, and mobile apps.",
+  'I completed a Bachelor of Information Technology (Honours) in Software Systems Development at TAR UMT in April 2026, with First Class Honours, CGPA 3.78. I joined Bantu2U Holdings as a Software Development Executive Intern in October 2025 and now work there full-time as a Software Developer, developing in-house software.',
 ];
 
 export const timeline: TimelineItem[] = [
@@ -62,7 +62,7 @@ export const skills: SkillGroup[] = [
 ];
 
 export const musicParagraph =
-  'Outside development, Adriel has 8 years of experience in audio and visual (AV) production, including 2 years as an AV coordinator at Emmanuel EFC, and 7 years performing live music on guitar, both ongoing.';
+  'Outside development, I have 8 years of experience in audio and visual (AV) production, including 2 years as an AV coordinator at Emmanuel EFC, and 7 years performing live music on guitar, both ongoing.';
 
 export const photoAlt =
   "Adriel Tang playing acoustic guitar with a capo on the fretboard, seated in a black shirt during a live performance, with another musician visible behind him.";

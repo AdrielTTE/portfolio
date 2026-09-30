@@ -44,7 +44,8 @@ const commands: Command[] = [
       <button type="button" class="close-btn" data-palette-close aria-label="Close command menu">Close</button>
     </div>
     <ul id="palette-list" role="listbox" aria-label="Results"></ul>
-    <p id="palette-empty" hidden>No results</p>
+    <p id="palette-empty" role="status" aria-live="polite"></p>
+    <p id="palette-status" class="visually-hidden" role="status" aria-live="polite"></p>
     <span class="hl" aria-hidden="true"></span>
     <div class="footer-hints" aria-hidden="true">
       <span><kbd>↑↓</kbd> move</span>
@@ -64,7 +65,10 @@ const commands: Command[] = [
     border: 1px solid var(--c-rule);
     border-radius: 8px;
     width: min(640px, calc(100vw - 32px));
-    max-height: 76vh;
+    /* Tall enough for every command (11 items + 3 group labels, ~590px) at a
+       900px-tall desktop viewport; the list scrolls below that. */
+    --pal-max: calc(88dvh - 24px);
+    max-height: var(--pal-max);
     margin: 12vh auto auto;
     background: var(--c-bg);
     color: var(--c-ink);
@@ -119,7 +123,7 @@ const commands: Command[] = [
     dialog {
       width: calc(100% - 16px);
       margin: 8px auto auto;
-      max-height: calc(100dvh - 16px);
+      --pal-max: calc(100dvh - 16px);
     }
   }
 
@@ -188,7 +192,8 @@ const commands: Command[] = [
     list-style: none;
     margin: 0;
     padding: 6px;
-    max-height: 60vh;
+    /* The dialog minus the input row (57px), footer hints (37px), borders. */
+    max-height: calc(var(--pal-max) - 96px);
     overflow-y: auto;
     position: relative;
   }
@@ -246,9 +251,17 @@ const commands: Command[] = [
     }
   }
 
+  /* Always in the tree so the live region speaks when a query stops
+     matching (a hidden region may not); it collapses while empty. */
   #palette-empty {
     padding: 16px;
     color: var(--c-ink-2);
+  }
+  #palette-empty:empty {
+    padding: 0;
+  }
+  :global(#palette-list .item.is-done .hint) {
+    color: var(--c-ink);
   }
 
   .footer-hints {

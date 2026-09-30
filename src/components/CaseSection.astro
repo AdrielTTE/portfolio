@@ -4,6 +4,10 @@
 // Layout: docs/design-addendum.md §7.4/7.5 ledger rail — heading in the left
 // rail (cols 1-3), content in cols 4-9, widened to cols 4-12 for a wide
 // artifact (ArchDiagram/SchemaCard), under a full-width hairline rule.
+// `text` is plain frontmatter prose; `backticks` render as <code> (escaped
+// first, see src/lib/inline-code.ts).
+import { inlineCode } from '../lib/inline-code';
+
 interface Props { title: string; id: string; text?: string; show?: boolean }
 const { title, id, text, show } = Astro.props;
 const visible = show ?? Boolean(text);
@@ -12,7 +16,7 @@ const visible = show ?? Boolean(text);
   <section class="case-section" aria-labelledby={id}>
     <h2 id={id}>{title}</h2>
     <div class="content">
-      {text && <p>{text}</p>}
+      {text && <p set:html={inlineCode(text)} />}
       <slot />
     </div>
   </section>
@@ -33,6 +37,12 @@ const visible = show ?? Boolean(text);
   }
   .content p {
     font-size: var(--step-1);
+  }
+  /* Long file paths must wrap rather than push the page wider at 360px. */
+  .content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
   }
   /* "What I'd change" reads as one bigger line, per design-addendum §7.4. */
   h2[id='change'] + .content p {

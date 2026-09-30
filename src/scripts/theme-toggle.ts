@@ -1,10 +1,33 @@
 // Cycles the theme Auto -> Light -> Dark, persists it, and updates the two
 // <meta name="theme-color"> tags so the browser chrome matches immediately.
+// Storage can throw (private mode, blocked site data), so every access is
+// guarded, as in head-inline.js: the toggle still works for the page's life.
 const STATES = ['auto', 'light', 'dark'] as const;
 type ThemeState = (typeof STATES)[number];
 
+function readStored(): string | null {
+  try {
+    return localStorage.getItem('theme');
+  } catch {
+    return null;
+  }
+}
+
+function writeStored(state: ThemeState) {
+  try {
+    if (state === 'auto') localStorage.removeItem('theme');
+    else localStorage.setItem('theme', state);
+  } catch {
+    /* storage unavailable: the choice lasts until the next load */
+  }
+}
+
 function currentState(): ThemeState {
-  const stored = localStorage.getItem('theme');
+  // The root attribute is the source of truth once the page is up, so a
+  // blocked storage write still cycles correctly.
+  const attr = document.documentElement.getAttribute('data-theme');
+  if (attr === 'light' || attr === 'dark') return attr;
+  const stored = readStored();
   return stored === 'light' || stored === 'dark' ? stored : 'auto';
 }
 
@@ -29,13 +52,9 @@ function updateMetaThemeColor(state: ThemeState) {
 function apply(state: ThemeState) {
   const root = document.documentElement;
   root.classList.add('theme-switching');
-  if (state === 'auto') {
-    root.removeAttribute('data-theme');
-    localStorage.removeItem('theme');
-  } else {
-    root.setAttribute('data-theme', state);
-    localStorage.setItem('theme', state);
-  }
+  if (state === 'auto') root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', state);
+  writeStored(state);
   updateMetaThemeColor(state);
   requestAnimationFrame(() => {
     requestAnimationFrame(() => root.classList.remove('theme-switching'));
@@ -48,47 +67,27 @@ function label(state: ThemeState): string {
 
 const button = document.getElementById('theme-toggle');
 if (button) {
-  const textEl = button.querySelector('span');
+  const textEl = button.querySelector('.theme-label');
+  const sync = (state: ThemeState) => {
+    if (textEl) textEl.textContent = label(state);
+    button.setAttribute('aria-label', `Colour theme: ${label(state)}`);
+  };
   const state = currentState();
-  if (textEl) textEl.textContent = label(state);
-  button.setAttribute('aria-label', `Colour theme: ${label(state)}`);
+  sync(state);
   if (state !== 'auto') updateMetaThemeColor(state);
 
   button.addEventListener('click', () => {
     const next = STATES[(STATES.indexOf(currentState()) + 1) % STATES.length];
-    // Spec §5.3 item 9: circular reveal from the toggle on desktop; plain
-    // crossfade on touch; instant under reduced motion.
-    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    // Spec §5.3 item 9, adjusted to the house motion rule (transform and
+    // opacity only): the default root crossfade from global.css everywhere,
+    // instant without View Transitions or under reduced motion.
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const root = document.documentElement;
     if (typeof document.startViewTransition === 'function' && !reduced) {
-      if (fine) {
-        const r = button.getBoundingClientRect();
-        const cx = r.left + r.width / 2;
-        const cy = r.top + r.height / 2;
-        const radius = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
-        // Scopes the "animation: none" on the root snapshots to this
-        // transition only (global.css), so navigations keep their crossfade.
-        root.classList.add('theme-vt');
-        const vt = document.startViewTransition(() => apply(next));
-        vt.ready
-          .then(() => {
-            root.animate(
-              { clipPath: [`circle(0px at ${cx}px ${cy}px)`, `circle(${radius}px at ${cx}px ${cy}px)`] },
-              { duration: 450, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
-            );
-          })
-          .catch(() => {});
-        vt.finished.catch(() => {}).finally(() => root.classList.remove('theme-vt'));
-      } else {
-        // Default root crossfade from global.css (opacity only).
-        document.startViewTransition(() => apply(next));
-      }
+      document.startViewTransition(() => apply(next)).finished.catch(() => {});
     } else {
       apply(next);
     }
-    if (textEl) textEl.textContent = label(next);
-    button.setAttribute('aria-label', `Colour theme: ${label(next)}`);
+    sync(next);
   });
 }
 

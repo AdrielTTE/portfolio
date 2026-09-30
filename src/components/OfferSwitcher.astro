@@ -100,7 +100,9 @@ const offers = offersWithProjects(Astro.props.projects);
   }
   .panel {
     grid-area: 1 / 1;
-    padding-block: 24px;
+    /* No bottom padding: the rail's own section margin already spaces the
+       next block, and the proof links' 44px box adds its own air. */
+    padding-top: 24px;
     opacity: 0;
     visibility: hidden;
     /* Exiting: fade out, then flip visibility once the fade finishes. */
@@ -138,9 +140,15 @@ const offers = offersWithProjects(Astro.props.projects);
   .proof {
     list-style: none;
     padding: 0;
-    margin-top: 16px;
+    /* 16px to the text, less the 44px box's own half-leading (~12px). */
+    margin-top: 4px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 24px;
+    gap: 0 24px;
+  }
+  .proof a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 </style>

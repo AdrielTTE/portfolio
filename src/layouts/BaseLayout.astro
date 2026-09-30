@@ -11,21 +11,59 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import { getCollection } from 'astro:content';
+import { site as facts, home } from '../data/site';
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  ogType?: 'website' | 'article';
   noindex?: boolean;
   current?: 'work' | 'about' | 'contact';
   currentSlug?: string;
 }
-const { title, description, ogImage = '/og-default.png', noindex = false, current, currentSlug } = Astro.props;
+const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current, currentSlug } = Astro.props;
 
 const site = Astro.site ?? new URL('https://adrieltang.vercel.app');
 const canonicalURL = new URL(Astro.url.pathname, site);
 const ogImageURL = new URL(ogImage, site);
 const allWork = await getCollection('work');
+
+// Structured data: who Adriel is and the freelance service. Every value comes
+// from src/data/site.ts or the configured `site` URL; nothing is invented here.
+const origin = new URL('/', site).href;
+const sameAs = [facts.github, facts.linkedin];
+const address = { '@type': 'PostalAddress', addressLocality: facts.city, addressCountry: facts.country };
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${origin}#person`,
+      name: facts.name,
+      url: origin,
+      email: `mailto:${facts.email}`,
+      jobTitle: 'Full stack developer',
+      address,
+      sameAs,
+    },
+    {
+      '@type': 'ProfessionalService',
+      '@id': `${origin}#service`,
+      name: facts.name,
+      description: home.description,
+      url: origin,
+      email: `mailto:${facts.email}`,
+      image: new URL('/og-default.png', site).href,
+      address,
+      areaServed: { '@type': 'Country', name: 'Malaysia' },
+      founder: { '@id': `${origin}#person` },
+      sameAs,
+    },
+  ],
+};
+// Escape `<` so no string value can close the script element early.
+const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
 ---
 <!doctype html>
 <html lang="en">
@@ -41,7 +79,7 @@ const allWork = await getCollection('work');
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImageURL} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <meta name="theme-color" content="#F4F5F6" media="(prefers-color-scheme: light)" />
@@ -51,6 +89,7 @@ const allWork = await getCollection('work');
     <link rel="preload" as="font" type="font/woff2" href={hankenWoff2} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={jetbrainsWoff2} crossorigin />
 
+    <script is:inline type="application/ld+json" set:html={jsonLdText} />
     <script is:inline set:html={headInline} />
     <script is:inline set:html={vtInline} />
   </head>

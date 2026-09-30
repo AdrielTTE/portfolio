@@ -9,11 +9,11 @@ const { prev, next } = Astro.props;
 ---
 <nav class="prev-next" aria-label="More work">
   <span class="side side-prev">
-    {prev && <a href={`/work/${prev.slug}`}>← {prev.title}</a>}
+    {prev && <a href={`/work/${prev.slug}/`}>← {prev.title}</a>}
   </span>
   <a href="/#work" class="all-work">All work</a>
   <span class="side side-next">
-    {next && <a href={`/work/${next.slug}`}>{next.title} →</a>}
+    {next && <a href={`/work/${next.slug}/`}>{next.title} →</a>}
   </span>
 </nav>
 

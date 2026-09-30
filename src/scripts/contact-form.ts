@@ -1,9 +1,13 @@
 // Progressive-enhancement contact form: works as a plain POST without this
-// script; with it, submits via fetch and shows inline states.
+// script (with native browser validation); with it, native validation is
+// switched off in favour of inline messages, and the form submits via fetch.
 // docs/design-spec.md §5.4.
 const form = document.getElementById('contact-form') as HTMLFormElement | null;
 
 if (form) {
+  // Only once the script runs: without JS the browser's own validation stays on.
+  form.noValidate = true;
+
   const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
   const submitLabel = submitButton?.querySelector('span');
   const formError = document.getElementById('form-error');
@@ -27,6 +31,28 @@ if (form) {
   for (const name of fields) {
     const el = fieldEl(name);
     el?.addEventListener('blur', () => markTouched(name));
+  }
+
+  function showSuccess() {
+    const box = document.createElement('div');
+    box.className = 'form-success';
+    const heading = document.createElement('h2');
+    heading.tabIndex = -1;
+    heading.textContent = 'Message sent.';
+    const next = document.createElement('p');
+    next.textContent = form!.dataset.successNote ?? '';
+    box.append(heading, next);
+    form!.replaceWith(box);
+    heading.focus();
+  }
+
+  function showError() {
+    if (!formError) return;
+    formError.textContent = 'Something went wrong and the message was not sent. Try again, or use WhatsApp or email instead.';
+    formError.hidden = false;
+    // It sits directly above the button; make sure it's on screen and read out.
+    formError.scrollIntoView({ block: 'center' });
+    formError.focus({ preventScroll: true });
   }
 
   form.addEventListener('submit', async (event) => {
@@ -54,25 +80,13 @@ if (form) {
         headers: { Accept: 'application/json' },
         body: new FormData(form),
       });
-
-      if (response.ok) {
-        const heading = document.createElement('h2');
-        heading.className = 'success-heading';
-        heading.tabIndex = -1;
-        heading.textContent = "Message sent. I'll get back to you soon.";
-        form.replaceWith(heading);
-        heading.focus();
-      } else {
-        throw new Error('Formspree error');
-      }
+      if (!response.ok) throw new Error('Formspree error');
+      showSuccess();
     } catch {
-      if (formError) {
-        formError.textContent = 'Something went wrong. Try WhatsApp or email instead.';
-        formError.hidden = false;
-      }
       form.removeAttribute('aria-busy');
       if (submitButton) submitButton.disabled = false;
       if (submitLabel) submitLabel.textContent = 'Send message';
+      showError();
     }
   });
 }

@@ -1,5 +1,6 @@
 ---
-// docs/design-spec.md §8. No pills: radius never over 2px.
+// docs/design-spec.md §8. Primary matches MagneticLink (docs/design-addendum.md
+// §6.1): accent fill, 4px radius, instant hover fill change. No pills.
 interface Props {
   as?: 'a' | 'button';
   href?: string;
@@ -35,17 +36,20 @@ const Tag = as;
     translate: 0 1px;
   }
   .btn--primary {
-    height: 48px;
+    min-height: 48px;
     padding-inline: 20px;
-    border: 1px solid var(--c-ink);
-    border-radius: 2px;
-    background: var(--c-ink);
-    color: var(--c-bg);
+    border: 0;
+    border-radius: 4px;
+    background: var(--c-accent);
+    color: var(--c-accent-ink);
+  }
+  .btn--primary:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 3px;
   }
   @media (hover: hover) and (pointer: fine) {
-    .btn--primary:hover {
-      background: var(--c-bg);
-      color: var(--c-ink);
+    .btn--primary:hover:not(:disabled) {
+      background: color-mix(in oklab, var(--c-accent) 86%, var(--c-ink));
     }
   }
   .btn--primary:disabled {

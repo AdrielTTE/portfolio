@@ -13,9 +13,9 @@ const { current } = Astro.props;
   <div class="container bar">
     <a href="/" class="name">Adriel Tang</a>
     <nav aria-label="Main" class="nav">
-      <a href="/#work" class="nav-link" aria-current={current === 'work' ? 'page' : undefined}>Work</a>
-      <a href="/about" class="nav-link" aria-current={current === 'about' ? 'page' : undefined}>About</a>
-      <a href="/contact" class="nav-link" aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
+      <a href="/#work" class="nav-link nav-link--wide" aria-current={current === 'work' ? 'page' : undefined}>Work</a>
+      <a href="/about/" class="nav-link nav-link--wide" aria-current={current === 'about' ? 'page' : undefined}>About</a>
+      <a href="/contact/" class="nav-link" aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
       <ThemeToggle />
       <a href="#site-footer" class="menu" data-palette-open aria-haspopup="dialog">
         Menu <kbd class="menu-hint" data-kbd-mod aria-hidden="true">⌘K</kbd>
@@ -73,6 +73,7 @@ const { current } = Astro.props;
     background: var(--c-ink);
   }
   .menu {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -85,6 +86,12 @@ const { current } = Astro.props;
     text-decoration: none;
     color: var(--c-ink);
   }
+  /* 44px hit area around the 36px box (addendum §6.1 keeps the box 36px). */
+  .menu::after {
+    content: '';
+    position: absolute;
+    inset: -5px -4px;
+  }
   .menu-hint {
     font-family: var(--font-mono);
     font-size: var(--step--1);
@@ -94,13 +101,30 @@ const { current } = Astro.props;
     .menu {
       min-height: 44px;
     }
+    .menu::after {
+      content: none;
+    }
     .menu-hint {
       display: none;
     }
   }
+  /* Phones: the palette is the nav (addendum §7.1), but Contact stays in
+     view as the one direct route. */
+  .name {
+    white-space: nowrap;
+  }
   @media (max-width: 599px) {
-    .nav-link {
+    .nav {
+      gap: 8px;
+    }
+    .menu-hint {
       display: none;
+    }
+    .nav-link--wide {
+      display: none;
+    }
+    .nav-link {
+      padding-inline: 4px;
     }
   }
 </style>

@@ -1,6 +1,9 @@
 ---
-// Screenshot in a phone or browser frame. Placeholder (real UI strings, no
-// imagery) when a project has no shots yet. docs/design-addendum.md §6.5.
+// Screenshot in a phone or browser frame. docs/design-addendum.md §6.5.
+// With no shots yet it renders an honest, compact placeholder: a shorter
+// backdrop (never a screen-sized empty box), the device outline, the app's
+// name and a plain "screenshots to come" note instead of repeating the
+// summary printed right above it. WorkList skips thumbs for these entirely.
 import { Image } from 'astro:assets';
 import type { WorkEntry } from '../lib/work';
 
@@ -10,9 +13,10 @@ const { device, shots, title, summary, accent, live } = project.data;
 const shot = shots[0];
 const widths = variant === 'thumb' ? [240, 480] : [640, 960, 1280, 1920];
 const host = live ? new URL(live).host : '';
+const empty = !shot;
 ---
 <figure
-  class={`frame frame--${device} frame--${variant}`}
+  class={`frame frame--${device} frame--${variant}${empty ? ' frame--empty' : ''}`}
   data-shot-slug={project.id}
   data-variant={variant}
   style={[accent && `--frame-tint:${accent}`, variant === 'hero' && 'view-transition-name: shot'].filter(Boolean).join(';')}
@@ -32,7 +36,7 @@ const host = live ? new URL(live).host : '';
       ) : (
         <div class="placeholder">
           <strong>{title}</strong>
-          <span>{summary}</span>
+          <span>{variant === 'thumb' ? summary : 'Screenshots to come'}</span>
         </div>
       )}
     </div>
@@ -60,6 +64,18 @@ const host = live ? new URL(live).host : '';
   }
   .frame--lead {
     aspect-ratio: 16 / 10;
+  }
+  /* No screenshot: a compact plate (still a fixed ratio, so zero CLS). */
+  .frame--hero.frame--empty {
+    aspect-ratio: 16 / 6;
+  }
+  .frame--lead.frame--empty {
+    aspect-ratio: 16 / 8;
+  }
+  @media (max-width: 599px) {
+    .frame--hero.frame--empty {
+      aspect-ratio: 16 / 9;
+    }
   }
   .frame--thumb {
     aspect-ratio: 4 / 3;
@@ -148,6 +164,37 @@ const host = live ? new URL(live).host : '';
   }
   .frame--phone .placeholder span {
     display: none;
+  }
+
+  /* Empty browser frame: only the top of the screen shows inside the short
+     plate, so the copy sits at the top, not the (cropped) middle. The note
+     is mono, like other meta text, so it never reads as app copy. */
+  .frame--empty.frame--browser .placeholder {
+    justify-content: flex-start;
+  }
+  .frame--empty .placeholder span {
+    font-family: var(--font-mono);
+  }
+  .frame--empty.frame--phone:not(.frame--thumb) .placeholder span {
+    display: block;
+    font-size: clamp(0.6rem, 7cqi, var(--step--1));
+  }
+  /* Empty phone: top-anchored and taller than the short plate, cropped at
+     the bottom like the browser frame, so its screen stays wide enough for
+     the name; the note drops out on the narrowest screens. */
+  .frame--empty.frame--phone:not(.frame--thumb) .bezel {
+    height: 120%;
+    top: 10%;
+    translate: -50% 0;
+  }
+  .frame--empty.frame--phone .placeholder {
+    justify-content: flex-start;
+    padding: clamp(4px, 10cqi, 24px) clamp(4px, 6cqi, 24px);
+  }
+  @container (max-width: 140px) {
+    .frame--empty .placeholder span {
+      display: none !important;
+    }
   }
 
   /* Thumb bezels (WorkList's 64px column) are too small for any placeholder

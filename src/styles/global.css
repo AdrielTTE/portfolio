@@ -177,15 +177,9 @@ h4,
   }
 }
 
-/* Theme toggle circular reveal (spec §5.3 item 9). theme-toggle.ts adds
-   .theme-vt only for the duration of its own transition and animates the
-   new snapshot's clip-path itself, so page navigations keep the crossfade
-   above. */
-html.theme-vt::view-transition-old(root),
-html.theme-vt::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
+/* Theme toggle (spec §5.3 item 9) reuses the root crossfade above: the
+   circular clip-path reveal was dropped to keep motion to transform and
+   opacity only. */
 
 /* Section reveals (spec §5.3 item 5). Hidden only under .js-reveal, which
    head-inline.js sets when JS runs and motion is allowed, so no-JS and

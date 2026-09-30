@@ -1,17 +1,21 @@
 ---
-// docs/design-spec.md §5.4. Works without JS (plain POST to Formspree);
-// with JS, submits via fetch and swaps in inline states.
+// docs/design-spec.md §5.4. Works without JS (plain POST to Formspree, with
+// native browser validation); with JS, the script turns native validation off,
+// submits via fetch and swaps in inline states. Every named field, including
+// the optional project type and timeline, goes to Formspree as-is.
 import Button from './Button.astro';
+import { site } from '../data/site';
 
 interface Props {
   endpoint: string;
   subject?: string;
 }
 const { endpoint, subject = 'Portfolio contact' } = Astro.props;
+const projectTypes = ['Website', 'Web app', 'Mobile app', 'Not sure'];
+// Shown under "Message sent." after a successful submit.
+const successNote = `${site.replyTime} Look out for an email from ${site.email}, usually with a few questions or a time for a short call.`;
 ---
-<form class="contact-form" id="contact-form" action={endpoint} method="POST" novalidate>
-  <p class="form-error" id="form-error" role="alert" hidden></p>
-
+<form class="contact-form" id="contact-form" action={endpoint} method="POST" data-success-note={successNote}>
   <div class="field">
     <label for="cf-name">Name</label>
     <input id="cf-name" name="name" type="text" autocomplete="name" required aria-describedby="cf-name-error" />
@@ -24,6 +28,24 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
     <p class="field-error" id="cf-email-error" hidden>Enter a valid email address.</p>
   </div>
 
+  <fieldset class="field choice">
+    <legend>What do you need? <span class="optional">Optional</span></legend>
+    <div class="options">
+      {projectTypes.map((type, i) => (
+        <label class="option" for={`cf-type-${i}`}>
+          <input id={`cf-type-${i}`} type="radio" name="project_type" value={type} />
+          <span>{type}</span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <label for="cf-timeline">Timeline <span class="optional">Optional</span></label>
+    <input id="cf-timeline" name="timeline" type="text" autocomplete="off" aria-describedby="cf-timeline-hint" />
+    <p class="hint" id="cf-timeline-hint">A launch date, a rough month, or "no fixed date".</p>
+  </div>
+
   <div class="field">
     <label for="cf-message">Message</label>
     <textarea id="cf-message" name="message" rows="8" required minlength="10" aria-describedby="cf-message-error"></textarea>
@@ -32,6 +54,8 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
 
   <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
   <input type="hidden" name="_subject" value={subject} />
+
+  <p class="form-error" id="form-error" role="alert" tabindex="-1" hidden></p>
 
   <Button as="button" type="submit" variant="primary" class="submit-btn">
     <span>Send message</span>
@@ -51,11 +75,33 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
     flex-direction: column;
     gap: 8px;
   }
-  label {
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  label,
+  legend {
     font-weight: 500;
     font-size: var(--step-0);
   }
-  input,
+  legend {
+    padding: 0;
+    margin-bottom: 8px;
+  }
+  .optional {
+    font-weight: 400;
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+    margin-left: 6px;
+  }
+  .hint {
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--c-ink-2);
+  }
+  input:not([type='radio']),
   textarea {
     height: 48px;
     padding: 12px;
@@ -70,7 +116,7 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
     resize: vertical;
   }
   @media (hover: hover) and (pointer: fine) {
-    input:hover,
+    input:not([type='radio']):hover,
     textarea:hover {
       border-color: var(--c-ink);
     }
@@ -80,6 +126,61 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
     border-color: var(--c-error);
     border-width: 2px;
   }
+
+  /* Project type: native radios in bordered rows (same field border, 48px
+     tall so each is a full touch target), wrapping two-up on narrow screens. */
+  .options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding-inline: 12px;
+    border: 1px solid var(--c-ink-2);
+    border-radius: 2px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .option input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: none;
+    accent-color: var(--c-accent);
+  }
+  .option:has(input:checked) {
+    border-color: var(--c-accent);
+    box-shadow: inset 0 0 0 1px var(--c-accent);
+  }
+  .option:has(input:focus-visible) {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .option:hover {
+      border-color: var(--c-ink);
+    }
+  }
+  @media (min-width: 600px) {
+    .options {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1280px) {
+    .options {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
   .field-error {
     color: var(--c-error);
     font-size: var(--step-0);
@@ -88,6 +189,10 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
   .form-error {
     color: var(--c-error);
     margin: 0;
+    scroll-margin-block: calc(var(--header-h) + var(--space-5));
+  }
+  .form-error:focus {
+    outline: none;
   }
   .submit-btn {
     width: 100%;
@@ -98,8 +203,14 @@ const { endpoint, subject = 'Portfolio contact' } = Astro.props;
       align-self: flex-start;
     }
   }
-  .success-heading {
+  /* Built by contact-form.ts after the form is removed, so not scoped. */
+  :global(.form-success h2) {
     font-size: var(--step-2);
     font-weight: 500;
+  }
+  :global(.form-success p) {
+    margin-top: 12px;
+    font-size: var(--step-1);
+    max-width: 48ch;
   }
 </style>
