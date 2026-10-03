@@ -78,16 +78,11 @@ const commands: Command[] = [
     transform-origin: top center;
   }
   dialog::backdrop {
-    background: rgb(15 32 25 / 0.45);
+    background: rgb(29 23 18 / 0.45);
     animation: fade var(--dur-base) var(--ease-enter);
   }
   :root[data-theme='dark'] dialog::backdrop {
     background: rgb(0 0 0 / 0.6);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) dialog::backdrop {
-      background: rgb(0 0 0 / 0.6);
-    }
   }
   /* Exit (palette.ts adds .closing, closes on animationend). `forwards`
      holds the end state for the frame before dialog.close(). */

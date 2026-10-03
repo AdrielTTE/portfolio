@@ -81,6 +81,22 @@ const year = new Date().getFullYear();
     font-size: var(--step-6);
     max-width: 12ch;
   }
+  /* Scroll-driven (where supported): the headline rises into place. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      h2 {
+        animation: foot-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 90%;
+      }
+    }
+  }
+  @keyframes foot-in {
+    from {
+      opacity: 0;
+      transform: translateY(48px);
+    }
+  }
   .hire-body {
     margin-top: var(--space-6);
     max-width: 44ch;

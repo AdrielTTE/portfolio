@@ -1,8 +1,8 @@
-// Cycles the theme Auto -> Light -> Dark, persists it, and updates the two
-// <meta name="theme-color"> tags so the browser chrome matches immediately.
+// Toggles the theme Light <-> Dark (light is the default), persists it, and
+// updates the <meta name="theme-color"> tags so the browser chrome matches immediately.
 // Storage can throw (private mode, blocked site data), so every access is
 // guarded, as in head-inline.js: the toggle still works for the page's life.
-const STATES = ['auto', 'light', 'dark'] as const;
+const STATES = ['light', 'dark'] as const;
 type ThemeState = (typeof STATES)[number];
 
 function readStored(): string | null {
@@ -15,8 +15,7 @@ function readStored(): string | null {
 
 function writeStored(state: ThemeState) {
   try {
-    if (state === 'auto') localStorage.removeItem('theme');
-    else localStorage.setItem('theme', state);
+    localStorage.setItem('theme', state);
   } catch {
     /* storage unavailable: the choice lasts until the next load */
   }
@@ -28,32 +27,20 @@ function currentState(): ThemeState {
   const attr = document.documentElement.getAttribute('data-theme');
   if (attr === 'light' || attr === 'dark') return attr;
   const stored = readStored();
-  return stored === 'light' || stored === 'dark' ? stored : 'auto';
+  return stored === 'dark' ? 'dark' : 'light';
 }
 
-const PAPER = { light: '#ECEEE6', dark: '#0F2A20' };
+const PAPER = { light: '#F1EEEA', dark: '#14100C' };
 
 function updateMetaThemeColor(state: ThemeState) {
-  const light = document.querySelector('meta[name="theme-color"][media*="light"]');
-  const dark = document.querySelector('meta[name="theme-color"][media*="dark"]');
-  if (!light || !dark) return;
-  if (state === 'auto') {
-    light.setAttribute('media', '(prefers-color-scheme: light)');
-    dark.setAttribute('media', '(prefers-color-scheme: dark)');
-  } else {
-    // Force both tags to the chosen colour regardless of system scheme.
-    light.setAttribute('media', '');
-    dark.setAttribute('media', '');
-    light.setAttribute('content', PAPER[state]);
-    dark.setAttribute('content', PAPER[state]);
-  }
+  const tag = document.querySelector('meta[name="theme-color"]');
+  if (tag) tag.setAttribute('content', PAPER[state]);
 }
 
 function apply(state: ThemeState) {
   const root = document.documentElement;
   root.classList.add('theme-switching');
-  if (state === 'auto') root.removeAttribute('data-theme');
-  else root.setAttribute('data-theme', state);
+  root.setAttribute('data-theme', state);
   writeStored(state);
   updateMetaThemeColor(state);
   requestAnimationFrame(() => {
@@ -62,7 +49,7 @@ function apply(state: ThemeState) {
 }
 
 function label(state: ThemeState): string {
-  return state === 'auto' ? 'Auto' : state === 'light' ? 'Light' : 'Dark';
+  return state === 'light' ? 'Light' : 'Dark';
 }
 
 const button = document.getElementById('theme-toggle');
@@ -74,7 +61,7 @@ if (button) {
   };
   const state = currentState();
   sync(state);
-  if (state !== 'auto') updateMetaThemeColor(state);
+  updateMetaThemeColor(state);
 
   button.addEventListener('click', () => {
     const next = STATES[(STATES.indexOf(currentState()) + 1) % STATES.length];

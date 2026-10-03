@@ -41,14 +41,6 @@ const light = extractVars(lightBlock, NAMES);
 const darkAttrBlock = extractBlock(css, /:root\[data-theme=['"]dark['"]\]\s*\{([^}]*)\}/);
 const darkAttr = extractVars(darkAttrBlock, NAMES);
 
-// Dark tokens, system preference: the block nested inside
-// `@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { ... } }`.
-const darkMediaBlock = extractBlock(
-  css,
-  /@media \(prefers-color-scheme:\s*dark\)\s*\{\s*:root:not\(\[data-theme=['"]light['"]\]\)\s*\{([^}]*)\}/
-);
-const darkMedia = extractVars(darkMediaBlock, NAMES);
-
 const block = extractVars(lightBlock, ['c-block', 'c-block-ink', 'c-block-ink-2']);
 const lightPanel = extractVars(lightBlock, ['c-ink-2', 'c-bg-2']);
 const darkPanel = extractVars(darkAttrBlock, ['c-ink-2', 'c-bg-2']);
@@ -119,7 +111,4 @@ describe('colour token contrast (design-addendum.md §2.2)', () => {
     expect(contrastRatio(darkPanel['c-ink-2'], darkPanel['c-bg-2'])).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('the prefers-color-scheme dark block matches the [data-theme="dark"] block', () => {
-    expect(darkMedia).toEqual(darkAttr);
-  });
 });
