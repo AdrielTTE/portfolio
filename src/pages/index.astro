@@ -13,6 +13,11 @@ import { offersWithProjects } from '../lib/offers';
 
 const allWork = await getCollection('work');
 const offers = offersWithProjects(allWork);
+// The three things I build get a drawn underline in the pitch.
+const emphasis = ['web apps', 'APIs and databases', 'mobile apps'];
+const pitchParts = home.pitch
+  .split(new RegExp(`(${emphasis.join('|')})`))
+  .map((text) => ({ text, em: emphasis.includes(text) }));
 ---
 <BaseLayout title={home.title} description={home.description}>
   <div class="container home">
@@ -26,7 +31,7 @@ const offers = offersWithProjects(allWork);
           <p>{home.roleLine}</p>
         </div>
         <div class="what">
-          <p class="pitch line-rise" style="--i:3">{home.pitch}</p>
+          <p class="pitch line-rise" style="--i:3">{pitchParts.map((p, i) => (p.em ? <span class="u" style={`--u:${pitchParts.slice(0, i).filter((q) => q.em).length}`}>{p.text}</span> : p.text))}</p>
           <div class="actions line-rise" style="--i:4">
             <MagneticLink href="/contact/">Start a project</MagneticLink>
             <p class="avail">{site.availability}</p>
@@ -67,6 +72,7 @@ const offers = offersWithProjects(allWork);
 </BaseLayout>
 
 <script src="../scripts/reveal-sections.ts"></script>
+<script src="../scripts/hero-shape.ts"></script>
 
 <style>
   .intro {
@@ -75,6 +81,11 @@ const offers = offersWithProjects(allWork);
   }
   /* A flat quarter-circle bleeding off the top-right corner, a tint of the
      paper. Static; the text sits above it. */
+  /* The container edge is the viewport edge: clip there so the shape can drift
+     past it without adding a horizontal scrollbar. */
+  .home {
+    overflow-x: clip;
+  }
   .intro::before {
     content: '';
     position: absolute;
@@ -85,6 +96,56 @@ const offers = offersWithProjects(allWork);
     border-bottom-left-radius: 100%;
     background: var(--c-shape-paper);
     pointer-events: none;
+    /* Pointer drift (hero-shape.ts) via the independent translate property. */
+    translate: var(--sx, 0) var(--sy, 0);
+  }
+  /* The shape swings in from the corner once per session. */
+  :global(.js-reveal:not(.intro-seen)) .intro::before {
+    animation: shape-in 900ms var(--ease-enter) both;
+    transform-origin: 100% 0;
+  }
+  @keyframes shape-in {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+  }
+  /* Underlines under the three things I build draw in left to right, one
+     after the other, after the pitch has risen. */
+  /* The underline is a background gradient (not a pseudo-element) so it
+     follows a phrase that wraps onto two lines. */
+  .u {
+    background: linear-gradient(var(--c-accent), var(--c-accent)) no-repeat 0 96% / 100% max(0.07em, 3px);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  :global(.js-reveal:not(.intro-seen)) .u {
+    animation: u-draw 700ms var(--ease-enter) both;
+    animation-delay: calc(500ms + var(--u, 0) * 220ms);
+  }
+  @keyframes u-draw {
+    from {
+      background-size: 0% max(0.07em, 3px);
+    }
+  }
+  /* A slow breathing dot makes "taking on projects" read as live. */
+  .avail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .avail::before {
+    content: '';
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--c-accent);
+    animation: breathe 2800ms ease-in-out infinite;
+  }
+  @keyframes breathe {
+    50% {
+      opacity: 0.25;
+    }
   }
   .intro > * {
     position: relative;
