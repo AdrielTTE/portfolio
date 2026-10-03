@@ -1,0 +1,74 @@
+---
+title: "Crest"
+seoTitle: "Crest: An Offline-First Gym Tracker"
+seoDescription: "Crest is an offline-first Android gym workout tracker built with Flutter, Drift and Riverpod, with a live workout notification and Drive backup."
+summary: "An offline-first gym workout tracker: log sets, run rest timers, and see progress without a connection."
+scope: "Mobile app"
+stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
+year: 2026
+role: "Design and build"
+repo: "https://github.com/AdrielTTE/crest"
+offers: ["mobile"]
+shots:
+  - src: "../../assets/work/crest/stats.png"
+    alt: "Crest Stats screen: weekly volume chart and sets per muscle, in the dark theme"
+  - src: "../../assets/work/crest/history.png"
+    alt: "Crest History screen: monthly totals and a list of past workouts with personal records"
+featured: true
+order: 1
+problem: |-
+  Gyms have bad signal and sweaty hands. A workout tracker has to log a set in a couple of taps, keep a rest timer running with the screen off, and never lose data because the network dropped. Crest keeps everything in a local SQLite database and treats the network as optional.
+decision: |-
+  All data lives in Drift/SQLite on the device, and backup is a separate, optional step (Google Drive or a local folder) instead of a sync layer the app depends on. That keeps every screen fast and working offline, and means a failed backup can never block a workout.
+change: |-
+  I'd add automated tests around the set-logging and session-summary logic earlier. The visual and motion work moved quickly, and that logic is where a silent bug would cost a user their numbers.
+forYou: |-
+  This is a personal project, not a client job, but it covers what most mobile apps need: a real local database, background behaviour (an ongoing notification and rest timers), backup and restore, and charts. A mobile app for your business would be built the same way, with the offline case designed in from the start.
+diagram:
+  nodes:
+    - id: session
+      label: Active session
+      note: "Logs sets against the current workout and drives the rest timer (features/session)."
+    - id: database
+      label: Drift / SQLite
+      note: "Local source of truth for exercises, templates, sessions and set logs (data/tables.dart)."
+    - id: history
+      label: History and PRs
+      note: "Reads finished sessions and works out personal records (features/history)."
+    - id: analytics
+      label: Analytics
+      note: "Aggregates volume and progress over time into charts (features/analytics)."
+    - id: notifications
+      label: Live notification
+      note: "Shows the running session and rest countdown outside the app (services/live_workout_notifications.dart)."
+    - id: backup
+      label: Backup
+      note: "Optional export to Google Drive or a local folder, and restore (services/drive_backup.dart)."
+  edges:
+    - [session, database]
+    - [session, notifications]
+    - [database, history]
+    - [database, analytics]
+    - [database, backup]
+schema:
+  - table: exercises
+    fields: [name, primaryMuscle, secondaryMuscles, equipment, isLowerBody, isCustom, archived, notes]
+  - table: templates
+    fields: [name]
+  - table: template_exercises
+    fields: [templateId, exerciseId, order]
+  - table: sessions
+    fields: [templateId, name, startedAt, endedAt, notes, restEndsAt]
+  - table: session_exercises
+    fields: [sessionId, exerciseId, order, supersetGroup]
+  - table: set_logs
+    fields: [sessionExerciseId, order, type, weightKg, reps, rpe, completedAt, restSec]
+  - table: app_settings
+    fields: [unit, barKg]
+---
+
+Crest is an offline-first gym workout tracker for Android, built with Flutter. You pick a template or start an empty session, log each set, and a rest timer runs between them. Afterwards you get history, personal records and charts of your progress.
+
+### Who it's for
+
+Someone who lifts and wants a fast, quiet logbook that works with no signal and doesn't ask for an account.

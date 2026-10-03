@@ -1,8 +1,7 @@
 /* Design tokens: colour, type, space, grid, motion.
-   Art direction (docs/design-addendum.md §0): a two-colour print job. Bottle
-   green ink on a pale green-grey paper, one spot colour (saffron) used as a
-   solid block, never as a tint or gradient. Dark mode is the same job
-   reversed: the paper becomes the green, saffron becomes the ink you click. */
+   Art direction: a two-colour print job. Espresso brown ink on a stone paper,
+   with the same brown as a flat field (the stack band and the site footer).
+   Dark mode is the same job reversed: near-black brown paper, pale tan accent. */
 
 /* Metric-matched fallback for Archivo (computed with fontkit from the
    Fontsource woff2 against Arial: hhea 878/-210 on a 1000 upm, average
@@ -20,19 +19,19 @@
   color-scheme: light;
 
   /* colour */
-  --c-bg: #eceee6;
-  --c-bg-2: #e0e3d8;
-  --c-ink: #0f2019;
-  --c-ink-2: #4a5a51;
-  --c-rule: #c9cfc2;
-  --c-accent: #11513a;
-  --c-accent-ink: #eef2e8;
-  --c-focus: #11513a;
+  --c-bg: #f1eeea;
+  --c-bg-2: #e5dfd8;
+  --c-ink: #1d1712;
+  --c-ink-2: #675d54;
+  --c-rule: #d8d0c6;
+  --c-accent: #43301f;
+  --c-accent-ink: #f1eadf;
+  --c-focus: #43301f;
   --c-error: #b42318;
-  /* The spot colour: a solid block (site footer), same in both themes. */
-  --c-block: #f2be22;
-  --c-block-ink: #0f2019;
-  --c-block-ink-2: #3d4a3f;
+  /* The flat colour field: site footer and stack band. */
+  --c-block: #43301f;
+  --c-block-ink: #f1eadf;
+  --c-block-ink-2: #cdbfae;
   /* The masthead and big display words take the accent. */
   --c-display: var(--c-accent);
 
@@ -93,26 +92,32 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --c-bg: #0f2a20;
-    --c-bg-2: #16362a;
-    --c-ink: #e8ede3;
-    --c-ink-2: #a3b4a9;
-    --c-rule: #2b4a3d;
-    --c-accent: #f2be22;
-    --c-accent-ink: #0f2a20;
-    --c-focus: #f2be22;
+    --c-bg: #14100c;
+    --c-bg-2: #1d1812;
+    --c-ink: #efe9e1;
+    --c-ink-2: #aea294;
+    --c-rule: #342b21;
+    --c-accent: #d2b48f;
+    --c-accent-ink: #14100c;
+    --c-focus: #d2b48f;
     --c-error: #ff8a7a;
+    --c-block: #55402b;
+    --c-block-ink: #f1eadf;
+    --c-block-ink-2: #d4c6b4;
   }
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --c-bg: #0f2a20;
-  --c-bg-2: #16362a;
-  --c-ink: #e8ede3;
-  --c-ink-2: #a3b4a9;
-  --c-rule: #2b4a3d;
-  --c-accent: #f2be22;
-  --c-accent-ink: #0f2a20;
-  --c-focus: #f2be22;
+  --c-bg: #14100c;
+  --c-bg-2: #1d1812;
+  --c-ink: #efe9e1;
+  --c-ink-2: #aea294;
+  --c-rule: #342b21;
+  --c-accent: #d2b48f;
+  --c-accent-ink: #14100c;
+  --c-focus: #d2b48f;
   --c-error: #ff8a7a;
+  --c-block: #55402b;
+  --c-block-ink: #f1eadf;
+  --c-block-ink-2: #d4c6b4;
 }

@@ -6,6 +6,7 @@
 // of them rather than framing empty devices.
 // Borrowed: the title/subline index from frankchimero.com, scaled up to the
 // big condensed titles of henry.codes.
+import { Image } from 'astro:assets';
 import type { WorkEntry } from '../lib/work';
 
 interface Props { projects: WorkEntry[] }
@@ -24,10 +25,23 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
             <span class="meta">{p.data.scope}, {p.data.year}. {p.data.stack.join(', ')}.</span>
           </span>
         </a>
+        <div class="peek" aria-hidden="true">
+          {p.data.shots[0] ? (
+            <Image src={p.data.shots[0].src} alt="" width={300} class="peek-img" />
+          ) : (
+            <>
+              <span class="peek-year">{p.data.year}</span>
+              <span class="peek-scope">{p.data.scope}</span>
+              <span class="peek-stack">{p.data.stack.join(' / ')}</span>
+            </>
+          )}
+        </div>
       </li>
     ))}
   </ol>
 </section>
+
+<script src="../scripts/work-peek.ts"></script>
 
 <style>
   .section-h {
@@ -90,6 +104,74 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     }
   }
 
+  /* Pointer-following card (work-peek.ts). Hidden everywhere except fine
+     pointers; JS moves it with transform, CSS fades it with opacity. */
+  .peek {
+    display: none;
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .peek {
+      display: grid;
+      align-content: space-between;
+      gap: var(--space-4);
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 20;
+      width: 300px;
+      height: 200px;
+      padding: var(--space-4);
+      overflow: hidden;
+      background: var(--c-block);
+      color: var(--c-block-ink);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--dur-base) var(--ease-enter);
+    }
+    .peek.on {
+      opacity: 1;
+    }
+    .peek-year {
+      font-family: var(--font-sans);
+      font-stretch: var(--display-stretch);
+      font-weight: 800;
+      font-size: 72px;
+      line-height: 0.85;
+    }
+    .peek-scope {
+      font-weight: 600;
+    }
+    .peek-stack {
+      color: var(--c-block-ink-2);
+      font-size: var(--step--1);
+    }
+    .peek :global(.peek-img) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  /* Scroll-driven (where supported): each title slides in as its row enters
+     the viewport. Transform and opacity only; no scroll listener. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .title {
+        animation: title-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 70%;
+      }
+    }
+  }
+  @keyframes title-in {
+    from {
+      opacity: 0;
+      transform: translateX(-32px);
+    }
+  }
+
   /* Fine pointers: the title slides in and the arrow arrives. Touch keeps
      the arrow visible at rest, so the row still reads as a link. */
   @media (hover: hover) and (pointer: fine) {
@@ -105,6 +187,13 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     }
     .work-row a:hover .title {
       transform: translateX(12px);
+    }
+    .work-row {
+      transition: opacity var(--dur-base) var(--ease-enter);
+    }
+    .rows:has(a:hover) .work-row:not(:hover),
+    .rows:has(a:focus-visible) .work-row:not(:has(a:focus-visible)) {
+      opacity: 0.4;
     }
     .work-row a:hover .go {
       opacity: 1;
