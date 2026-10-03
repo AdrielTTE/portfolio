@@ -71,42 +71,25 @@ const offers = offersWithProjects(allWork);
 <style>
   .intro {
     padding-top: clamp(var(--space-5), 2.5vw + 16px, var(--space-8));
-    /* The masthead words slide sideways on scroll; keep that from adding a
-       horizontal scrollbar. */
-    overflow-x: clip;
+    position: relative;
+  }
+  /* A flat quarter-circle bleeding off the top-right corner, a tint of the
+     paper. Static; the text sits above it. */
+  .intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: calc(-1 * var(--margin));
+    width: min(78vw, 820px);
+    aspect-ratio: 1;
+    border-bottom-left-radius: 100%;
+    background: var(--c-shape-paper);
+    pointer-events: none;
+  }
+  .intro > * {
+    position: relative;
   }
 
-  /* Scroll-driven (where supported): as the page scrolls away from the top,
-     the two words slide apart and fade. translate and opacity only, no
-     scroll listener. */
-  @supports (animation-timeline: scroll()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .masthead > .line-mask {
-        animation-timeline: scroll(root);
-        animation-range: 0 70vh;
-        animation-fill-mode: both;
-        animation-timing-function: linear;
-      }
-      .masthead > .line-mask:nth-child(1) {
-        animation-name: word-left;
-      }
-      .masthead > .line-mask:nth-child(2) {
-        animation-name: word-right;
-      }
-    }
-  }
-  @keyframes word-left {
-    to {
-      translate: -14vw 0;
-      opacity: 0.15;
-    }
-  }
-  @keyframes word-right {
-    to {
-      translate: 14vw 0;
-      opacity: 0.15;
-    }
-  }
 
   /* The masthead: two stacked words on phones, one line across the full
      measure from 600px. Sized off the viewport so it always fills, never

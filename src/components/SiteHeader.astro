@@ -70,13 +70,29 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
     text-decoration: none;
     color: var(--c-ink);
   }
-  .nav-link[aria-current] {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 6px;
+  /* The nav underline slides in from the left (transform only). */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-base) var(--ease-enter);
+  }
+  .nav-link[aria-current]::after {
+    transform: scaleX(1);
   }
   @media (hover: hover) and (pointer: fine) {
-    .nav-link:hover,
+    .nav-link:hover::after {
+      transform: scaleX(1);
+    }
     .menu:hover,
     .name:hover {
       text-decoration: underline;

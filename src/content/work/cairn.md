@@ -9,10 +9,13 @@ year: 2026
 role: "Design and build"
 repo: "https://github.com/AdrielTTE/cairn"
 offers: ["mobile"]
+mark: "cards"
 shots:
   - src: "../../assets/work/cairn/today.png"
+    label: "Today"
     alt: "Cairn Today screen: schedule from the calendar and starred mail"
   - src: "../../assets/work/cairn/inbox.png"
+    label: "Inbox"
     alt: "Cairn Inbox screen: task capture field and starred mail with an Add task action"
 featured: true
 order: 2

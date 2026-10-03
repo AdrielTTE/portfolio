@@ -26,6 +26,8 @@
   .progress {
     position: relative;
     container-type: inline-size;
+    /* The knob sits half past the end at 100%; keep it from adding a horizontal scrollbar. */
+    overflow-x: clip;
     height: 2px;
     cursor: ew-resize;
     touch-action: none;

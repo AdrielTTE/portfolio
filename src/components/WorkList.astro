@@ -6,7 +6,7 @@
 // of them rather than framing empty devices.
 // Borrowed: the title/subline index from frankchimero.com, scaled up to the
 // big condensed titles of henry.codes.
-import { Image } from 'astro:assets';
+import ProjectMark from './ProjectMark.astro';
 import type { WorkEntry } from '../lib/work';
 
 interface Props { projects: WorkEntry[] }
@@ -19,29 +19,17 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     {rows.map((p) => (
       <li class="work-row">
         <a href={`/work/${p.id}/`}>
-          <span class="title display">{p.data.title}<span class="go arrow" aria-hidden="true">→</span></span>
+          <span class="title display">{p.data.title}<span class="go arrow" aria-hidden="true">→</span><span class="mk"><ProjectMark kind={p.data.mark} /></span></span>
           <span class="about">
             <span class="line">{p.data.summary}</span>
             <span class="meta">{p.data.scope}, {p.data.year}. {p.data.stack.join(', ')}.</span>
           </span>
         </a>
-        <div class="peek" aria-hidden="true">
-          {p.data.shots[0] ? (
-            <Image src={p.data.shots[0].src} alt="" width={300} class="peek-img" />
-          ) : (
-            <>
-              <span class="peek-year">{p.data.year}</span>
-              <span class="peek-scope">{p.data.scope}</span>
-              <span class="peek-stack">{p.data.stack.join(' / ')}</span>
-            </>
-          )}
-        </div>
       </li>
     ))}
   </ol>
 </section>
 
-<script src="../scripts/work-peek.ts"></script>
 
 <style>
   .section-h {
@@ -70,6 +58,16 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     align-items: baseline;
     gap: 0.25em;
     padding-bottom: 0.06em;
+  }
+  .mk {
+    margin-left: auto;
+    align-self: center;
+    --mark: 48px;
+  }
+  @media (min-width: 1024px) {
+    .mk {
+      --mark: 88px;
+    }
   }
   .go {
     font-size: 0.5em;
@@ -101,56 +99,6 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     }
     .about {
       padding-bottom: 0.6em;
-    }
-  }
-
-  /* Pointer-following card (work-peek.ts). Hidden everywhere except fine
-     pointers; JS moves it with transform, CSS fades it with opacity. */
-  .peek {
-    display: none;
-  }
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .peek {
-      display: grid;
-      align-content: space-between;
-      gap: var(--space-4);
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 20;
-      width: 300px;
-      height: 200px;
-      padding: var(--space-4);
-      overflow: hidden;
-      background: var(--c-block);
-      color: var(--c-block-ink);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity var(--dur-base) var(--ease-enter);
-    }
-    .peek.on {
-      opacity: 1;
-    }
-    .peek-year {
-      font-family: var(--font-sans);
-      font-stretch: var(--display-stretch);
-      font-weight: 800;
-      font-size: 72px;
-      line-height: 0.85;
-    }
-    .peek-scope {
-      font-weight: 600;
-    }
-    .peek-stack {
-      color: var(--c-block-ink-2);
-      font-size: var(--step--1);
-    }
-    .peek :global(.peek-img) {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
   }
 

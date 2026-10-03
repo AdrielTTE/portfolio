@@ -32,7 +32,7 @@ const work = defineCollection({
       repo: z.url().optional(),
       live: z.url().optional(),
       offers: z.array(z.enum(['webapps', 'apis', 'mobile'])).default([]),
-      shots: z.array(z.object({ src: image(), alt: z.string() })).default([]),
+      shots: z.array(z.object({ src: image(), alt: z.string(), label: z.string().optional() })).default([]),
       diagram: diagram.optional(),
       schema: z.array(z.object({ table: z.string(), fields: z.array(z.string()).min(1) })).optional(),
       problem: z.string().optional(),
@@ -42,6 +42,8 @@ const work = defineCollection({
       // Show the measured build receipts (page weight, JS, Lighthouse) on
       // this case study. Only true for this site: it's the one build measured.
       receipts: z.boolean().default(false),
+      // Small flat mark shown beside the title (ProjectMark.astro).
+      mark: z.enum(['bars', 'cards', 'disc']).optional(),
       featured: z.boolean().default(false),
       order: z.number().default(0),
     }),

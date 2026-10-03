@@ -4,6 +4,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Shots from '../../components/Shots.astro';
+import ProjectMark from '../../components/ProjectMark.astro';
 import FactsRow from '../../components/FactsRow.astro';
 import Prose from '../../components/Prose.astro';
 import PrevNext from '../../components/PrevNext.astro';
@@ -44,6 +45,7 @@ const { prev, next } = getPrevNext(allWork, project.id);
     <header class="title-block">
       <h1 class="display">{title}</h1>
       <p class="summary">{summary}</p>
+      {project.data.mark && <div class="mark-slot"><ProjectMark kind={project.data.mark} /></div>}
     </header>
 
     <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} />
@@ -105,6 +107,10 @@ const { prev, next } = getPrevNext(allWork, project.id);
     display: grid;
     gap: var(--space-5);
   }
+  .mark-slot {
+    --mark: 56px;
+    order: -1;
+  }
   h1 {
     font-size: clamp(64px, 11vw, 176px);
     line-height: 0.82;
@@ -127,6 +133,10 @@ const { prev, next } = getPrevNext(allWork, project.id);
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--gutter);
       align-items: end;
+    }
+    .mark-slot {
+      --mark: 72px;
+      grid-column: 1 / -1;
     }
     h1 {
       grid-column: 1 / span 8;

@@ -1,20 +1,55 @@
 ---
-// Real screenshots of a project, laid out as one justified row on a solid
-// colour field (the accent: espresso in light, tan in dark). No device
-// bezels or fake browser chrome: the screenshots are shown as what they are.
+// Real screenshots of a project, on a solid colour field (the accent). No fake
+// browser chrome.
+// - All phone screens: an interactive viewer. One phone frame shows the
+//   chosen screen; the labelled tabs beside it swap it (click, tap, hover or
+//   arrow keys). Without JS the screens simply sit side by side.
+// - Anything else: one justified row, every image the same height.
 // Each image's flex-grow is its aspect ratio, so a phone shot takes a narrow
-// slot beside the desktop ones and every image in the row shares one height.
-// Renders nothing for a project without screenshots.
+// slot beside the desktop ones. Renders nothing for a project without
+// screenshots.
 import { Image } from 'astro:assets';
 import type { WorkEntry } from '../lib/work';
 
 interface Props { project: WorkEntry }
 const { shots } = Astro.props.project.data;
+const ratioOf = (s: (typeof shots)[number]) => s.src.width / s.src.height;
+const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
 ---
-{shots.length > 0 && (
+{shots.length > 0 && allPhones && (
+  <div class="shots viewer" data-viewer>
+    <div class="phones">
+      {shots.map((s, i) => (
+        <div class:list={['phone', { on: i === 0 }]} data-i={i}>
+          <div class="screen">
+            <Image
+              src={s.src}
+              alt={s.alt}
+              widths={[320, 480, 720]}
+              sizes="(min-width: 800px) 340px, 60vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="side">
+      <div class="tabs" role="tablist" aria-label="Screens">
+        {shots.map((s, i) => (
+          <button type="button" role="tab" class="tab" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-i={i}>
+            {s.label ?? `Screen ${i + 1}`}
+          </button>
+        ))}
+      </div>
+      <p class="cap" aria-live="polite">{shots[0].alt}</p>
+    </div>
+  </div>
+)}
+{shots.length > 0 && !allPhones && (
   <div class="shots">
     {shots.map((s, i) => {
-      const ratio = s.src.width / s.src.height;
+      const ratio = ratioOf(s);
       return (
         <figure class={ratio < 1 ? 'tall' : undefined} style={`--r:${ratio.toFixed(3)}`}>
           <Image
@@ -31,6 +66,8 @@ const { shots } = Astro.props.project.data;
   </div>
 )}
 
+<script src="../scripts/shots-viewer.ts"></script>
+
 <style>
   /* Phones: one column; a tall (phone) shot is held to a readable width. */
   .shots {
@@ -45,6 +82,7 @@ const { shots } = Astro.props.project.data;
     width: 100%;
     aspect-ratio: var(--r);
     min-width: 0;
+    overflow: hidden;
   }
   figure.tall {
     width: 58%;
@@ -57,7 +95,7 @@ const { shots } = Astro.props.project.data;
   }
   /* Wider: one justified row, every image the same height. */
   @media (min-width: 600px) {
-    .shots {
+    .shots:not(.viewer) {
       display: flex;
       align-items: flex-start;
     }
@@ -65,6 +103,159 @@ const { shots } = Astro.props.project.data;
     figure.tall {
       width: auto;
       flex: var(--r) 1 calc(var(--r) * 100px);
+    }
+  }
+  /* Fine pointers: a very slow 2% push-in on the image under the cursor. */
+  @media (hover: hover) and (pointer: fine) {
+    figure :global(img) {
+      transition: transform 900ms var(--ease-enter);
+    }
+    figure:hover :global(img) {
+      transform: scale(1.02);
+    }
+  }
+
+  /* The phone viewer ----------------------------------------------------- */
+  .viewer {
+    color: var(--c-accent-ink);
+    gap: var(--space-6);
+    padding-block: clamp(24px, 4vw, 64px);
+  }
+  /* No JS: the screens sit side by side and the tabs are hidden. */
+  .phones {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    width: min(100%, 560px);
+  }
+  .phone {
+    padding: 7px;
+    border-radius: 28px;
+    background: #0b0a09;
+  }
+  .screen {
+    aspect-ratio: 1344 / 2992;
+    border-radius: 21px;
+    overflow: hidden;
+    background: #14100c;
+  }
+  .screen :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .side {
+    display: none;
+  }
+
+  /* JS on: one phone, stacked screens, tabs. */
+  .viewer.live .phones {
+    display: block;
+    position: relative;
+    width: min(62vw, 320px);
+  }
+  .viewer.live .phone:not(:first-child) {
+    position: absolute;
+    inset: 0;
+  }
+  .viewer.live .phone {
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-enter);
+  }
+  .viewer.live .phone.on {
+    opacity: 1;
+  }
+  .viewer.live .side {
+    display: grid;
+    gap: var(--space-4);
+    align-content: center;
+    justify-items: center;
+    text-align: center;
+  }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-5);
+  }
+  .tab {
+    position: relative;
+    padding: 0;
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-stretch: var(--display-stretch);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: var(--step-4);
+    line-height: 1;
+    opacity: 0.5;
+    transition: opacity var(--dur-base) var(--ease-enter);
+  }
+  .tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 3px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--dur-base) var(--ease-enter);
+  }
+  .tab[aria-selected='true'] {
+    opacity: 1;
+  }
+  .tab[aria-selected='true']::after {
+    transform: scaleX(1);
+  }
+  .tab:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+  .cap {
+    max-width: 32ch;
+    font-size: var(--step-0);
+    opacity: 0.85;
+    min-height: 4.5em;
+  }
+  @media (min-width: 800px) {
+    .viewer.live {
+      grid-template-columns: auto minmax(0, 1fr);
+      justify-items: start;
+      align-items: center;
+      column-gap: clamp(32px, 6vw, 96px);
+      padding-inline: clamp(24px, 6vw, 96px);
+    }
+    .viewer.live .phones {
+      width: clamp(240px, 24vw, 340px);
+    }
+    .viewer.live .side {
+      justify-items: start;
+      text-align: left;
+    }
+    .tabs {
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: var(--space-2);
+    }
+    .tab {
+      font-size: var(--step-5);
+      text-align: left;
+    }
+  }
+  /* Fine pointers: the phone pushes in 1.5% over a long, slow ease. */
+  @media (hover: hover) and (pointer: fine) {
+    .viewer.live .phones {
+      transition: transform 900ms var(--ease-enter);
+    }
+    .viewer.live .phones:hover {
+      transform: scale(1.015);
     }
   }
 </style>
