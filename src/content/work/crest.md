@@ -21,8 +21,6 @@ featured: true
 order: 1
 problem: |-
   Gyms have bad signal and sweaty hands. A workout tracker has to log a set in a couple of taps, keep a rest timer running with the screen off, and never lose data because the network dropped. Crest keeps everything in a local SQLite database and treats the network as optional.
-decision: |-
-  All data lives in Drift/SQLite on the device, and backup is a separate, optional step (Google Drive or a local folder) instead of a sync layer the app depends on. That keeps every screen fast and working offline, and means a failed backup can never block a workout.
 change: |-
   I'd add automated tests around the set-logging and session-summary logic earlier. The visual and motion work moved quickly, and that logic is where a silent bug would cost a user their numbers.
 forYou: |-
@@ -53,21 +51,6 @@ diagram:
     - [database, history]
     - [database, analytics]
     - [database, backup]
-schema:
-  - table: exercises
-    fields: [name, primaryMuscle, secondaryMuscles, equipment, isLowerBody, isCustom, archived, notes]
-  - table: templates
-    fields: [name]
-  - table: template_exercises
-    fields: [templateId, exerciseId, order]
-  - table: sessions
-    fields: [templateId, name, startedAt, endedAt, notes, restEndsAt]
-  - table: session_exercises
-    fields: [sessionId, exerciseId, order, supersetGroup]
-  - table: set_logs
-    fields: [sessionExerciseId, order, type, weightKg, reps, rpe, completedAt, restSec]
-  - table: app_settings
-    fields: [unit, barKg]
 ---
 
 Crest is an offline-first gym workout tracker for Android, built with Flutter. You pick a template or start an empty session, log each set, and a rest timer runs between them. Afterwards you get history, personal records and charts of your progress.
