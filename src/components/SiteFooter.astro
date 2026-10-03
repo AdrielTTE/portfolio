@@ -1,6 +1,6 @@
 ---
-// Site footer, and the one colour block on the site: a solid saffron back
-// cover (the spot colour, the same in both themes). On every page but
+// Site footer, and the one colour block on the site: a solid espresso back
+// cover (the flat colour field). On every page but
 // /contact it opens with the hire moment, so no page needs its own CTA band.
 // Borrowed: the solid colour field from felixpeault.com's colour-blocked
 // sections; the "back cover" idea from print. "Source" link is left out until
@@ -44,6 +44,7 @@ const year = new Date().getFullYear();
       <p class="colophon-line">
         <span>© {year} Adriel Tang, {site.city}.</span>
         <span>Built with Astro, set in Archivo.</span>
+        <span class="local" data-clock-wrap hidden>Local time <span data-clock>--:--</span> in {site.city}.</span>
         <span class="palette-hint">Press <kbd data-kbd-mod>⌘K</kbd> to jump anywhere.</span>
         <span class="sha" data-receipt-wrap="sha" hidden>Built from <a data-receipt="sha" data-href-template="https://github.com/AdrielTTE/portfolio/commit/{v}" hidden></a></span>
       </p>
@@ -51,13 +52,15 @@ const year = new Date().getFullYear();
   </div>
 </footer>
 
+<script src="../scripts/clock.ts"></script>
+
 <style>
   .site-footer {
     margin-top: var(--section);
     background: var(--c-block);
     color: var(--c-block-ink);
     padding-block: var(--space-9) var(--space-6);
-    /* Everything inside reads on saffron in both themes. */
+    /* Everything inside reads on the espresso field in both themes. */
     --c-ink: var(--c-block-ink);
     --c-ink-2: var(--c-block-ink-2);
     --c-focus: var(--c-block-ink);
@@ -66,7 +69,7 @@ const year = new Date().getFullYear();
   .hire {
     padding-bottom: var(--space-9);
   }
-  /* No hire block (on /contact): just the base line on the saffron. */
+  /* No hire block (on /contact): just the base line on the espresso field. */
   .slim {
     padding-top: var(--space-5);
   }
@@ -104,7 +107,7 @@ const year = new Date().getFullYear();
     flex-wrap: wrap;
     gap: var(--space-3);
   }
-  /* On the saffron block the primary button inverts to green ink. */
+  /* On the saffron block the primary button inverts to the paper colour. */
   .actions :global(.magnetic) {
     background: var(--c-block-ink);
     color: var(--c-block);

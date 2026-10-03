@@ -7,6 +7,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkList from '../components/WorkList.astro';
+import StackBand from '../components/StackBand.astro';
 import MagneticLink from '../components/MagneticLink.astro';
 import { site, home, offerCopy } from '../data/site';
 import { offersWithProjects } from '../lib/offers';
@@ -35,7 +36,11 @@ const offers = offersWithProjects(allWork);
         </div>
       </div>
     </section>
+  </div>
 
+  <StackBand />
+
+  <div class="container home">
     <div class="block" data-reveal><WorkList projects={allWork} /></div>
 
     {/* What I build: a plain statement, not a widget. Each line names the
@@ -63,6 +68,7 @@ const offers = offersWithProjects(allWork);
 </BaseLayout>
 
 <script src="../scripts/reveal-sections.ts"></script>
+<script src="../scripts/masthead-drift.ts"></script>
 
 <style>
   .intro {

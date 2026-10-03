@@ -1,5 +1,9 @@
 # Newest first. `text` should not end with a period-less fragment; keep each entry
 # a single factual sentence. Dates use the first of the month (only month/year is shown).
+- id: "2026-10"
+  date: 2026-10-01
+  type: ship
+  text: "Built Crest, an offline-first gym tracker in Flutter, and started Cairn, a local-first planner."
 - id: "2026-09"
   date: 2026-09-01
   type: ship
@@ -16,11 +20,3 @@
   date: 2025-10-01
   type: life
   text: "Started a software development internship, working on in-house software."
-- id: "2025-08"
-  date: 2025-08-01
-  type: ship
-  text: "Built Package Tracker, a Laravel web app, as TAR UMT coursework with a team of five."
-- id: "2025-03"
-  date: 2025-03-01
-  type: feat
-  text: "Started building the habit-tracking part of Habitect, a Flutter app, with a team of four."

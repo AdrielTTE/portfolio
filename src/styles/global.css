@@ -134,11 +134,16 @@ h4,
   navigation: auto;
 }
 
+/* The paper dips to the espresso field between pages: the old page lifts and
+   fades out, the new one rises in, and the field shows through the gap. */
+::view-transition {
+  background: var(--c-block);
+}
 ::view-transition-old(root) {
-  animation: 180ms var(--ease-enter) both vt-fade-out;
+  animation: 200ms var(--ease-exit) both vt-fade-out;
 }
 ::view-transition-new(root) {
-  animation: 300ms var(--ease-enter) 120ms both vt-fade-in;
+  animation: 340ms var(--ease-enter) 140ms both vt-fade-in;
 }
 ::view-transition-group(site-header),
 ::view-transition-group(progress) {
@@ -148,11 +153,13 @@ h4,
 @keyframes vt-fade-out {
   to {
     opacity: 0;
+    transform: translateY(-14px);
   }
 }
 @keyframes vt-fade-in {
   from {
     opacity: 0;
+    transform: translateY(18px);
   }
 }
 
