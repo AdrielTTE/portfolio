@@ -241,22 +241,3 @@ html.theme-switching * {
 }
 
 
-/* Pointer glow on the espresso fields (glow.ts). A static radial gradient that
-   is only ever moved (transform) and faded (opacity). */
-.glow {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 560px;
-  height: 560px;
-  margin: -280px 0 0 -280px;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in oklab, var(--c-block-ink) 16%, transparent), transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-slow) var(--ease-enter);
-  will-change: transform;
-}
-.glow.on {
-  opacity: 1;
-}
