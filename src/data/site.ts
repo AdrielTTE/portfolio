@@ -31,7 +31,6 @@ export const home = {
   roleLine: 'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart.',
   pitch: 'I build full stack applications: web apps, the APIs and databases behind them, and mobile apps for iOS and Android.',
   // One human line under the role (source: about.ts musicParagraph).
-  aside: 'Off the clock I play guitar live and run AV production.',
 };
 
 // How a project runs, in three plain steps. Shown as
