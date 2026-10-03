@@ -15,7 +15,7 @@ interface Props {
 const { hire = true } = Astro.props;
 const year = new Date().getFullYear();
 ---
-<footer class:list={['site-footer', { slim: !hire }]} id="site-footer">
+<footer class:list={['site-footer', { slim: !hire }]} id="site-footer" data-glow>
   <div class="container">
     {hire && (
       <section class="hire" aria-labelledby="hire-h">
@@ -53,9 +53,12 @@ const year = new Date().getFullYear();
 </footer>
 
 <script src="../scripts/clock.ts"></script>
+<script src="../scripts/glow.ts"></script>
 
 <style>
   .site-footer {
+    position: relative;
+    overflow: clip;
     margin-top: var(--section);
     background: var(--c-block);
     color: var(--c-block-ink);

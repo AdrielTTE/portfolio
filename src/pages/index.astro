@@ -7,6 +7,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkList from '../components/WorkList.astro';
+import Showcase from '../components/Showcase.astro';
+import Toolbox from '../components/Toolbox.astro';
 import MagneticLink from '../components/MagneticLink.astro';
 import { site, home, offerCopy } from '../data/site';
 import { offersWithProjects } from '../lib/offers';
@@ -37,14 +39,17 @@ const offers = offersWithProjects(allWork);
     </section>
   </div>
 
+  <Showcase projects={allWork} />
+
   <div class="container home">
     <div class="block" data-reveal><WorkList projects={allWork} /></div>
+    <div class="block" data-reveal><Toolbox /></div>
   </div>
 
   {/* What I build: a plain statement on the espresso field, not a widget.
       Each line names the tools and links the projects that show it, and
       lights up as it scrolls in (CSS scroll-driven). */}
-  <section class="build-field" aria-labelledby="build-h">
+  <section class="build-field" aria-labelledby="build-h" data-glow>
     <div class="container build">
       <h2 id="build-h" class="display">What I build</h2>
       <div class="build-body">
@@ -68,7 +73,7 @@ const offers = offersWithProjects(allWork);
 </BaseLayout>
 
 <script src="../scripts/reveal-sections.ts"></script>
-<script src="../scripts/masthead-drift.ts"></script>
+<script src="../scripts/hero.ts"></script>
 
 <style>
   .intro {
@@ -207,6 +212,8 @@ const offers = offersWithProjects(allWork);
     --c-ink-2: var(--c-block-ink-2);
     --c-focus: var(--c-block-ink);
     --c-accent: var(--c-block-ink);
+    position: relative;
+    overflow: clip;
   }
   /* It runs straight into the footer, which is the same colour. */
   :global(#site-footer) {
