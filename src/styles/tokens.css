@@ -1,7 +1,7 @@
 /* Design tokens: colour, type, space, grid, motion.
    Art direction: a two-colour print job. Espresso brown ink on a stone paper,
    with the same brown as a flat field (the stack band and the site footer).
-   Dark mode is the same job reversed: near-black brown paper, pale tan accent. */
+   Light is the default; dark is opt-in via the toggle and is the same job reversed: near-black brown paper, pale tan accent. */
 
 /* Metric-matched fallback for Archivo (computed with fontkit from the
    Fontsource woff2 against Arial: hhea 878/-210 on a 1000 upm, average
@@ -89,23 +89,6 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-    --c-bg: #14100c;
-    --c-bg-2: #1d1812;
-    --c-ink: #efe9e1;
-    --c-ink-2: #aea294;
-    --c-rule: #342b21;
-    --c-accent: #d2b48f;
-    --c-accent-ink: #14100c;
-    --c-focus: #d2b48f;
-    --c-error: #ff8a7a;
-    --c-block: #55402b;
-    --c-block-ink: #f1eadf;
-    --c-block-ink-2: #d4c6b4;
-  }
-}
 :root[data-theme='dark'] {
   color-scheme: dark;
   --c-bg: #14100c;

@@ -55,6 +55,6 @@ export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {
   },
   mobile: {
     line: 'Cross-platform mobile apps built once in Flutter, shipped to iOS and Android.',
-    stack: ['Flutter', 'Dart', 'Firebase'],
+    stack: ['Flutter', 'Dart', 'Drift', 'SQLite'],
   },
 };

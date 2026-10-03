@@ -165,6 +165,36 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
       }
     }
   }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .about {
+        animation: about-in linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 90%;
+      }
+    }
+  }
+  @keyframes about-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .about {
+        animation: about-in linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 90%;
+      }
+    }
+  }
+  @keyframes about-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
   @keyframes title-in {
     from {
       opacity: 0;

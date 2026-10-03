@@ -7,7 +7,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkList from '../components/WorkList.astro';
-import StackBand from '../components/StackBand.astro';
 import MagneticLink from '../components/MagneticLink.astro';
 import { site, home, offerCopy } from '../data/site';
 import { offersWithProjects } from '../lib/offers';
@@ -38,14 +37,15 @@ const offers = offersWithProjects(allWork);
     </section>
   </div>
 
-  <StackBand />
-
   <div class="container home">
     <div class="block" data-reveal><WorkList projects={allWork} /></div>
+  </div>
 
-    {/* What I build: a plain statement, not a widget. Each line names the
-        tools and links the projects that show it. */}
-    <section class="block build" aria-labelledby="build-h" data-reveal>
+  {/* What I build: a plain statement on the espresso field, not a widget.
+      Each line names the tools and links the projects that show it, and
+      lights up as it scrolls in (CSS scroll-driven). */}
+  <section class="build-field" aria-labelledby="build-h">
+    <div class="container build">
       <h2 id="build-h" class="display">What I build</h2>
       <div class="build-body">
         {offers.map((o) => (
@@ -63,8 +63,8 @@ const offers = offersWithProjects(allWork);
           </p>
         ))}
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </BaseLayout>
 
 <script src="../scripts/reveal-sections.ts"></script>
@@ -73,6 +73,41 @@ const offers = offersWithProjects(allWork);
 <style>
   .intro {
     padding-top: clamp(var(--space-5), 2.5vw + 16px, var(--space-8));
+    /* The masthead words slide sideways on scroll; keep that from adding a
+       horizontal scrollbar. */
+    overflow-x: clip;
+  }
+
+  /* Scroll-driven (where supported): as the page scrolls away from the top,
+     the two words slide apart and fade. translate and opacity only, no
+     scroll listener. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .masthead > .line-mask {
+        animation-timeline: scroll(root);
+        animation-range: 0 70vh;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+      }
+      .masthead > .line-mask:nth-child(1) {
+        animation-name: word-left;
+      }
+      .masthead > .line-mask:nth-child(2) {
+        animation-name: word-right;
+      }
+    }
+  }
+  @keyframes word-left {
+    to {
+      translate: -14vw 0;
+      opacity: 0.15;
+    }
+  }
+  @keyframes word-right {
+    to {
+      translate: 14vw 0;
+      opacity: 0.15;
+    }
   }
 
   /* The masthead: two stacked words on phones, one line across the full
@@ -162,8 +197,38 @@ const offers = offersWithProjects(allWork);
     margin-top: var(--section);
   }
 
+  /* The espresso field. Everything inside reads on it in both themes. */
+  .build-field {
+    margin-top: var(--section);
+    padding-block: var(--space-9);
+    background: var(--c-block);
+    color: var(--c-block-ink);
+    --c-ink: var(--c-block-ink);
+    --c-ink-2: var(--c-block-ink-2);
+    --c-focus: var(--c-block-ink);
+    --c-accent: var(--c-block-ink);
+  }
+  /* It runs straight into the footer, which is the same colour. */
+  :global(#site-footer) {
+    margin-top: 0;
+  }
   .build h2 {
-    font-size: var(--step-4);
+    font-size: var(--step-5);
+    color: var(--c-block-ink);
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .build-body p {
+        animation: line-lit linear both;
+        animation-timeline: view();
+        animation-range: entry 15% cover 40%;
+      }
+    }
+  }
+  @keyframes line-lit {
+    from {
+      opacity: 0.2;
+    }
   }
   .build-body {
     margin-top: var(--space-5);

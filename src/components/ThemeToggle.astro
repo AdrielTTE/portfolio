@@ -1,20 +1,20 @@
 ---
-// Cycles Auto -> Light -> Dark. See docs/design-spec.md §8 (Components table).
+// Toggles Light <-> Dark (light is the default). See docs/design-spec.md §8 (Components table).
 // Unboxed like the other header words, with a 44px hit area. The glyph follows the root's data-theme in CSS, so it is right
-// before any script runs: half-filled = Auto, open = Light, solid = Dark. The
+// before any script runs: open = Light, solid = Dark. The
 // text label shows from 600px up; below that the icon stands alone.
 ---
 <button
   type="button"
   class="theme-toggle"
   id="theme-toggle"
-  aria-label="Colour theme: Auto"
+  aria-label="Colour theme: Light"
 >
   <svg class="theme-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
     <circle cx="8" cy="8" r="6.25" />
     <path class="half" d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" />
   </svg>
-  <span class="theme-label" aria-hidden="true">Auto</span>
+  <span class="theme-label" aria-hidden="true">Light</span>
 </button>
 
 <script src="../scripts/theme-toggle.ts"></script>
@@ -63,9 +63,6 @@
     stroke-width: 1.5;
   }
   .theme-icon .half {
-    fill: currentColor;
-  }
-  :global(:root[data-theme='light']) .theme-icon .half {
     fill: none;
   }
   :global(:root[data-theme='dark']) .theme-icon circle {
