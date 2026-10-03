@@ -16,7 +16,15 @@ document.querySelectorAll<HTMLElement>('.arch').forEach((fig) => {
       n.classList.toggle('on', n.dataset.id === id);
     });
     paths.forEach((p) => p.classList.toggle('lit', !!id && (p.dataset.from === id || p.dataset.to === id)));
-    if (note) note.textContent = id ? document.getElementById(`note-${id}`)?.textContent ?? '' : 'Select a part to see what it does.';
+    if (note) {
+      if (!id) note.textContent = 'Select a part to see what it does.';
+      else {
+        const label = nodes.find((n) => n.dataset.id === id)?.querySelector('text')?.textContent ?? '';
+        const strong = document.createElement('strong');
+        strong.textContent = label;
+        note.replaceChildren(strong, ' ' + (document.getElementById(`note-${id}`)?.textContent ?? ''));
+      }
+    }
   };
 
   nodes.forEach((n) => {

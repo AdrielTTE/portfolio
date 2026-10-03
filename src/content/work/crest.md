@@ -9,10 +9,13 @@ year: 2026
 role: "Design and build"
 repo: "https://github.com/AdrielTTE/crest"
 offers: ["mobile"]
+mark: "bars"
 shots:
   - src: "../../assets/work/crest/stats.png"
+    label: "Stats"
     alt: "Crest Stats screen: weekly volume chart and sets per muscle, in the dark theme"
   - src: "../../assets/work/crest/history.png"
+    label: "History"
     alt: "Crest History screen: monthly totals and a list of past workouts with personal records"
 featured: true
 order: 1

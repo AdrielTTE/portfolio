@@ -32,7 +32,7 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
     <svg viewBox={`-2 -2 ${width + 4} ${height + 4}`} style={`min-width:${minWidth}px`} role="group" aria-label="Architecture diagram">
       <g class="edges" aria-hidden="true">
         {edges.filter(([a, b]) => a !== b).map(([a, b]) => (
-          <path data-from={a} data-to={b} d={`M${x(a) + w(a)} ${y(a) + H / 2} C${x(a) + w(a) + GX / 2} ${y(a) + H / 2}, ${x(b) - GX / 2} ${y(b) + H / 2}, ${x(b)} ${y(b) + H / 2}`} />
+          <path pathLength="1" data-from={a} data-to={b} d={`M${x(a) + w(a)} ${y(a) + H / 2} C${x(a) + w(a) + GX / 2} ${y(a) + H / 2}, ${x(b) - GX / 2} ${y(b) + H / 2}, ${x(b)} ${y(b) + H / 2}`} />
         ))}
       </g>
       {nodes.map((n) => (
@@ -110,6 +110,24 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
     stroke-width: 1.25;
     transition: opacity var(--dur-base) var(--ease-enter);
   }
+  /* A lit connection draws itself in, so the direction of the flow reads. */
+  path.lit {
+    stroke: var(--c-accent);
+    stroke-width: 2;
+    stroke-dasharray: 1;
+    animation: draw var(--dur-slow) var(--ease-enter) both;
+  }
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .note :global(strong) {
+    color: var(--c-ink);
+  }
   .node rect {
     fill: var(--c-bg-2);
     stroke: transparent;
@@ -129,6 +147,9 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
   .node:focus-visible rect,
   .node.on rect {
     stroke: var(--c-accent);
+  }
+  .node.lit:not(.on) rect {
+    fill: color-mix(in oklab, var(--c-bg-2) 82%, var(--c-accent));
   }
   .arch.focus .node:not(.lit),
   .arch.focus path:not(.lit) {

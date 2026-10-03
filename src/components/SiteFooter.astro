@@ -16,6 +16,7 @@ const { hire = true } = Astro.props;
 const year = new Date().getFullYear();
 ---
 <footer class:list={['site-footer', { slim: !hire }]} id="site-footer">
+  {hire && (<><span class="shape disc" aria-hidden="true"></span><span class="shape steps" aria-hidden="true"><i></i><i></i><i></i></span></>)}
   <div class="container">
     {hire && (
       <section class="hire" aria-labelledby="hire-h">
@@ -70,6 +71,49 @@ const year = new Date().getFullYear();
   }
   .hire {
     padding-bottom: var(--space-9);
+  }
+  .container {
+    position: relative;
+  }
+  /* Flat shapes in a lighter brown, behind the text. Wide screens only. */
+  .shape {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .shape {
+      display: block;
+      position: absolute;
+      pointer-events: none;
+    }
+    .disc {
+      right: -10%;
+      bottom: -42%;
+      width: min(46vw, 640px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--c-shape-field);
+    }
+    .steps {
+      top: 0;
+      right: var(--margin);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .steps i {
+      display: block;
+      width: 20px;
+      background: var(--c-shape-field);
+    }
+    .steps i:nth-child(1) {
+      height: 28px;
+    }
+    .steps i:nth-child(2) {
+      height: 52px;
+    }
+    .steps i:nth-child(3) {
+      height: 80px;
+    }
   }
   /* No hire block (on /contact): just the base line on the espresso field. */
   .slim {
