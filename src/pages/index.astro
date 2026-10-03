@@ -20,6 +20,8 @@ const pitchParts = home.pitch
   .map((text) => ({ text, em: emphasis.includes(text) }));
 ---
 <BaseLayout title={home.title} description={home.description}>
+  <div class="hero-wrap">
+  <span class="hero-shape" aria-hidden="true"></span>
   <div class="container home">
     <section class="intro" aria-labelledby="intro-h">
       <h1 id="intro-h" class="masthead display">
@@ -39,6 +41,7 @@ const pitchParts = home.pitch
         </div>
       </div>
     </section>
+  </div>
   </div>
 
   <div class="container home">
@@ -79,19 +82,23 @@ const pitchParts = home.pitch
     padding-top: clamp(var(--space-5), 2.5vw + 16px, var(--space-8));
     position: relative;
   }
-  /* A flat quarter-circle bleeding off the top-right corner, a tint of the
-     paper. Static; the text sits above it. */
-  /* The container edge is the viewport edge: clip there so the shape can drift
-     past it without adding a horizontal scrollbar. */
-  .home {
+  /* A flat quarter-circle bleeding off the top-right corner of the screen, a
+     tint of the paper. It lives in a full-width wrapper (not the centred
+     container) so it reaches the real screen edge at any width, and it is
+     oversized past the top and right edges by more than the pointer drift
+     (hero-shape.ts) so the drift never exposes a bare edge. */
+  .hero-wrap {
+    position: relative;
     overflow-x: clip;
   }
-  .intro::before {
-    content: '';
+  .hero-wrap > .container {
+    position: relative;
+  }
+  .hero-shape {
     position: absolute;
-    top: 0;
-    right: calc(-1 * var(--margin));
-    width: min(78vw, 820px);
+    top: -60px;
+    right: -60px;
+    width: calc(min(78vw, 820px) + 60px);
     aspect-ratio: 1;
     border-bottom-left-radius: 100%;
     background: var(--c-shape-paper);
@@ -100,7 +107,7 @@ const pitchParts = home.pitch
     translate: var(--sx, 0) var(--sy, 0);
   }
   /* The shape swings in from the corner once per session. */
-  :global(.js-reveal:not(.intro-seen)) .intro::before {
+  :global(.js-reveal:not(.intro-seen)) .hero-shape {
     animation: shape-in 900ms var(--ease-enter) both;
     transform-origin: 100% 0;
   }
