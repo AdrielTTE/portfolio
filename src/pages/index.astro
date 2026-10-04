@@ -14,7 +14,7 @@ import { offersWithProjects } from '../lib/offers';
 const allWork = await getCollection('work');
 const offers = offersWithProjects(allWork);
 // The three things I build get a drawn underline in the pitch.
-const emphasis = ['web apps', 'APIs and databases', 'mobile apps'];
+const emphasis = ['websites', 'web apps', 'mobile apps'];
 const pitchParts = home.pitch
   .split(new RegExp(`(${emphasis.join('|')})`))
   .map((text) => ({ text, em: emphasis.includes(text) }));
@@ -34,7 +34,10 @@ const pitchParts = home.pitch
         </div>
         <div class="what">
           <p class="pitch line-rise" style="--i:3">{pitchParts.map((p, i) => (p.em ? <span class="u" style={`--u:${pitchParts.slice(0, i).filter((q) => q.em).length}`}>{p.text}</span> : p.text))}</p>
-          <div class="actions line-rise" style="--i:4">
+          <div class="intro-text line-rise" style="--i:4">
+            <p>{home.intro}</p>
+          </div>
+          <div class="actions line-rise" style="--i:5">
             <MagneticLink href="/contact/">Start a project</MagneticLink>
             <p class="avail">{site.availability}</p>
           </div>
@@ -215,7 +218,17 @@ const pitchParts = home.pitch
     font-weight: 500;
     line-height: 1.08;
     letter-spacing: -0.015em;
-    max-width: 22ch;
+    max-width: 26ch;
+    text-wrap: pretty;
+  }
+  .intro-text {
+    margin-top: var(--space-5);
+    display: grid;
+    gap: var(--space-3);
+    max-width: 44ch;
+    color: var(--c-ink-2);
+    font-size: var(--step-1);
+    line-height: 1.45;
     text-wrap: pretty;
   }
   .actions {
