@@ -18,7 +18,7 @@ export interface SkillGroup {
 export const heroRoleLine = 'Full stack developer in Kuala Lumpur, working at Bantu2U Holdings.';
 
 export const bio = [
-  "I'm a full stack developer based in Kuala Lumpur, Malaysia. My main tools are ASP.NET Core and C# for web apps and backend APIs, SQL for designing and managing the databases behind them, and Flutter and Dart for cross-platform mobile apps. I've also built with Laravel, Node.js, Next.js, and Astro. I take on freelance projects: web apps, APIs and databases, mobile apps, and the occasional business website.",
+  "I'm a full stack developer based in Kuala Lumpur, Malaysia. My main tools are ASP.NET Core and C# for web apps and backend APIs, SQL for designing and managing the databases behind them, and Flutter and Dart for cross-platform mobile apps. I've also built with Laravel, Node.js, Next.js, and Astro. I take on freelance projects: web apps, APIs and databases, mobile apps, and the occasional business website. I publish my own apps on Google Play under the name Applied Theory.",
   'I completed a Bachelor of Information Technology (Honours) in Software Systems Development at TAR UMT in April 2026, with First Class Honours, CGPA 3.78. I joined Bantu2U Holdings as a Software Development Executive Intern in October 2025 and now work there full-time as a Software Developer, developing in-house software.',
 ];
 
