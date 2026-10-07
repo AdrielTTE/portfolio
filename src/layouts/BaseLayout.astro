@@ -20,7 +20,7 @@ interface Props {
 }
 const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current } = Astro.props;
 
-const site = Astro.site ?? new URL('https://adrieltang.vercel.app');
+const site = Astro.site ?? new URL('https://appliedtheory.vercel.app');
 const canonicalURL = new URL(Astro.url.pathname, site);
 const ogImageURL = new URL(ogImage, site);
 
