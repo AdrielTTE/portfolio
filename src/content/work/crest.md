@@ -7,7 +7,7 @@ scope: "Mobile app"
 stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
 role: "Design and build"
-repo: "https://github.com/AdrielTTE/crest"
+download: "https://github.com/AdrielTTE/crest/releases/latest"
 offers: ["mobile"]
 mark: "bars"
 shots:
@@ -62,7 +62,7 @@ diagram:
     - [database, backup]
 ---
 
-Crest is an offline-first gym workout tracker for Android, built with Flutter. You pick a template or start an empty session, log each set, and a rest timer runs between them. Afterwards you get history, personal records and charts of your progress.
+Crest is an offline-first gym workout tracker for Android, built with Flutter and released as v1.0. You pick a template or start an empty session, log each set, and a rest timer runs between them. Afterwards you get history, personal records and charts of your progress.
 
 ### Who it's for
 

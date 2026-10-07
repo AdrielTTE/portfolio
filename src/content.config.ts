@@ -31,6 +31,8 @@ const work = defineCollection({
       team: z.string().optional(),
       repo: z.url().optional(),
       live: z.url().optional(),
+      // Public download page (APK releases) for apps whose source is private.
+      download: z.url().optional(),
       offers: z.array(z.enum(['webapps', 'apis', 'mobile'])).default([]),
       shots: z.array(z.object({ src: image(), alt: z.string(), label: z.string().optional() })).default([]),
       diagram: diagram.optional(),
