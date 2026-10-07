@@ -1,13 +1,13 @@
 ---
 title: "Cairn"
 seoTitle: "Cairn: A Local-First Planner App"
-seoDescription: "Cairn is a local-first planner for tasks, projects and notes, built with Flutter, Drift and Riverpod, with Google Calendar and Drive links planned."
-summary: "A local-first planner that keeps tasks, projects and notes together, with Google Calendar and Drive links on the way."
+seoDescription: "Cairn is a local-first planner for tasks, projects and notes, built with Flutter, Drift and Riverpod, with Google Calendar, Drive and Gmail."
+summary: "A local-first planner that keeps tasks, projects and notes together, with Google Calendar, Drive and Gmail alongside, now released on Android."
 scope: "Mobile app"
 stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
 role: "Design and build"
-repo: "https://github.com/AdrielTTE/cairn"
+download: "https://github.com/AdrielTTE/cairn/releases/latest"
 offers: ["mobile"]
 mark: "cards"
 shots:
@@ -22,9 +22,9 @@ order: 2
 problem: |-
   Tasks, project plans and notes usually live in three different apps, and none of them know about the calendar. Cairn puts tasks, projects and notes in one local database so a day's agenda can show them side by side.
 change: |-
-  It's early. The core (tasks, projects, notes and the app shell) is in place, while the Google Calendar and Drive integrations are still to come. I'd get one real integration working end to end before adding more screens.
+  Version 1.0 is out on Android. Tasks, projects, notes and the Today agenda work offline, and Google Calendar, Drive and Gmail connect on top. Next I'd tighten sync and conflict handling, since that's where a local-first app earns its keep.
 forYou: |-
-  Cairn is a personal project in progress, not a client job. It shows how I'd approach an app that has to work offline now and sync later: a local database first, with the data model shaped for sync from day one.
+  Cairn is a personal project, not a client job, now shipped as a signed Android release. It shows how I'd approach an app that has to work offline now and sync later: a local database first, with the data model shaped for sync from day one.
 diagram:
   nodes:
     - id: screens
@@ -38,14 +38,14 @@ diagram:
       note: "Local source of truth; synced tables share id, timestamps and soft delete (data/tables.dart)."
     - id: google
       label: Google Calendar and Drive
-      note: "Planned: read-only calendar cache for the Today agenda, and Drive/Gmail links on tasks and notes."
+      note: "Read-only calendar cache for the Today agenda, plus Drive and Gmail links on tasks and notes."
   edges:
     - [screens, daos]
     - [daos, database]
     - [database, google]
 ---
 
-Cairn is a local-first planner built with Flutter. It holds tasks, projects and notes in one place, with a Today view for the day's agenda. It's a work in progress: the local core is done, and calendar and Drive links come next.
+Cairn is a local-first planner built with Flutter. It holds tasks, projects and notes in one place, with a Today view for the day's agenda. Version 1.0 is out on Android, with Google Calendar, Drive and Gmail linked in.
 
 ### Who it's for
 

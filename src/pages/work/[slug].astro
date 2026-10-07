@@ -23,7 +23,7 @@ export async function getStaticPaths() {
 
 const { project, allWork } = Astro.props;
 const { Content } = await render(project);
-const { title, summary, role, team, scope, stack, year, repo, live, seoTitle, seoDescription } = project.data;
+const { title, summary, role, team, scope, stack, year, repo, live, download, seoTitle, seoDescription } = project.data;
 const { prev, next } = getPrevNext(allWork, project.id);
 ---
 <BaseLayout
@@ -47,7 +47,7 @@ const { prev, next } = getPrevNext(allWork, project.id);
       {project.data.mark && <div class="mark-slot"><ProjectMark kind={project.data.mark} /></div>}
     </header>
 
-    <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} />
+    <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} download={download} />
 
     <div class="shots-wrap"><Shots project={project} /></div>
 
