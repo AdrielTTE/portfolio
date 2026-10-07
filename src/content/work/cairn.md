@@ -13,10 +13,16 @@ mark: "cards"
 shots:
   - src: "../../assets/work/cairn/today.png"
     label: "Today"
-    alt: "Cairn Today screen: schedule from the calendar and starred mail"
+    alt: "Cairn Today screen: overdue banner, all-day events and a timeline of calendar events and tasks"
   - src: "../../assets/work/cairn/inbox.png"
     label: "Inbox"
-    alt: "Cairn Inbox screen: task capture field and starred mail with an Add task action"
+    alt: "Cairn Inbox screen: task capture field and tasks waiting to be planned"
+  - src: "../../assets/work/cairn/mail.png"
+    label: "Mail"
+    alt: "Cairn Inbox Mail tab: Gmail threads grouped under Primary, with starred messages"
+  - src: "../../assets/work/cairn/calendar.png"
+    label: "Calendar"
+    alt: "Cairn Calendar screen: month grid with calendar filters and the selected day agenda"
 featured: true
 order: 2
 problem: |-
