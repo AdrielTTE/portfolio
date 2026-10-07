@@ -1,0 +1,127 @@
+---
+// Crest privacy policy. Moved here from adrieltte.github.io/crest-privacy so
+// the Google OAuth consent screen's home page and privacy policy share one
+// verified domain. Keep it in step with what the app actually does.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prose from '../../components/Prose.astro';
+---
+<BaseLayout
+  title="Crest Privacy Policy: Applied Theory"
+  description="What data the Crest gym tracker for Android handles, where it is stored, and how to delete it."
+>
+  <div class="container policy">
+    <h1 class="display">Crest Privacy Policy</h1>
+    <p class="meta">Effective 3 October 2026 · Developer: Applied Theory</p>
+    <Prose>
+      <p>
+        Crest is a gym workout tracker for Android. This policy explains what data the app handles,
+        where it is stored, and how you can delete it.
+      </p>
+      <p>
+        <strong>In short: your workouts stay on your phone.</strong> The developer runs no servers and
+        never receives your data. If you turn on Google Drive backup, copies go to your own Google
+        Drive, which only you and the app can access.
+      </p>
+
+      <h2>Data the app stores</h2>
+      <p>Crest stores the following only on your device, in the app's private storage:</p>
+      <ul>
+        <li>Your workouts: exercises, sets, weights, reps, notes, and start and finish times.</li>
+        <li>Your workout templates and custom exercises.</li>
+        <li>Your settings, such as weight unit, bar weight, plates and rest time.</li>
+      </ul>
+      <p>
+        Crest has no account system, no analytics, no advertising and no tracking. It does not
+        collect your location, contacts, photos or any identifier for advertising.
+      </p>
+
+      <h2>Backups you choose to make</h2>
+      <p>Crest sends data off your phone only when you choose one of these:</p>
+      <ul>
+        <li>
+          <strong>Google Drive backup.</strong> If you connect Google Drive, Crest saves a copy of
+          your data after each finished workout and keeps the 10 newest copies. Copies are stored in
+          Crest's hidden app folder in your own Google Drive. Crest asks only for the
+          <code>drive.appdata</code> permission, which gives it access to that folder and nothing
+          else in your Drive. The app also reads your Google account email address, only to show you
+          which account it backs up to. This data goes directly from your phone to Google. The
+          developer never receives it.
+        </li>
+        <li>
+          <strong>Device folder backup.</strong> If you choose a folder, Crest saves the same copies
+          into that folder on your device. If that folder is synced by another app, that app's
+          privacy policy applies to the copies.
+        </li>
+        <li>
+          <strong>Manual export.</strong> When you tap Export, Crest creates a file and opens the
+          Android share menu. The file goes wherever you choose to send it.
+        </li>
+      </ul>
+      <p>
+        Android may also include the app's data in your device's own backup to your Google account,
+        depending on your phone's backup settings. Google manages that backup, not Crest.
+      </p>
+
+      <h2>Google user data</h2>
+      <p>
+        Crest's use and transfer to any other app of information received from Google APIs will
+        adhere to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Google API Services User Data Policy</a>,
+        including the Limited Use requirements. Crest uses Google Drive access only to save and
+        restore your own backups. It does not sell this data, use it for advertising, or let anyone
+        else read it.
+      </p>
+
+      <h2>Permissions</h2>
+      <ul>
+        <li><strong>Notifications:</strong> to alert you when your rest between sets is over, and to show the workout in progress.</li>
+        <li><strong>Alarms &amp; reminders (exact alarms):</strong> so the rest alert arrives on time. If you deny it, the alert still arrives, possibly a little late.</li>
+        <li><strong>Vibration:</strong> for the rest alert.</li>
+        <li><strong>Run at startup:</strong> to restore a pending rest alert after your phone restarts.</li>
+        <li><strong>Internet:</strong> only for Google Drive backup.</li>
+      </ul>
+
+      <h2>Deleting your data</h2>
+      <ul>
+        <li>To delete everything on your phone, uninstall Crest.</li>
+        <li>To stop new backups, open Settings in Crest and tap Stop auto-backup.</li>
+        <li>
+          To delete the backups in Google Drive, open Google Drive on the web, go to Settings, then
+          Manage apps, find Crest, and choose Delete hidden app data.
+        </li>
+        <li>
+          To remove Crest's access to your Google account, visit
+          <a href="https://myaccount.google.com/permissions" rel="noopener">myaccount.google.com/permissions</a>.
+        </li>
+        <li>
+          To delete copies in a device folder, delete the <code>crest-auto-*.json</code> files (and
+          any <code>barlog-auto-*.json</code> from before the app was renamed) in that folder.
+        </li>
+      </ul>
+
+      <h2>Children</h2>
+      <p>Crest is not directed at children under 13 and does not knowingly collect data from them.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>If this policy changes, the new version will be posted on this page with a new effective date.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy: <a href="mailto:adrieltangte@gmail.com">adrieltangte@gmail.com</a></p>
+    </Prose>
+  </div>
+</BaseLayout>
+
+<style>
+  .policy {
+    padding-block: var(--space-9) 0;
+  }
+  h1 {
+    font-size: var(--step-5);
+    line-height: 0.95;
+    max-width: 14ch;
+  }
+  .meta {
+    margin-block: var(--space-4) var(--space-6);
+    color: var(--c-ink-2);
+  }
+</style>
