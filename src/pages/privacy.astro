@@ -1,0 +1,57 @@
+---
+// Index of the privacy policies, one per app. The footer links here, so a new
+// app only needs a line in this list.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Prose from '../components/Prose.astro';
+
+const policies = [
+  { name: 'Cairn', href: '/cairn/privacy/', line: 'Tasks, projects and notes app for Android.', effective: '6 October 2026' },
+  { name: 'Crest', href: '/crest/privacy/', line: 'Gym workout tracker for Android.', effective: '3 October 2026' },
+];
+---
+<BaseLayout
+  title="Privacy: Applied Theory"
+  description="Privacy policies for the Android apps made by Applied Theory: Cairn and Crest."
+>
+  <div class="container policy">
+    <h1 class="display">Privacy</h1>
+    <p class="meta">Developer: Applied Theory</p>
+    <Prose>
+      <p>Each app has its own privacy policy. Pick the app you use.</p>
+      <ul class="apps">
+        {policies.map((p) => (
+          <li>
+            <a href={p.href}>{p.name}</a>
+            <span class="line">{p.line} Effective {p.effective}.</span>
+          </li>
+        ))}
+      </ul>
+      <p>Questions: <a href="mailto:adrieltangte@gmail.com">adrieltangte@gmail.com</a></p>
+    </Prose>
+  </div>
+</BaseLayout>
+
+<style>
+  .policy {
+    padding-block: var(--space-9) 0;
+  }
+  h1 {
+    font-size: var(--step-5);
+    line-height: 0.95;
+  }
+  .meta {
+    margin-block: var(--space-4) var(--space-6);
+    color: var(--c-ink-2);
+  }
+  .apps li {
+    padding-block: var(--space-3);
+  }
+  .apps a {
+    font-weight: 600;
+    font-size: var(--step-1);
+  }
+  .line {
+    display: block;
+    color: var(--c-ink-2);
+  }
+</style>
