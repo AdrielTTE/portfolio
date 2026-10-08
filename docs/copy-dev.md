@@ -14,7 +14,7 @@ Anything still needing Adriel's confirmation is marked `[CONFIRM]`.
 
 > **Superseded 2026-09-30 (repositioning).** The live copy now leads with ASP.NET Core and
 > Flutter; `src/data/site.ts` is the source of truth. Current values:
-> title `Adriel Tang: Full Stack Developer, ASP.NET and Flutter`; roleLine `Full stack
+> title `Adriel Tang: ASP.NET and Flutter developer in Kuala Lumpur`; roleLine `Full stack
 > developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart.`; pitch
 > `I build full stack applications: web apps, the APIs and databases behind them, and mobile
 > apps for iOS and Android.` Offer tabs: Web apps · APIs & data · Mobile apps (webapps →

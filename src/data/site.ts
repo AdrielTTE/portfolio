@@ -25,7 +25,7 @@ export function whatsappUrl(): string {
 
 // Home meta and intro copy. Source: docs/copy-dev.md §1.
 export const home = {
-  title: 'Adriel Tang: Full Stack Developer, ASP.NET and Flutter',
+  title: 'Adriel Tang: ASP.NET and Flutter developer in Kuala Lumpur',
   description:
     'Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.',
   roleLine: 'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart.',
