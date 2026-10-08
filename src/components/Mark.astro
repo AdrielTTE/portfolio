@@ -1,0 +1,34 @@
+---
+// The site mark: AT over one short heavy rule, in the masthead face. Live type
+// in the colour of the display words, so it follows the theme. Decorative, so
+// hidden from assistive tech (the link around it carries the name). Sized by
+// --mark (default 36px).
+---
+<span class="mark" aria-hidden="true"><span class="at">AT</span><i></i></span>
+
+<style>
+  .mark {
+    --m: var(--mark, 36px);
+    display: inline-grid;
+    flex: none;
+    width: var(--m);
+    height: var(--m);
+    place-content: center;
+    justify-items: start;
+    gap: calc(var(--m) * 0.05);
+    color: var(--c-display);
+    line-height: 1;
+  }
+  .at {
+    font-size: calc(var(--m) * 0.5);
+    font-weight: 700;
+    font-stretch: var(--display-stretch);
+    letter-spacing: -0.005em;
+  }
+  i {
+    display: block;
+    width: calc(var(--m) * 0.5);
+    height: max(2px, calc(var(--m) * 0.06));
+    background: currentColor;
+  }
+</style>
