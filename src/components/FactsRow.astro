@@ -10,8 +10,9 @@ interface Props {
   repo?: string;
   live?: string;
   download?: string;
+  privacy?: string;
 }
-const { role, team, scope, stack, year, repo, live, download } = Astro.props;
+const { role, team, scope, stack, year, repo, live, download, privacy } = Astro.props;
 const facts = [
   { k: 'Role', v: role },
   team ? { k: 'Team', v: team } : null,
@@ -26,12 +27,13 @@ const facts = [
       <dd>{f.v}</dd>
     </div>
   ))}
-  {(repo || live || download) && (
+  {(repo || live || download || privacy) && (
     <div class="fact fact-links">
       <dt>Links</dt>
       <dd>
         {repo && <a href={repo} rel="noopener" target="_blank">Code on GitHub <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
         {download && <a href={download} rel="noopener" target="_blank">Download for Android <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
+        {privacy && <a href={privacy}>Privacy policy</a>}
         {live && <a href={live} rel="noopener" target="_blank">Live site <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a>}
       </dd>
     </div>

@@ -33,6 +33,8 @@ const work = defineCollection({
       live: z.url().optional(),
       // Public download page (APK releases) for apps whose source is private.
       download: z.url().optional(),
+      // Site path of the app's privacy policy, linked from its facts row.
+      privacy: z.string().startsWith('/').optional(),
       offers: z.array(z.enum(['webapps', 'apis', 'mobile'])).default([]),
       shots: z.array(z.object({ src: image(), alt: z.string(), label: z.string().optional() })).default([]),
       diagram: diagram.optional(),

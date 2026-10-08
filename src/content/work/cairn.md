@@ -8,6 +8,7 @@ stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
 role: "Design and build"
 download: "https://github.com/AdrielTTE/cairn/releases/latest"
+privacy: "/cairn/privacy/"
 offers: ["mobile"]
 mark: "cards"
 shots:

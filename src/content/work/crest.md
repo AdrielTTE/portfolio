@@ -8,6 +8,7 @@ stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
 role: "Design and build"
 download: "https://github.com/AdrielTTE/crest/releases/latest"
+privacy: "/crest/privacy/"
 offers: ["mobile"]
 mark: "bars"
 shots:
