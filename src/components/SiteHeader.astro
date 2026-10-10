@@ -16,7 +16,7 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
 ---
 <header class="site-header" style="view-transition-name: site-header">
   <div class="container bar">
-    <a href="/" class="name" aria-label="Adriel Tang, home"><Mark /><span class="name-text">Adriel Tang</span></a>
+    <a href="/" class="name" aria-label="Applied Theory, home"><Mark /></a>
     <nav aria-label="Main" class="nav">
       <a href="/#work" class="nav-link nav-link--wide" aria-current={workCurrent}>Work</a>
       <a href="/about/" class="nav-link nav-link--wide" aria-current={current === 'about' ? 'page' : undefined}>About</a>
@@ -46,22 +46,9 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
   .name {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
     min-height: 44px;
-    font-weight: 700;
-    font-size: var(--step-1);
-    font-stretch: var(--display-stretch);
-    text-transform: uppercase;
-    letter-spacing: 0.01em;
     text-decoration: none;
     white-space: nowrap;
-  }
-  /* On a narrow phone the mark stands alone; the link keeps its name for
-     screen readers and the page title says the rest. */
-  @media (max-width: 479px) {
-    .name-text {
-      display: none;
-    }
   }
   .nav {
     display: flex;
@@ -103,7 +90,7 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
       transform: scaleX(1);
     }
     .menu:hover,
-    .name:hover .name-text {
+    .name:hover :global(.mark) {
       text-decoration: underline;
       text-decoration-thickness: 2px;
       text-underline-offset: 6px;

@@ -20,7 +20,7 @@ interface Props {
 }
 const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current } = Astro.props;
 
-const site = Astro.site ?? new URL('https://appliedtheory.vercel.app');
+const site = Astro.site ?? new URL('https://appliedtheory.asia');
 const canonicalURL = new URL(Astro.url.pathname, site);
 const ogImageURL = new URL(ogImage, site);
 
@@ -88,9 +88,9 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <meta property="og:type" content={ogType} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <meta name="theme-color" content="#F1EEEA" />
-    <link rel="icon" href="/favicon.png?v=2" type="image/png" sizes="48x48" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+    <meta name="theme-color" content="#F3F4F2" />
+    <link rel="icon" href="/favicon.png?v=3" type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
 
     <link rel="preload" as="font" type="font/woff2" href={archivoWoff2} crossorigin />
 

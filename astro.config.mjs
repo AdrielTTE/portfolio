@@ -10,7 +10,7 @@ import sitemap from '@astrojs/sitemap';
 // URL convention: trailing slash. Pages build as `<route>/index.html`, so
 // canonical URLs, the sitemap and every internal link use `/about/`, `/work/x/`.
 export default defineConfig({
-  site: 'https://appliedtheory.vercel.app',
+  site: 'https://appliedtheory.asia',
   output: 'static',
   integrations: [sitemap()],
 });

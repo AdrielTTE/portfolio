@@ -2,7 +2,7 @@
 title: "Cairn"
 seoTitle: "Cairn: A Local-First Planner App"
 seoDescription: "Cairn is a local-first planner for tasks, projects and notes, built with Flutter, Drift and Riverpod, with Google Calendar, Drive and Gmail."
-summary: "A local-first planner that keeps tasks, projects and notes together, with Google Calendar, Drive and Gmail alongside, now released on Android."
+summary: "A local-first planner for tasks, projects and notes, with Google Calendar, Drive and Gmail alongside. Still in development."
 scope: "Mobile app"
 stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
@@ -29,9 +29,9 @@ order: 2
 problem: |-
   Tasks, project plans and notes usually live in three different apps, and none of them know about the calendar. Cairn puts tasks, projects and notes in one local database so a day's agenda can show them side by side.
 change: |-
-  Version 1.0 is out on Android. Tasks, projects, notes and the Today agenda work offline, and Google Calendar, Drive and Gmail connect on top. Next I'd tighten sync and conflict handling, since that's where a local-first app earns its keep.
+  Cairn is still in development. An early Android build works offline for tasks, projects, notes and the Today agenda, and Google Calendar, Drive and Gmail connect on top. Next I'd tighten sync and conflict handling, since that's where a local-first app earns its keep.
 forYou: |-
-  Cairn is a personal project, not a client job, now shipped as a signed Android release. It shows how I'd approach an app that has to work offline now and sync later: a local database first, with the data model shaped for sync from day one.
+  Cairn is a personal project, not a client job, still in development with an early signed Android build. It shows how I'd approach an app that has to work offline now and sync later: a local database first, with the data model shaped for sync from day one.
 diagram:
   nodes:
     - id: screens
@@ -52,7 +52,7 @@ diagram:
     - [database, google]
 ---
 
-Cairn is a local-first planner built with Flutter. It holds tasks, projects and notes in one place, with a Today view for the day's agenda. Version 1.0 is out on Android, with Google Calendar, Drive and Gmail linked in.
+Cairn is a local-first planner built with Flutter. It holds tasks, projects and notes in one place, with a Today view for the day's agenda. It is still in development, with an early Android build and Google Calendar, Drive and Gmail linked in.
 
 ### Who it's for
 
