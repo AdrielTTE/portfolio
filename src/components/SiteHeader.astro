@@ -77,7 +77,7 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
     right: 0;
     bottom: 8px;
     height: 2px;
-    background: currentColor;
+    background: var(--c-signal);
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform var(--dur-base) var(--ease-enter);
@@ -106,14 +106,21 @@ const workCurrent = current === 'work' ? (Astro.url.pathname.startsWith('/work/'
       display: none;
     }
   }
-  /* Phones: the palette is the nav, but Contact stays in view as the one
-     direct route. */
+  /* Phones: the palette is the nav (theme toggle lives there too), but Contact
+     stays in view as the one direct route. */
   @media (max-width: 599px) {
+    .bar {
+      gap: 20px;
+    }
+    .name {
+      --mark: 16px;
+    }
     .nav {
-      gap: 14px;
+      gap: 20px;
     }
     .menu-hint,
-    .nav-link--wide {
+    .nav-link--wide,
+    .nav :global(.theme-toggle) {
       display: none;
     }
   }
