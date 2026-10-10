@@ -87,7 +87,7 @@ a:hover {
   outline-offset: 3px;
 }
 ::selection {
-  background: var(--c-accent);
+  background: var(--c-signal);
   color: var(--c-accent-ink);
 }
 [hidden] {

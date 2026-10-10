@@ -26,9 +26,9 @@
   --c-rule: #d9dcd8;
   --c-accent: #14161f;
   --c-accent-ink: #f3f4f2;
-  --c-focus: #14161f;
+  --c-focus: #c2410c;
   --c-error: #b42318;
-  /* Signal: the dot and brackets in the wordmark. Small marks only. */
+  /* Signal: the dot and brackets in the wordmark. Small marks only: wordmark, nav underline, progress, focus, selection, link arrow. */
   --c-signal: #c2410c;
   /* The flat colour field: site footer and stack band. */
   --c-block: #14161f;
@@ -104,7 +104,7 @@
   --c-rule: #272c37;
   --c-accent: #e6e9f0;
   --c-accent-ink: #0f1117;
-  --c-focus: #e6e9f0;
+  --c-focus: #ff8a57;
   --c-error: #ff8a7a;
   --c-signal: #ff8a57;
   --c-block: #1c2130;
