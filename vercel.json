@@ -1,7 +1,30 @@
 {
   "redirects": [
-    { "source": "/projects", "destination": "/", "permanent": true },
-    { "source": "/projects/:slug", "destination": "/work/:slug/", "permanent": true },
-    { "source": "/experience", "destination": "/about/", "permanent": true }
+    {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "appliedtheory.vercel.app"
+        }
+      ],
+      "destination": "https://appliedtheory.asia/:path",
+      "permanent": true
+    },
+    {
+      "source": "/projects",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/projects/:slug",
+      "destination": "/work/:slug/",
+      "permanent": true
+    },
+    {
+      "source": "/experience",
+      "destination": "/about/",
+      "permanent": true
+    }
   ]
 }

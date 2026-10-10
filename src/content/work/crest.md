@@ -63,12 +63,12 @@ diagram:
     - [database, backup]
 ---
 
-Crest is an offline-first gym workout tracker for Android, built with Flutter and released as v1.0. You pick a template or start an empty session, log each set, and a rest timer runs between them. Afterwards you get history, personal records and charts of your progress.
+Crest is an offline-first gym workout tracker for Android, built with Flutter and now in closed testing on Google Play. You pick a template or start an empty session, log each set, and a rest timer runs between them. Afterwards you get history, personal records and charts of your progress.
 
 ### Who it's for
 
 Someone who lifts and wants a fast, quiet logbook that works with no signal and doesn't ask for an account.
 
-### Release
+### Status
 
-Crest is being prepared for Google Play, where I publish my own apps under the name Applied Theory.
+Crest is in closed testing on Google Play ahead of a public release. It will be published under the studio name Applied Theory.

@@ -3,7 +3,7 @@
 - id: "2026-10"
   date: 2026-10-01
   type: ship
-  text: "Released Crest, a gym tracker, and Cairn, a local-first planner, as signed Android apps built in Flutter."
+  text: "Put Crest, a Flutter gym tracker, into closed testing on Google Play, and started building Cairn, a local-first planner."
 - id: "2026-09"
   date: 2026-09-01
   type: ship
