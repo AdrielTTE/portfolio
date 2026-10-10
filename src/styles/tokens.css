@@ -28,6 +28,8 @@
   --c-accent-ink: #f1eadf;
   --c-focus: #43301f;
   --c-error: #b42318;
+  /* Signal: the dot and brackets in the wordmark. Small marks only. */
+  --c-signal: #c2410c;
   /* The flat colour field: site footer and stack band. */
   --c-block: #43301f;
   --c-block-ink: #f1eadf;
@@ -42,6 +44,7 @@
      condensed display voice and the text; code falls back to system mono. */
   --font-sans: 'Archivo Variable', 'Archivo Fallback', system-ui, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --font-wordmark: 'DM Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
   --display-stretch: 68%;
 
   --step--1: clamp(13px, 0.09vw + 12.67px, 14px);
@@ -103,6 +106,7 @@
   --c-accent-ink: #14100c;
   --c-focus: #d2b48f;
   --c-error: #ff8a7a;
+  --c-signal: #ff8a57;
   --c-block: #55402b;
   --c-block-ink: #f1eadf;
   --c-block-ink-2: #d4c6b4;
