@@ -28,7 +28,8 @@ export const home = {
   title: 'Adriel Tang: ASP.NET and Flutter developer in Kuala Lumpur',
   description:
     'Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.',
-  roleLine: 'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart.',
+  roleLine:
+    'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart. First Class Honours graduate, now building software full-time.',
   pitch: 'I build websites, web apps and mobile apps.',
   // One casual line under the pitch. The music stays on /about.
   intro: "I'm a developer by day and I take freelance projects on the side. Got something you want built? Let's discuss.",
@@ -37,28 +38,32 @@ export const home = {
 // How a project runs, in three plain steps. Shown as
 // "What happens next" on /contact. Owner to confirm.
 export const projectSteps = [
-  'We talk through what you need, by message or a short call.',
-  'I send a written scope and timeline, so we agree on the work before it starts.',
-  'I build in small steps you can see and try, then hand it over with the logins and a short guide.',
+  'We chat about what you need, over messages or a quick call.',
+  "I write up the scope and timeline so we're both clear before I start.",
+  'I build it in small pieces you can try along the way, then hand it over with the logins and a short guide.',
 ];
 
 // Contact-page FAQ (also emitted as FAQPage schema). Every answer restates a
 // fact already on the site; no prices or promises beyond it.
 export const faq = [
   {
-    q: 'What does Adriel Tang build?',
-    a: 'Websites, web apps with user logins and dashboards, backend APIs with the databases behind them (ASP.NET Core, C#, SQL), and cross-platform mobile apps in Flutter for iOS and Android.',
+    q: 'What do you build?',
+    a: 'Websites, web apps with logins and dashboards, backend APIs and the databases behind them (ASP.NET Core, C#, SQL), and mobile apps in Flutter that run on both iOS and Android.',
   },
   {
-    q: 'Where are you based, and do you take freelance projects?',
-    a: 'I am based in Kuala Lumpur, Malaysia, and I take on freelance projects alongside my day job.',
+    q: 'Where are you, and do you take freelance work?',
+    a: "I'm in Kuala Lumpur, Malaysia. I have a day job, and I take on freelance projects on the side.",
   },
   {
-    q: 'How does a project run?',
+    q: 'Can you publish the app to the store for me?',
+    a: "For Google Play, yes. I'm taking my own apps through it right now (Crest is in closed testing), so I've dealt with signing, the store listing, the privacy policy and testing tracks.",
+  },
+  {
+    q: 'How does it work?',
     a: projectSteps.join(' '),
   },
   {
-    q: 'How quickly do you reply?',
+    q: 'How fast do you reply?',
     a: site.replyTime,
   },
 ];
