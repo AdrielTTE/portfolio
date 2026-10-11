@@ -14,7 +14,7 @@ mark: "disc"
 shots:
   - src: "../../assets/work/quotebook/dashboard.png"
     label: "Dashboard"
-    alt: "Quotebook dashboard: RM 2,040.00 owed across 3 unpaid invoices, RM 240.00 overdue, a sent quotation waiting for a reply, and the overdue invoice listed below"
+    alt: "Quotebook dashboard: a dark band showing RM 2,040.00 owed across 3 unpaid invoices, with RM 240.00 overdue, RM 240.00 waiting for a reply and RM 1,100.00 collected this month, then a Needs attention list and recent invoices"
   - src: "../../assets/work/quotebook/invoices.png"
     label: "Invoices"
     alt: "Quotebook invoice list with status filters and four invoices marked Unpaid, Partial, Paid and Overdue"
@@ -92,6 +92,7 @@ Open the live demo and press **Try the demo**. There's no sign-up. The demo busi
 - **Two people paying at once.** A payment is a new row, so the invoice row itself wouldn't change and a second payment could slip past the "not more than owed" check. I force an update on the invoice so the database rejects the second one. I tested it on real PostgreSQL by sending two full payments at the same moment: exactly one was recorded.
 - **Stale edits.** Editing a quotation replaces its lines, which has the same problem. Two browser tabs editing the same draft now give the second one a clear message instead of silently overwriting the first.
 - **Rules live in one place.** The quote and invoice rules sit in a plain C# project with no framework code, so they're tested directly and the pages can't quietly disagree with them.
+- **A design language, not a template.** I designed it as "Ledger": a calm, finance-tool look with money in tabular monospace so the columns line up, status shown as a dot and a word (never colour alone), and a dark band on the dashboard that holds the one number an owner cares about. On a phone the navigation becomes a bottom tab bar and every table turns into a card per row. It uses no CSS framework, and the fonts are served from the site itself.
 - **A bug the tests couldn't see.** An in-memory test database doesn't enforce foreign keys, so a customer-link bug in the quote-to-invoice step only showed up when the demo seeder ran on real PostgreSQL. It now has its own unit test.
 - **A bug in my own access rules.** Requiring sign-in everywhere also blocked the stylesheets for signed-out visitors, so the public pages loaded unstyled. I found it by testing as a visitor, fixed it, and added a test.
 
