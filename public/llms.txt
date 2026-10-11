@@ -1,0 +1,16 @@
+# Applied Theory (Adriel Tang)
+
+> Adriel Tang is a full stack developer in Kuala Lumpur, Malaysia, working mainly in ASP.NET Core, C#, Flutter and Dart. He builds websites, web apps, backend APIs with databases, and cross-platform mobile apps, and takes freelance projects.
+
+## Pages
+- [Home](https://appliedtheory.asia/): what I build and selected work
+- [About](https://appliedtheory.asia/about/): background, timeline and skills
+- [Contact](https://appliedtheory.asia/contact/): email, WhatsApp, form, how a project runs, common questions
+
+## Work
+- [Crest](https://appliedtheory.asia/work/crest/): offline-first Android gym workout tracker (Flutter, Drift, Riverpod)
+- [Cairn](https://appliedtheory.asia/work/cairn/): local-first planner for tasks, projects and notes with Google Calendar, Drive and Gmail (Flutter, Drift, Riverpod)
+
+## Elsewhere
+- [GitHub](https://github.com/AdrielTTE)
+- [LinkedIn](https://www.linkedin.com/in/adriel-tang-6a5a941a0/)

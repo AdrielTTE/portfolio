@@ -4,12 +4,22 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CopyEmail from '../components/CopyEmail.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { site, whatsappUrl, projectSteps } from '../data/site';
+import { site, whatsappUrl, projectSteps, faq } from '../data/site';
+
+const faqSchema = {
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 <BaseLayout
-  title="Contact: Adriel Tang"
+  title="Contact Adriel Tang: Freelance ASP.NET and Flutter Developer"
   description="Get in touch with Adriel Tang about a web app, backend API, database or Flutter mobile app. Email, WhatsApp, LinkedIn, or the contact form."
   current="contact"
+  schema={[faqSchema]}
 >
   <div class="container contact-layout">
     <div class="contact-info">
@@ -29,6 +39,12 @@ import { site, whatsappUrl, projectSteps } from '../data/site';
         <ol role="list">
           {projectSteps.map((step) => <li>{step}</li>)}
         </ol>
+      </section>
+      <section class="faq" aria-labelledby="faq-h">
+        <h2 id="faq-h">Common questions</h2>
+        <dl>
+          {faq.map((f) => <><dt>{f.q}</dt><dd>{f.a}</dd></>)}
+        </dl>
       </section>
     </div>
     <div class="contact-form-col" data-reveal>
@@ -103,6 +119,26 @@ import { site, whatsappUrl, projectSteps } from '../data/site';
   /* Order is carried by the <ol> semantics, not by drawn numbers. */
   .next-steps {
     margin-top: var(--space-8);
+  }
+  .faq {
+    margin-top: var(--space-8);
+    max-width: 48ch;
+  }
+  .faq h2 {
+    font-size: var(--step-2);
+    font-weight: 700;
+  }
+  .faq dl {
+    margin-top: var(--space-3);
+    display: grid;
+    gap: var(--space-3);
+  }
+  .faq dt {
+    font-weight: 600;
+  }
+  .faq dd {
+    margin: 0;
+    color: var(--c-ink-2);
   }
   .next-steps ol {
     list-style: none;

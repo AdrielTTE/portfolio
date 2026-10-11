@@ -42,6 +42,27 @@ export const projectSteps = [
   'I build in small steps you can see and try, then hand it over with the logins and a short guide.',
 ];
 
+// Contact-page FAQ (also emitted as FAQPage schema). Every answer restates a
+// fact already on the site; no prices or promises beyond it.
+export const faq = [
+  {
+    q: 'What does Adriel Tang build?',
+    a: 'Websites, web apps with user logins and dashboards, backend APIs with the databases behind them (ASP.NET Core, C#, SQL), and cross-platform mobile apps in Flutter for iOS and Android.',
+  },
+  {
+    q: 'Where are you based, and do you take freelance projects?',
+    a: 'I am based in Kuala Lumpur, Malaysia, and I take on freelance projects alongside my day job.',
+  },
+  {
+    q: 'How does a project run?',
+    a: projectSteps.join(' '),
+  },
+  {
+    q: 'How quickly do you reply?',
+    a: site.replyTime,
+  },
+];
+
 // "What I build" copy per offer on the home page. Source: docs/copy-dev.md §2.
 // Stacks lead with the core tools; the rest are ones the proof projects use.
 export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {

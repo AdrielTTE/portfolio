@@ -17,8 +17,10 @@ interface Props {
   ogType?: 'website' | 'article';
   noindex?: boolean;
   current?: 'work' | 'about' | 'contact';
+  /** Extra schema.org nodes for this page, added to the shared @graph. */
+  schema?: Record<string, unknown>[];
 }
-const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current } = Astro.props;
+const { title, description, ogImage = '/og-default.png', ogType = 'website', noindex = false, current, schema = [] } = Astro.props;
 
 const site = Astro.site ?? new URL('https://appliedtheory.asia');
 const canonicalURL = new URL(Astro.url.pathname, site);
@@ -32,6 +34,14 @@ const address = { '@type': 'PostalAddress', addressLocality: facts.city, address
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${origin}#website`,
+      url: origin,
+      name: 'Applied Theory',
+      publisher: { '@id': `${origin}#person` },
+      inLanguage: 'en',
+    },
     {
       '@type': 'Person',
       '@id': `${origin}#person`,
@@ -66,6 +76,7 @@ const jsonLd = {
       founder: { '@id': `${origin}#person` },
       sameAs,
     },
+    ...schema,
   ],
 };
 // Escape `<` so no string value can close the script element early.
