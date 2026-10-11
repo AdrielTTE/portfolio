@@ -25,12 +25,43 @@ const { project, allWork } = Astro.props;
 const { Content } = await render(project);
 const { title, summary, role, team, scope, stack, year, repo, live, download, privacy, seoTitle, seoDescription } = project.data;
 const { prev, next } = getPrevNext(allWork, project.id);
+
+// Structured data: breadcrumb trail plus the project as a software app (or a
+// plain creative work when it has no download). Values come from front matter.
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const siteOrigin = new URL('/', Astro.site).href;
+const schema = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteOrigin },
+      { '@type': 'ListItem', position: 2, name: 'Work', item: new URL('/#work', Astro.site).href },
+      { '@type': 'ListItem', position: 3, name: title, item: pageUrl },
+    ],
+  },
+  {
+    '@type': download ? 'SoftwareApplication' : 'CreativeWork',
+    name: title,
+    description: summary,
+    url: pageUrl,
+    author: { '@id': `${siteOrigin}#person` },
+    dateCreated: String(year),
+    keywords: stack.join(', '),
+    ...(download && {
+      applicationCategory: 'MobileApplication',
+      operatingSystem: 'Android',
+      downloadUrl: download,
+    }),
+    ...(repo && { codeRepository: repo }),
+  },
+];
 ---
 <BaseLayout
   title={seoTitle ?? `${title}: Adriel Tang`}
   description={seoDescription ?? summary}
   ogType="article"
   current="work"
+  schema={schema}
 >
   <div class="container case-study">
     {/* The way out sits first, above the title, so it's in view without
