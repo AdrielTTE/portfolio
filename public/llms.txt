@@ -8,6 +8,7 @@
 - [Contact](https://appliedtheory.asia/contact/): email, WhatsApp, form, how a project runs, common questions
 
 ## Work
+- [Quotebook](https://appliedtheory.asia/work/quotebook/): quotation and invoice tracker for small service businesses, with a live demo (ASP.NET Core, EF Core, PostgreSQL)
 - [Crest](https://appliedtheory.asia/work/crest/): offline-first Android gym workout tracker (Flutter, Drift, Riverpod)
 - [Cairn](https://appliedtheory.asia/work/cairn/): local-first planner for tasks, projects and notes with Google Calendar, Drive and Gmail (Flutter, Drift, Riverpod)
 
