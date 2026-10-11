@@ -10,6 +10,7 @@ import Prose from '../../components/Prose.astro';
 import PrevNext from '../../components/PrevNext.astro';
 import CaseSection from '../../components/CaseSection.astro';
 import ArchDiagram from '../../components/ArchDiagram.astro';
+import SchemaCard from '../../components/SchemaCard.astro';
 import BuildReceipts from '../../components/BuildReceipts.astro';
 import { getPrevNext } from '../../lib/work';
 
@@ -93,6 +94,9 @@ const schema = [
     <CaseSection id="problem" title="The problem" text={project.data.problem} />
     <CaseSection id="built" title="How it's built" show={Boolean(project.data.diagram)}>
       {project.data.diagram && <ArchDiagram diagram={project.data.diagram} />}
+    </CaseSection>
+    <CaseSection id="data" title="The data model" show={Boolean(project.data.schema)}>
+      {project.data.schema && <SchemaCard schema={project.data.schema} />}
     </CaseSection>
     <CaseSection id="change" title="What I'd change" text={project.data.change} />
     <CaseSection id="for-you" title="What this means for your project" text={project.data.forYou} />
