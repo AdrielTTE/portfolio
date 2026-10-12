@@ -29,10 +29,12 @@ order: 0
 problem: |-
   A lot of small service businesses quote over WhatsApp, track invoices in a spreadsheet and lose track of who has paid. I wanted to show how I'd build a system for that: the path from quotation to invoice to payment, with money that adds up and each business's data kept apart from everyone else's. It's a demo built for this portfolio, not a product with paying customers.
 change: |-
-  I'd add PDF output and email next, because a quotation has to reach the customer to matter. I'd also move the dashboard totals into SQL: today they're added up in memory, which is fine for hundreds of invoices but not thousands. And most of my tests ran against an in-memory database, which hid a foreign-key bug until I ran the demo seeder on real PostgreSQL. Next time I'd run the tests against a real PostgreSQL in CI from the start.
+  I'd add email sending next, because a quotation has to reach the customer to matter. Today you print it or save it as a PDF from the browser, and an invited staff member gets a link the owner has to pass on by hand. Real PDF generation would come with email, so the document can be attached. I'd also move the dashboard totals into SQL: today they're added up in memory, which is fine for hundreds of invoices but not thousands. And most of my tests ran against an in-memory database, which hid a foreign-key bug until I ran the demo seeder on real PostgreSQL. Next time I'd run the tests against a real PostgreSQL in CI from the start.
 forYou: |-
   If you need a web app with logins, roles and money that has to add up, this is how I'd build it: ASP.NET Core and SQL, with tests around the business rules and every business's data kept separate. The demo shows how it's put together. Yours would be scoped to what your business actually does.
 schema:
+  - table: Businesses
+    fields: ["Id (the business id)", "Name", "Address", "Phone", "Email"]
   - table: Customers
     fields: ["Id", "OwnerId", "Name", "Email", "Phone"]
   - table: Quotes
@@ -50,7 +52,7 @@ diagram:
       note: "Pages and handlers for customers, quotations, invoices and the dashboard (Quotebook.Web)."
     - id: identity
       label: Sign-in and roles
-      note: "ASP.NET Identity with Owner and Staff roles. The business id travels in the sign-in cookie."
+      note: "ASP.NET Identity with Owner and Staff roles, and staff invites by one-time link. The business id travels in the sign-in cookie."
     - id: core
       label: Domain rules
       note: "Quote and invoice rules, payment totals and statuses, with no framework or database code (Quotebook.Core)."
@@ -62,7 +64,7 @@ diagram:
       note: "The single source of truth, hosted on Neon. Unique indexes and a check constraint back up the rules."
     - id: tests
       label: xUnit tests
-      note: "Over 80 tests: the domain rules, one business never seeing another's data, and real page flows."
+      note: "Over 90 tests: the domain rules, one business never seeing another's data, and real page flows."
   edges:
     - [web, identity]
     - [web, core]
@@ -84,7 +86,9 @@ Open the live demo and press **Try the demo**. There's no sign-up. The demo busi
 - **Quotations** with line items, numbered per business (Q-0001, Q-0002), moving through Draft, Sent, Accepted or Rejected. An expired quotation can't be accepted.
 - **Invoices** created from an accepted quotation, once only, with the lines copied across.
 - **Payments** recorded as their own rows, so deposits and instalments are kept. An invoice shows Unpaid, Partial, Paid or Overdue. That status is worked out from the due date and the payments each time, never stored, so it can't go stale overnight.
-- **Roles.** Owners manage everything. Staff can record payments but only owners can remove one, and that's enforced on the server, not just by hiding the button.
+- **Print-ready documents.** Quotations and invoices print cleanly, or save as a PDF from the browser, under a letterhead with the business's name, address and contact details. The owner sets those in Settings.
+- **Search.** Customers by name, email or phone; quotations and invoices by number or customer name.
+- **Roles and staff invites.** Owners manage everything. Staff can record payments but only owners can remove one, and that's enforced on the server, not just by hiding the button. An owner invites staff from a Team page and gets a one-time link to pass on. The person sets their own password, so no one else ever knows it. The link works once and expires after a day.
 - **Separate businesses.** Every query is scoped to the signed-in business, and saving a row for another business is refused. Tests check both.
 
 ### Decisions worth explaining
@@ -94,6 +98,7 @@ Open the live demo and press **Try the demo**. There's no sign-up. The demo busi
 - **Rules live in one place.** The quote and invoice rules sit in a plain C# project with no framework code, so they're tested directly and the pages can't quietly disagree with them.
 - **A design language, not a template.** I designed it as "Ledger": a calm, finance-tool look with money in tabular monospace so the columns line up, status shown as a dot and a word (never colour alone), and a dark band on the dashboard that holds the one number an owner cares about. On a phone the navigation becomes a bottom tab bar and every table turns into a card per row. It uses no CSS framework, and the fonts are served from the site itself.
 - **A bug the tests couldn't see.** An in-memory test database doesn't enforce foreign keys, so a customer-link bug in the quote-to-invoice step only showed up when the demo seeder ran on real PostgreSQL. It now has its own unit test.
+- **Print without a PDF library.** A print stylesheet hides the navigation and side panels and leaves just the document. It avoids a second layout in C# to maintain and a heavier server, and the cost is that the output depends on the browser. I'd add real PDFs once email needs an attachment.
 - **A bug in my own access rules.** Requiring sign-in everywhere also blocked the stylesheets for signed-out visitors, so the public pages loaded unstyled. I found it by testing as a visitor, fixed it, and added a test.
 
 ### Status
