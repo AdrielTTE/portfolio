@@ -17,13 +17,13 @@ shots:
     alt: "Quotebook dashboard: a dark band showing RM 2,040.00 owed across 3 unpaid invoices, with RM 240.00 overdue, RM 240.00 waiting for a reply and RM 1,100.00 collected this month, then a Needs attention list and recent invoices"
   - src: "../../assets/work/quotebook/invoices.png"
     label: "Invoices"
-    alt: "Quotebook invoice list with status filters and four invoices marked Unpaid, Partial, Paid and Overdue"
+    alt: "Quotebook invoice list with a search box, status filters and four invoices marked Unpaid, Partial, Paid and Overdue"
   - src: "../../assets/work/quotebook/invoice.png"
     label: "Payments"
-    alt: "Quotebook invoice INV-0002 partly paid: two line items, a RM 1,000 deposit recorded, a RM 1,450 balance and a form to record the next payment"
+    alt: "Quotebook invoice INV-0002 under the business letterhead, partly paid: two line items, a RM 1,000 deposit recorded, a RM 1,450 balance and a form to record the next payment"
   - src: "../../assets/work/quotebook/quotation.png"
     label: "Quotation"
-    alt: "Quotebook quotation Q-0006 in the Sent state, with buttons to record that the customer accepted or rejected it"
+    alt: "Quotebook quotation Q-0006 under the business letterhead, in the Sent state, with Print and buttons to record that the customer accepted or rejected it"
 featured: true
 order: 0
 problem: |-
