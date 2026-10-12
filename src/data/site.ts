@@ -48,7 +48,7 @@ export const projectSteps = [
 export const faq = [
   {
     q: 'What do you build?',
-    a: 'Websites, web apps with logins and dashboards, backend APIs and the databases behind them (ASP.NET Core, C#, SQL), and mobile apps in Flutter that run on both iOS and Android.',
+    a: 'Websites, web apps with logins and dashboards, backend APIs and the databases behind them (ASP.NET Core, C#, SQL), and Android apps in Flutter, taken all the way to a Google Play release.',
   },
   {
     q: 'Where are you, and do you take freelance work?',
@@ -80,7 +80,7 @@ export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {
     stack: ['ASP.NET Core', 'REST APIs', 'SQL', 'MySQL', 'Firestore'],
   },
   mobile: {
-    line: 'Cross-platform mobile apps built once in Flutter, shipped to iOS and Android.',
-    stack: ['Flutter', 'Dart', 'Drift', 'SQLite'],
+    line: 'Mobile apps built in Flutter and taken through to Google Play: app signing, release builds, the store listing and closed testing.',
+    stack: ['Flutter', 'Dart', 'Drift', 'SQLite', 'Google Play Console'],
   },
 };
