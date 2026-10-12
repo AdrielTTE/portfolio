@@ -52,6 +52,16 @@ export const skills: SkillGroup[] = [
     items: ['ASP.NET Core', 'C#', 'REST APIs', 'SQL', 'Database design and management', 'Flutter', 'Dart'],
   },
   {
+    name: 'Mobile app release',
+    items: [
+      'Google Play Console',
+      'App signing and Android App Bundles',
+      'Closed testing tracks',
+      'Store listing and privacy policy',
+      'Automated release builds (GitHub Actions)',
+    ],
+  },
+  {
     name: 'Also used',
     items: ['Laravel', 'PHP', 'Node.js', 'Next.js', 'React', 'Astro', 'Tailwind CSS'],
   },
