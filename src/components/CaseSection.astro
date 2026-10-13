@@ -12,7 +12,7 @@ const { title, id, text, show } = Astro.props;
 const visible = show ?? Boolean(text);
 ---
 {visible && (
-  <section class="case-section" aria-labelledby={id}>
+  <section class="case-section" data-reveal aria-labelledby={id}>
     <h2 id={id} class="display">{title}</h2>
     <div class="content">
       {text && <p set:html={inlineCode(text)} />}

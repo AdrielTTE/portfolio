@@ -90,6 +90,12 @@ const { prev, next } = Astro.props;
   .arrow {
     transition: transform var(--dur-fast) var(--ease-enter);
   }
+  /* Touch press feedback: hover is fine-pointer only. */
+  .adjacent a:active,
+  .back:active,
+  .talk:active {
+    opacity: 0.6;
+  }
   @media (hover: hover) and (pointer: fine) {
     .back:hover {
       text-decoration: underline;

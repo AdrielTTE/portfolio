@@ -107,6 +107,10 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
   .work-row a:focus-visible {
     outline-offset: 4px;
   }
+  /* Touch press feedback: hover is fine-pointer only. */
+  .work-row a:active {
+    opacity: 0.6;
+  }
 
   @media (min-width: 1024px) {
     .work-row a {
