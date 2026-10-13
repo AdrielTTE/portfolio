@@ -11,6 +11,7 @@ repo: "https://github.com/AdrielTTE/quotebook"
 live: "https://quotebook-oe9t.onrender.com/"
 offers: ["webapps", "apis"]
 mark: "disc"
+icon: "../../assets/work/quotebook/icon.png"
 shots:
   - src: "../../assets/work/quotebook/dashboard.png"
     label: "Dashboard"

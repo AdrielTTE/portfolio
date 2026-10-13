@@ -2,10 +2,14 @@
 // A small flat mark that stands for a project's shape of work: bars for a
 // tracker's charts, overlapping cards for a planner. Decorative, so hidden from
 // assistive tech. Sized by --mark (default 64px) so each place can scale it.
-interface Props { kind?: 'bars' | 'cards' | 'disc' }
-const { kind } = Astro.props;
+// When the project has its real app icon, that shows instead of the flat mark.
+import { Image } from 'astro:assets';
+interface Props { kind?: 'bars' | 'cards' | 'disc'; icon?: ImageMetadata }
+const { kind, icon } = Astro.props;
 ---
-{kind && (
+{icon ? (
+  <Image class="app-icon" src={icon} width={192} height={192} alt="" aria-hidden="true" />
+) : kind && (
   <span class:list={['mark', kind]} aria-hidden="true">
     {kind === 'bars' && (<><i></i><i></i><i></i></>)}
     {kind === 'cards' && (<><i></i><i></i></>)}
@@ -14,6 +18,13 @@ const { kind } = Astro.props;
 )}
 
 <style>
+  .app-icon {
+    display: block;
+    width: var(--mark, 64px);
+    height: var(--mark, 64px);
+    border-radius: 22%;
+    box-shadow: 0 0 0 1px var(--c-rule);
+  }
   .mark {
     --m: var(--mark, 64px);
     position: relative;

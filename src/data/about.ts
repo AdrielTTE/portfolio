@@ -55,6 +55,7 @@ export const skills: SkillGroup[] = [
     name: 'Mobile app release',
     items: [
       'Google Play Console',
+      'Apple App Store publishing',
       'App signing and Android App Bundles',
       'Closed testing tracks',
       'Store listing and privacy policy',

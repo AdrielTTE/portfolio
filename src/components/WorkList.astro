@@ -19,7 +19,7 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     {rows.map((p) => (
       <li class="work-row">
         <a href={`/work/${p.id}/`}>
-          <span class="title display"><span class="tw">{p.data.title.split(' ').map((w, i) => (<><span class="tx"><span class="tx-in" style={`--w:${i}`}>{w}</span></span>{' '}</>))}</span><span class="go arrow" aria-hidden="true">→</span><span class="mk"><ProjectMark kind={p.data.mark} /></span></span>
+          <span class="title display"><span class="tw">{p.data.title.split(' ').map((w, i) => (<><span class="tx"><span class="tx-in" style={`--w:${i}`}>{w}</span></span>{' '}</>))}</span><span class="go arrow" aria-hidden="true">→</span><span class="mk"><ProjectMark kind={p.data.mark} icon={p.data.icon} /></span></span>
           <span class="about">
             <span class="ln line"><span class="ln-in" style="--l:0">{p.data.summary}</span></span>
             <span class="ln meta"><span class="ln-in" style="--l:1">{p.data.scope}, {p.data.year}. {p.data.stack.join(', ')}.</span></span>
