@@ -76,7 +76,7 @@ const schema = [
     <header class="title-block">
       <h1 class="display">{title}</h1>
       <p class="summary">{summary}</p>
-      {project.data.mark && <div class="mark-slot"><ProjectMark kind={project.data.mark} /></div>}
+      {(project.data.icon || project.data.mark) && <div class="mark-slot"><ProjectMark kind={project.data.mark} icon={project.data.icon} /></div>}
     </header>
 
     <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} download={download} privacy={privacy} />

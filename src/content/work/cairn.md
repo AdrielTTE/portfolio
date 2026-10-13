@@ -11,6 +11,7 @@ download: "https://github.com/AdrielTTE/cairn/releases/latest"
 privacy: "/cairn/privacy/"
 offers: ["mobile"]
 mark: "cards"
+icon: "../../assets/work/cairn/icon.png"
 shots:
   - src: "../../assets/work/cairn/today.png"
     label: "Today"

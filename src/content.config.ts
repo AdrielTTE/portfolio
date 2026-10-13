@@ -48,6 +48,8 @@ const work = defineCollection({
       receipts: z.boolean().default(false),
       // Small flat mark shown beside the title (ProjectMark.astro).
       mark: z.enum(['bars', 'cards', 'disc']).optional(),
+      // The app's real icon; shown instead of the flat mark when present.
+      icon: image().optional(),
       featured: z.boolean().default(false),
       order: z.number().default(0),
     }),

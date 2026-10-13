@@ -11,6 +11,7 @@ download: "https://github.com/AdrielTTE/crest/releases/latest"
 privacy: "/crest/privacy/"
 offers: ["mobile"]
 mark: "bars"
+icon: "../../assets/work/crest/icon.png"
 shots:
   - src: "../../assets/work/crest/workout.png"
     label: "Workout"
