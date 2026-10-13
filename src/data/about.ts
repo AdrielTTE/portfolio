@@ -71,7 +71,7 @@ export const skills: SkillGroup[] = [
   },
   {
     name: 'Data & tools',
-    items: ['SQL Server', 'MySQL', 'Firebase', 'Git', 'GitHub', 'Unit and integration testing', 'HTML5', 'CSS3', 'npm', 'Yarn'],
+    items: ['SQL Server', 'MySQL', 'Firebase', 'Git', 'GitHub', 'HTML5', 'CSS3', 'npm'],
   },
 ];
 
