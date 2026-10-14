@@ -4,7 +4,6 @@
 import '../styles/global.css';
 import archivoWoff2 from '../assets/fonts/archivo-subset.woff2?url';
 import headInline from '../scripts/head-inline.js?raw';
-import txTester from '../scripts/tx-tester.js?raw';
 import SkipLink from '../components/SkipLink.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -98,7 +97,6 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
         out, with its font loaded, by the time you click.
         Both are ignored by browsers that do not know them. */}
     <link rel="expect" href="#main" blocking="render" />
-    <script type="speculationrules" set:html={JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }], prefetch: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] })} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -115,11 +113,9 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <link rel="preload" as="font" type="font/woff2" href={archivoWoff2} crossorigin />
 
     <script is:inline type="application/ld+json" set:html={jsonLdText} />
-    <script is:inline set:html={txTester} />
     <script is:inline set:html={headInline} />
   </head>
   <body>
-    <div class="nav-sweep" aria-hidden="true"></div>
     <SkipLink />
     <SiteHeader current={current} />
     <main id="main" tabindex="-1">
@@ -127,5 +123,6 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     </main>
     <SiteFooter hire={current !== 'contact'} />
     <CommandPalette />
+    <script src="../scripts/router.ts"></script>
   </body>
 </html>

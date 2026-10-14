@@ -9,6 +9,7 @@ if (el) {
     hour12: false,
   });
   const tick = () => {
+    if (!el.isConnected) return; // the footer was swapped out by the router
     el.textContent = fmt.format(new Date());
     el.closest<HTMLElement>('[data-clock-wrap]')?.removeAttribute('hidden');
     setTimeout(tick, 60000 - (Date.now() % 60000) + 50);

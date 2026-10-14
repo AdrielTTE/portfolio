@@ -53,7 +53,9 @@ function label(state: ThemeState): string {
 }
 
 const button = document.getElementById('theme-toggle');
-if (button) {
+// The header persists across client-side navigation; bind once.
+if (button && !button.dataset.bound) {
+  button.dataset.bound = '1';
   const textEl = button.querySelector('.theme-label');
   const sync = (state: ThemeState) => {
     if (textEl) textEl.textContent = label(state);

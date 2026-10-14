@@ -1,5 +1,4 @@
 @import './tokens.css';
-@import './tx-tester.css';
 /* Two self-hosted, subset fonts (scripts/subset-fonts.mjs). Archivo keeps only
    the Latin glyphs the site uses and only the weight (400-800) and width
    (68-100%) range it uses: 36 KB instead of 90 KB, so it loads and decodes
@@ -156,93 +155,64 @@ html:has(dialog[open]) {
   overflow: hidden;
 }
 
-/* Cross-document View Transitions ------------------------------------------*/
+/* Page changes ----------------------------------------------------------------
+   scripts/router.ts swaps pages inside the document under startViewTransition
+   and sets html[data-nav] to "forward" or "back" while it runs. The push: the
+   old page slides left (a little less, for depth) while the new one comes in
+   from the right; going back mirrors it. The header and progress bar have
+   their own transition names, so they stay still. Anything that is not a
+   router navigation (the theme toggle, or a full page load in Chrome) keeps
+   the browser's default crossfade. */
 @view-transition {
   navigation: auto;
 }
-
-/* One motion for every page change: the old page fades out, then the new one
-   fades in. They never overlap, so there is no ghosting or double exposure,
-   and nothing moves (opacity only), so a busy main thread (a font landing,
-   images decoding) cannot make it judder. The header and progress bar stay
-   put. About 300ms in all. */
 ::view-transition {
   background: var(--c-bg);
-}
-::view-transition-old(root),
-::view-transition-new(root) {
-  mix-blend-mode: normal;
-}
-::view-transition-old(root) {
-  animation: 110ms var(--ease-enter) both vt-fade-out;
-}
-::view-transition-new(root) {
-  animation: 200ms var(--ease-enter) 110ms both vt-fade-in;
 }
 ::view-transition-group(site-header),
 ::view-transition-group(progress) {
   animation-duration: 0s;
 }
-
-@keyframes vt-fade-in {
-  from {
-    opacity: 0;
+@media (prefers-reduced-motion: no-preference) {
+  html[data-nav]::view-transition-old(root),
+  html[data-nav]::view-transition-new(root) {
+    mix-blend-mode: normal;
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    animation-fill-mode: both;
+  }
+  html[data-nav='forward']::view-transition-old(root) {
+    animation-name: push-out-left;
+  }
+  html[data-nav='forward']::view-transition-new(root) {
+    animation-name: push-in-right;
+  }
+  html[data-nav='back']::view-transition-old(root) {
+    z-index: 2;
+    animation-name: push-out-right;
+  }
+  html[data-nav='back']::view-transition-new(root) {
+    animation-name: push-in-left;
   }
 }
-@keyframes vt-fade-out {
+@keyframes push-out-left {
   to {
-    opacity: 0;
+    transform: translateX(-30%);
   }
 }
-
-/* The sweep: a 2px orange line draws across the top of the screen on every
-   page change (head-inline.js adds .nav-sweep-on; Firefox-based browsers
-   without view transitions get it through .no-vt). The one accent, doing the
-   one job of saying "moving". */
-.nav-sweep {
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 2px;
-  background: var(--c-signal);
-  transform: scaleX(0);
-  transform-origin: left;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 100;
-}
-.nav-sweep-on .nav-sweep,
-.no-vt .nav-sweep {
-  animation: nav-sweep 650ms cubic-bezier(0.2, 0, 0, 1) both;
-}
-/* The same page changes for browsers without view transitions (Zen/Firefox);
-   head-inline.js adds .leaving on click and .entering on the next page. The
-   header and footer stay still; only the page fades. Opacity only: a tall
-   page sliding is the most expensive thing a phone can be asked to do. */
-.leaving main {
-  opacity: 0;
-  transition: opacity 110ms var(--ease-enter);
-}
-.entering main {
-  animation: zen-in 200ms var(--ease-enter) both;
-}
-@keyframes zen-in {
+@keyframes push-in-right {
   from {
-    opacity: 0;
+    transform: translateX(100%);
   }
 }
-
-@keyframes nav-sweep {
-  0% {
-    opacity: 1;
-    transform: scaleX(0);
+@keyframes push-out-right {
+  to {
+    transform: translateX(100%);
   }
-  65% {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scaleX(1);
+}
+@keyframes push-in-left {
+  from {
+    transform: translateX(-30%);
   }
 }
 
