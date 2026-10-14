@@ -15,6 +15,13 @@
     } catch (e) {
       /* storage blocked: play the intro every time */
     }
+    // Browsers without cross-document view transitions (Firefox and forks such
+    // as Zen) have no page-to-page animation, so the page rises in on load
+    // instead (see global.css). The home intro already animates, so skip it
+    // when that is about to play.
+    if (!('onpagereveal' in window) && !(location.pathname === '/' && !root.classList.contains('intro-seen'))) {
+      root.classList.add('no-vt');
+    }
   }
 
   try {
