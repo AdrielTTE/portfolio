@@ -23,6 +23,10 @@ const visible = show ?? Boolean(text);
 <style>
   .case-section {
     margin-top: clamp(var(--space-8), 5vw + 24px, var(--space-10));
+    /* Off-screen sections skip layout and paint until they are near the
+       viewport, which keeps a project page's first layout cheap. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
   }
   h2 {
     font-size: var(--step-4);

@@ -137,10 +137,11 @@ h4,
 
 /* Page changes are quiet by design. Between sibling pages (Home, About,
    Contact, one project to another) the swap is instant and an orange line
-   sweeps across the top (below). Going down into a project the case study
-   rises over the list, and going Back it drops away to reveal it, so the
-   motion says where you are. Types are set in head-inline.js. Transform and
-   opacity only. */
+   sweeps across the top (below). Opening a project fades the case study in
+   over the list (and Back fades it out), alongside the title/icon morph.
+   Opacity only: nothing large slides, so a busy main thread (a font landing,
+   images decoding) cannot make the motion judder. Types are set in
+   head-inline.js. */
 ::view-transition {
   background: var(--c-bg);
 }
@@ -150,17 +151,11 @@ h4,
   animation: none;
 }
 html:active-view-transition-type(forward)::view-transition-new(root) {
-  animation: 480ms cubic-bezier(0.32, 0.72, 0, 1) both vt-rise;
-}
-html:active-view-transition-type(forward)::view-transition-old(root) {
-  animation: 480ms cubic-bezier(0.32, 0.72, 0, 1) both vt-recede;
+  animation: 240ms var(--ease-enter) both vt-fade-in;
 }
 html:active-view-transition-type(back)::view-transition-old(root) {
   z-index: 2;
-  animation: 400ms cubic-bezier(0.32, 0.72, 0, 1) both vt-drop;
-}
-html:active-view-transition-type(back)::view-transition-new(root) {
-  animation: 400ms cubic-bezier(0.32, 0.72, 0, 1) both vt-reveal;
+  animation: 200ms var(--ease-enter) both vt-fade-out;
 }
 ::view-transition-group(site-header),
 ::view-transition-group(progress) {
@@ -175,24 +170,14 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@keyframes vt-rise {
+@keyframes vt-fade-in {
   from {
-    transform: translateY(100%);
+    opacity: 0;
   }
 }
-@keyframes vt-recede {
+@keyframes vt-fade-out {
   to {
-    opacity: 0.55;
-  }
-}
-@keyframes vt-drop {
-  to {
-    transform: translateY(100%);
-  }
-}
-@keyframes vt-reveal {
-  from {
-    opacity: 0.55;
+    opacity: 0;
   }
 }
 
@@ -217,43 +202,20 @@ html:active-view-transition-type(back)::view-transition-new(root) {
 }
 /* The same page changes for browsers without view transitions (Zen/Firefox);
    head-inline.js adds .leaving on click and .enter-* on the next page. The
-   header stays put; the page and footer move. Transform and opacity only. */
-.leaving main,
-.leaving #site-footer {
+   header and footer stay still; only the page fades. Opacity only: a tall
+   page sliding is the most expensive thing a phone can be asked to do. */
+.leaving main {
   opacity: 0;
-  transform: translateY(-6px);
-  transition:
-    opacity 140ms var(--ease-enter),
-    transform 140ms var(--ease-enter);
+  transition: opacity 110ms var(--ease-enter);
 }
 .enter-sibling main,
-.enter-sibling #site-footer {
-  animation: zen-in 280ms var(--ease-enter) both;
-}
 .enter-forward main,
-.enter-forward #site-footer {
-  animation: zen-rise 460ms cubic-bezier(0.32, 0.72, 0, 1) both;
-}
-.enter-back main,
-.enter-back #site-footer {
-  animation: zen-settle 320ms var(--ease-enter) both;
+.enter-back main {
+  animation: zen-in 200ms var(--ease-enter) both;
 }
 @keyframes zen-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
-  }
-}
-@keyframes zen-rise {
-  from {
-    opacity: 0;
-    transform: translateY(72px);
-  }
-}
-@keyframes zen-settle {
-  from {
-    opacity: 0;
-    transform: translateY(-14px);
   }
 }
 
@@ -284,8 +246,7 @@ html:active-view-transition-type(back)::view-transition-new(root) {
 
 /* Sections no longer fade in on scroll: text stays put and only imagery
    arrives (studio playbook: work is placed, text never animates on scroll).
-   [data-reveal] stays on the markup as a hook; reveal-sections.ts still adds
-   .in, which nothing styles. */
+   [data-reveal] stays on the markup as an unstyled hook. */
 
 /* Intro reveal (spec §5.3 item 1; addendum §8): each intro block rises once
    per session (head-inline.js sets .intro-seen on later loads). Text lines

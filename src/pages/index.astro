@@ -81,7 +81,6 @@ const pitchParts = home.pitch
   </section>
 </BaseLayout>
 
-<script src="../scripts/reveal-sections.ts"></script>
 <script src="../scripts/hero-shape.ts"></script>
 
 <style>
@@ -250,6 +249,8 @@ const pitchParts = home.pitch
      title left, plain text right). */
   .build {
     margin-top: var(--section);
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
   }
   .build-h {
     font-size: var(--step-4);
