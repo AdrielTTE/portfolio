@@ -39,6 +39,7 @@ const jsonLd = {
       '@id': `${origin}#website`,
       url: origin,
       name: 'Applied Theory',
+      alternateName: facts.name,
       publisher: { '@id': `${origin}#person` },
       inLanguage: 'en',
     },
@@ -49,6 +50,8 @@ const jsonLd = {
       url: origin,
       email: `mailto:${facts.email}`,
       jobTitle: 'Full stack developer',
+      description: 'Adriel Tang is a full stack developer in Kuala Lumpur and the developer behind Applied Theory.',
+      brand: { '@id': `${origin}#service` },
       knowsAbout: [
         'ASP.NET Core',
         'C#',
@@ -66,7 +69,8 @@ const jsonLd = {
     {
       '@type': 'ProfessionalService',
       '@id': `${origin}#service`,
-      name: facts.name,
+      name: 'Applied Theory',
+      alternateName: facts.name,
       description: home.description,
       url: origin,
       email: `mailto:${facts.email}`,
@@ -89,7 +93,7 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="robots" content={noindex ? 'noindex' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
     <link rel="canonical" href={canonicalURL} />
     {/* Smooth page changes: hold the first paint of a new page until <main> has
         been parsed (no half-built flash under the transition), and prerender the
@@ -98,6 +102,7 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
         Both are ignored by browsers that do not know them. */}
     <link rel="expect" href="#main" blocking="render" />
 
+    <meta property="og:site_name" content="Applied Theory" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />

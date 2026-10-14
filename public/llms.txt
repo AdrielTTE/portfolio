@@ -1,6 +1,6 @@
 # Applied Theory (Adriel Tang)
 
-> Adriel Tang is a full stack developer in Kuala Lumpur, Malaysia, working mainly in ASP.NET Core, C#, Flutter and Dart. He builds websites, web apps, backend APIs with databases, and cross-platform mobile apps, and takes freelance projects.
+> Adriel Tang is a full stack developer in Kuala Lumpur, Malaysia, and the developer behind Applied Theory, the studio name for his own apps. He works mainly in ASP.NET Core, C#, Flutter and Dart. He builds websites, web apps, backend APIs with databases, and cross-platform mobile apps, and takes freelance projects.
 
 ## Pages
 - [Home](https://appliedtheory.asia/): what I build and selected work

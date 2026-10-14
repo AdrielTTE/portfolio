@@ -1,6 +1,6 @@
 ---
 title: "Cairn"
-seoTitle: "Cairn: A Local-First Planner App"
+seoTitle: "Cairn: Local-First Planner in Flutter | Adriel Tang"
 seoDescription: "Cairn is a local-first planner for tasks, projects and notes, built with Flutter, Drift and Riverpod, with Google Calendar, Drive and Gmail."
 summary: "A local-first planner for tasks, projects and notes, with Google Calendar, Drive and Gmail alongside. Still in development."
 scope: "Mobile app"
@@ -31,6 +31,7 @@ facts:
   - value: "3"
     label: "Google services linked: Calendar, Drive, Gmail"
 sections: [overview, change, problem, built, facts, for-you]
+appCategory: "UtilitiesApplication"
 featured: true
 order: 2
 problem: |-

@@ -1,6 +1,6 @@
 ---
 title: "Crest"
-seoTitle: "Crest: An Offline-First Gym Tracker"
+seoTitle: "Crest: Offline-First Gym Tracker in Flutter | Adriel Tang"
 seoDescription: "Crest is an offline-first Android gym workout tracker built with Flutter, Drift and Riverpod, with a live workout notification and Drive backup."
 summary: "An offline-first gym workout tracker: log sets, run rest timers, and see progress without a connection."
 scope: "Mobile app"
@@ -33,6 +33,7 @@ facts:
     label: "Built-in exercises"
   - value: "0"
     label: "Accounts or servers needed"
+appCategory: "HealthApplication"
 featured: true
 order: 1
 problem: |-
