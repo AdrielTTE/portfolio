@@ -32,8 +32,11 @@ const Tag = as;
     align-items: center;
     justify-content: center;
   }
+  .btn {
+    transition: scale var(--dur-fast) var(--ease-enter);
+  }
   .btn:active {
-    translate: 0 1px;
+    scale: 0.97;
   }
   .btn--primary {
     min-height: 52px;
