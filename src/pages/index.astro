@@ -51,28 +51,32 @@ const pitchParts = home.pitch
     <div class="block"><WorkList projects={allWork} /></div>
   </div>
 
-  {/* What I build: a plain statement on the espresso field, not a widget.
-      Each line names the tools and links the projects that show it, and
-      lights up as it scrolls in (CSS scroll-driven). */}
-  <section class="build-field" aria-labelledby="build-h">
-    <div class="container build">
-      <h2 id="build-h" class="display">What I build</h2>
-      <div class="build-body">
+  {/* What I build: set like the Work list above it (big condensed title on
+      the left, plain description on the right, ruled rows) so the page reads
+      as one thing. Each row names the tools and links the projects that show
+      them. The only dark field left is the hire block in the footer. */}
+  <section class="build" aria-labelledby="build-h">
+    <div class="container home">
+      <h2 id="build-h" class="display build-h">What I build</h2>
+      <ol class="offers">
         {offers.map((o) => (
-          <p>
-            {offerCopy[o.id].line}{' '}
-            <span class="how">
-              {offerCopy[o.id].stack.join(', ')}. See{' '}
-              {o.projects.map((p, i) => (
-                <>
-                  {i > 0 && (i === o.projects.length - 1 ? ' and ' : ', ')}
-                  <a href={`/work/${p.id}/`}>{p.data.title}</a>
-                </>
-              ))}.
-            </span>
-          </p>
+          <li class="offer">
+            <h3 class="offer-title display">{o.label}</h3>
+            <div class="offer-body">
+              <p class="offer-line">{offerCopy[o.id].line}</p>
+              <p class="how">
+                {offerCopy[o.id].stack.join(', ')}. See{' '}
+                {o.projects.map((p, i) => (
+                  <>
+                    {i > 0 && (i === o.projects.length - 1 ? ' and ' : ', ')}
+                    <a href={`/work/${p.id}/`}>{p.data.title}</a>
+                  </>
+                ))}.
+              </p>
+            </div>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   </section>
 </BaseLayout>
@@ -242,36 +246,39 @@ const pitchParts = home.pitch
     margin-top: clamp(40px, 3vw + 24px, 72px);
   }
 
-  /* The espresso field. Everything inside reads on it in both themes. */
-  .build-field {
+  /* What I build: same language as the Work list (ruled rows, condensed
+     title left, plain text right). */
+  .build {
     margin-top: var(--section);
-    padding-block: var(--space-9);
-    background: var(--c-block);
-    color: var(--c-block-ink);
-    --c-ink: var(--c-block-ink);
-    --c-ink-2: var(--c-block-ink-2);
-    --c-focus: var(--c-block-ink);
-    --c-accent: var(--c-block-ink);
-    position: relative;
-    overflow: clip;
   }
-  /* It runs straight into the footer, which is the same colour. */
-  :global(#site-footer) {
-    margin-top: 0;
+  .build-h {
+    font-size: var(--step-4);
+    color: var(--c-ink);
+    margin-bottom: var(--space-6);
   }
-  .build h2 {
-    font-size: var(--step-5);
-    color: var(--c-block-ink);
+  .offers {
+    list-style: none;
+    border-top: 1px solid var(--c-ink);
   }
-  .build-body {
-    margin-top: var(--space-5);
+  .offer {
     display: grid;
-    gap: var(--space-5);
-    max-width: 34em;
+    gap: var(--space-3);
+    padding-block: var(--space-6) var(--space-7);
+    border-bottom: 1px solid var(--c-rule);
   }
-  .build-body p {
-    font-size: var(--step-2);
-    line-height: 1.35;
+  .offer-title {
+    font-size: var(--step-5);
+    color: var(--c-display);
+    line-height: 0.95;
+  }
+  .offer-body {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 46ch;
+  }
+  .offer-line {
+    font-size: var(--step-1);
+    line-height: 1.4;
   }
   .how {
     color: var(--c-ink-2);
@@ -282,23 +289,16 @@ const pitchParts = home.pitch
   }
   @media (hover: hover) and (pointer: fine) {
     .how a:hover {
-      color: var(--c-accent);
+      color: var(--c-signal);
       text-decoration-thickness: 2px;
     }
   }
   @media (min-width: 1024px) {
-    .build {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
+    .offer {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
       column-gap: var(--gutter);
-      align-items: start;
-    }
-    .build h2 {
-      grid-column: 1 / span 4;
-    }
-    .build-body {
-      grid-column: 5 / span 8;
-      margin-top: 0;
+      align-items: end;
+      padding-block: var(--space-7);
     }
   }
 </style>
