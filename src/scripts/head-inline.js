@@ -4,6 +4,34 @@
   var root = document.documentElement;
   root.classList.add('js');
 
+  // The big condensed headings are set in a web font that is much narrower than
+  // the fallback it replaces, so showing them early makes the name visibly jump
+  // when the font lands. Keep them hidden (their space is kept) until it has
+  // loaded; a timeout means a slow or failed font never hides them for long.
+  // The check waits for DOMContentLoaded because the @font-face rule lives in a
+  // <style> further down the head and is not parsed yet when this runs.
+  if (document.fonts && document.fonts.load) {
+    root.classList.add('fonts-loading');
+    var fontsShown = function () {
+      root.classList.remove('fonts-loading');
+    };
+    setTimeout(fontsShown, 1500);
+    // As soon as the font itself finishes (check() is false while the face
+    // exists but has not loaded), not when the whole page has.
+    if (document.fonts.addEventListener) {
+      document.fonts.addEventListener('loadingdone', function () {
+        try {
+          if (document.fonts.check('800 1em "Archivo Variable"')) fontsShown();
+        } catch (e) {
+          /* leave it to the timeout */
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      document.fonts.load('800 1em "Archivo Variable"').then(fontsShown, fontsShown);
+    });
+  }
+
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduced) {
     root.classList.add('js-reveal');

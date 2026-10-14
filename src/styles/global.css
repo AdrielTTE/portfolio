@@ -55,6 +55,19 @@ body {
   text-wrap: balance;
 }
 
+/* Until the web font has loaded (head-inline.js sets .fonts-loading) the big
+   condensed headings stay hidden but keep their space, and the hero entrance
+   waits, so the name appears once, in the right shape. */
+.fonts-loading .display {
+  visibility: hidden;
+}
+/* The entrance rules further down set `animation` as a shorthand (which resets
+   the play state), so the pause has to out-rank them. */
+.js-reveal.fonts-loading:not(.intro-seen) .line-mask > span,
+.js-reveal.fonts-loading:not(.intro-seen) .line-rise {
+  animation-play-state: paused;
+}
+
 h1,
 h2,
 h3,
