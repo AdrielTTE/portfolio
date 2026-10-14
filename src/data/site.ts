@@ -44,7 +44,8 @@ export const projectSteps = [
 ];
 
 // Contact-page FAQ (also emitted as FAQPage schema). Every answer restates a
-// fact already on the site; no prices or promises beyond it.
+// fact already on the site; no prices or promises beyond it. How a project
+// runs and the reply time sit elsewhere on the page, so they are not repeated here.
 export const faq = [
   {
     q: 'What do you build?',
@@ -57,14 +58,6 @@ export const faq = [
   {
     q: 'Can you publish the app to the store for me?',
     a: "For Google Play, yes. I'm taking my own apps through it right now (Crest is in closed testing), so I've dealt with signing, the store listing, the privacy policy and testing tracks.",
-  },
-  {
-    q: 'How does it work?',
-    a: projectSteps.join(' '),
-  },
-  {
-    q: 'How fast do you reply?',
-    a: site.replyTime,
   },
 ];
 
