@@ -7,7 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Timeline from '../components/Timeline.astro';
 import SkillGroups from '../components/SkillGroups.astro';
 import { getCollection } from 'astro:content';
-import photo from '../assets/tempProfile.jpg';
+import photo from '../assets/adriel.jpg';
 import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '../data/about';
 import { toLatelyLine, newestFirst } from '../lib/lately';
 
@@ -97,7 +97,7 @@ const lately = newestFirst((await getCollection('lately')).map((e) => e.data)).m
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
-    object-position: 45% 35%;
+    object-position: 50% 30%;
   }
   h1 {
     font-size: var(--step-6);
