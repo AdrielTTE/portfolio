@@ -53,7 +53,15 @@ function install() {
   };
   settleIntro();
 
-  const isPage = (u: URL) => u.origin === location.origin && !/\.[a-z0-9]{2,5}$/i.test(u.pathname.replace(/\.html$/i, '')) && !u.pathname.startsWith('/_astro/');
+  // Only the site's own pages. Not assets, and not /cdn-cgi/: Cloudflare serves
+  // its own pages there (the email-protection link it puts in place of a
+  // mailto, for one), and those must be left to the browser.
+  const isPage = (u: URL) =>
+    (u.protocol === 'http:' || u.protocol === 'https:') &&
+    u.origin === location.origin &&
+    !/\.[a-z0-9]{2,5}$/i.test(u.pathname.replace(/\.html$/i, '')) &&
+    !u.pathname.startsWith('/_astro/') &&
+    !u.pathname.startsWith('/cdn-cgi/');
 
   const load = (u: URL): Promise<string | null> => {
     const key = u.pathname + u.search;
