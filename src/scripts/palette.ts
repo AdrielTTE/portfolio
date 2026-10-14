@@ -19,7 +19,9 @@ if (!isApplePlatform()) {
 }
 
 const dialog = document.getElementById('palette') as HTMLDialogElement | null;
-if (dialog) {
+// The dialog persists across client-side navigation; bind once.
+if (dialog && !dialog.dataset.bound) {
+  dialog.dataset.bound = '1';
   const input = document.getElementById('palette-q') as HTMLInputElement;
   const list = document.getElementById('palette-list') as HTMLUListElement;
   const empty = document.getElementById('palette-empty') as HTMLElement;
@@ -158,6 +160,7 @@ if (dialog) {
     if (c.href) {
       dialog.close();
       if (/^https?:/.test(c.href)) window.open(c.href, '_blank', 'noopener');
+      else if ((window as any).__router) (window as any).__router.go(c.href);
       else location.href = c.href;
     } else if (c.action === 'copy-email') {
       // Visible and announced feedback in the row itself, then close after a

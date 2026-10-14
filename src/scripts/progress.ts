@@ -3,7 +3,9 @@
 // listener; elsewhere a passive rAF-throttled listener paints them. Drag-to-scrub
 // and the ARIA value work in both paths.
 const bar = document.getElementById('progress');
-if (bar) {
+// The header persists across client-side navigation; bind once.
+if (bar && !bar.dataset.bound) {
+  bar.dataset.bound = '1';
   const fill = bar.querySelector<HTMLElement>('.fill');
   const knob = bar.querySelector<HTMLElement>('.knob');
 
