@@ -204,6 +204,14 @@ const commands: Command[] = [
     /* Reaching the end of the list must not scroll the page behind it. */
     overscroll-behavior: contain;
     position: relative;
+    /* No visible scrollbar: the highlight is laid over the whole panel and ran
+       underneath it, and with it showing the rows were narrower than the
+       highlight. Wheel, touch and arrow keys still scroll; a half-cut row at
+       the bottom says there is more. */
+    scrollbar-width: none;
+  }
+  .panel > ul::-webkit-scrollbar {
+    display: none;
   }
   :global(#palette-list .grp-label) {
     padding: 8px 12px 4px;
