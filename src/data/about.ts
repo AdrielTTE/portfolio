@@ -18,8 +18,8 @@ export interface SkillGroup {
 export const heroRoleLine = 'Full stack developer in Kuala Lumpur, working at Bantu2U Holdings.';
 
 export const bio = [
-  "I'm a full stack developer based in Kuala Lumpur, Malaysia. My main tools are ASP.NET Core and C# for web apps and backend APIs, SQL for designing and managing the databases behind them, and Flutter and Dart for cross-platform mobile apps. I've also built with Laravel, Node.js, Next.js, and Astro. I take on freelance projects: web apps, APIs and databases, mobile apps, and the occasional business website. I am preparing my own apps for Google Play under the name Applied Theory, starting with Crest, which is in closed testing.",
-  'I completed a Bachelor of Information Technology (Honours) in Software Systems Development at TAR UMT in April 2026, with First Class Honours, CGPA 3.78. I joined Bantu2U Holdings as a Software Development Executive Intern in October 2025 and now work there full-time as a Software Developer, developing in-house software.',
+  "I'm a full stack developer in Kuala Lumpur. I build with ASP.NET Core and C# for web apps and APIs, SQL for the databases behind them, and Flutter and Dart for mobile apps. I take on freelance projects, and I'm getting my own apps ready for Google Play as Applied Theory, starting with Crest, which is in closed testing.",
+  'I graduated in Software Systems Development from TAR UMT with First Class Honours in April 2026, and I now work full-time as a Software Developer at Bantu2U Holdings.',
 ];
 
 export const timeline: TimelineItem[] = [
@@ -49,7 +49,7 @@ export const timeline: TimelineItem[] = [
 export const skills: SkillGroup[] = [
   {
     name: 'Main stack',
-    items: ['ASP.NET Core', 'C#', 'REST APIs', 'SQL', 'Database design and management', 'Flutter', 'Dart'],
+    items: ['ASP.NET Core', 'C#', 'REST APIs', 'SQL', 'Flutter', 'Dart'],
   },
   {
     name: 'Mobile app release',
@@ -63,15 +63,7 @@ export const skills: SkillGroup[] = [
   },
   {
     name: 'Also used',
-    items: ['Laravel', 'PHP', 'Node.js', 'Next.js', 'React', 'Astro', 'Tailwind CSS'],
-  },
-  {
-    name: 'Other languages',
-    items: ['TypeScript', 'JavaScript', 'Java', 'Python', 'C++'],
-  },
-  {
-    name: 'Data & tools',
-    items: ['SQL Server', 'MySQL', 'Firebase', 'Git', 'GitHub', 'HTML5', 'CSS3', 'npm'],
+    items: ['TypeScript', 'Laravel', 'Node.js', 'Next.js', 'Astro', 'SQL Server', 'MySQL', 'Firebase', 'Git'],
   },
 ];
 
