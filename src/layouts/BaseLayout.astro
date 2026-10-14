@@ -91,6 +91,12 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonicalURL} />
+    {/* Smooth page changes: hold the first paint of a new page until <main> has
+        been parsed (no half-built flash under the transition), and fetch likely
+        next pages when a link is hovered or pressed so they arrive instantly.
+        Both are ignored by browsers that do not know them. */}
+    <link rel="expect" href="#main" blocking="render" />
+    <script type="speculationrules" set:html={JSON.stringify({ prefetch: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] })} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
