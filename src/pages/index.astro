@@ -14,8 +14,8 @@ import { offersWithProjects } from '../lib/offers';
 
 const allWork = await getCollection('work');
 const offers = offersWithProjects(allWork);
-// The three things I build get a drawn underline in the pitch.
-const emphasis = ['websites', 'web apps', 'mobile apps'];
+// The two things I build get a drawn underline in the pitch.
+const emphasis = ['web apps', 'mobile apps'];
 const pitchParts = home.pitch
   .split(new RegExp(`(${emphasis.join('|')})`))
   .map((text) => ({ text, em: emphasis.includes(text) }));
@@ -99,7 +99,7 @@ const pitchParts = home.pitch
   /* Wide screens: extra height below the pitch holds the two phones. */
   @media (min-width: 1280px) {
     .hero-wrap {
-      padding-bottom: 210px;
+      padding-bottom: 260px;
     }
   }
   .hero-wrap > .container {
@@ -227,7 +227,7 @@ const pitchParts = home.pitch
     line-height: 1.08;
     letter-spacing: -0.015em;
     max-width: 26ch;
-    text-wrap: pretty;
+    text-wrap: balance;
   }
   .intro-text {
     margin-top: var(--space-5);
