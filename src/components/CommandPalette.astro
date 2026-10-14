@@ -72,6 +72,9 @@ const commands: Command[] = [
     margin: 12vh auto auto;
     background: var(--c-bg);
     color: var(--c-ink);
+    /* The list is the only thing that scrolls. A dialog scrolls by default,
+       which doubled the scrollbar whenever the rows were a few px too tall. */
+    overflow: hidden;
   }
   dialog[open] {
     animation: pal-in var(--dur-base) var(--ease-enter);
@@ -122,8 +125,16 @@ const commands: Command[] = [
     }
   }
 
+  /* A column: input row and hints keep their own height, the list takes
+     whatever is left of the dialog's max height and scrolls inside it. */
   .panel {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: var(--pal-max);
+  }
+  .panel > * {
+    flex: none;
   }
 
   .input-row {
@@ -183,13 +194,15 @@ const commands: Command[] = [
     }
   }
 
-  ul {
+  .panel > ul {
     list-style: none;
     margin: 0;
     padding: 6px;
-    /* The dialog minus the input row (57px), footer hints (37px), borders. */
-    max-height: calc(var(--pal-max) - 96px);
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
+    /* Reaching the end of the list must not scroll the page behind it. */
+    overscroll-behavior: contain;
     position: relative;
   }
   :global(#palette-list .grp-label) {

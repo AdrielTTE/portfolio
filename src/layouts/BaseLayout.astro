@@ -2,7 +2,7 @@
 // docs/design-spec.md §8, §10. Shared head, skip link, header and footer for
 // every page.
 import '../styles/global.css';
-import archivoWoff2 from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import archivoWoff2 from '../assets/fonts/archivo-subset.woff2?url';
 import headInline from '../scripts/head-inline.js?raw';
 import SkipLink from '../components/SkipLink.astro';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -92,11 +92,12 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonicalURL} />
     {/* Smooth page changes: hold the first paint of a new page until <main> has
-        been parsed (no half-built flash under the transition), and fetch likely
-        next pages when a link is hovered or pressed so they arrive instantly.
+        been parsed (no half-built flash under the transition), and prerender the
+        likely next page when a link is hovered or pressed, so it is already laid
+        out, with its font loaded, by the time you click.
         Both are ignored by browsers that do not know them. */}
     <link rel="expect" href="#main" blocking="render" />
-    <script type="speculationrules" set:html={JSON.stringify({ prefetch: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] })} />
+    <script type="speculationrules" set:html={JSON.stringify({ prerender: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }], prefetch: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] })} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

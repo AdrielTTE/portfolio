@@ -1,6 +1,25 @@
-@import '@fontsource-variable/archivo/wdth.css';
-@import '@fontsource/dm-mono/500.css';
 @import './tokens.css';
+/* Two self-hosted, subset fonts (scripts/subset-fonts.mjs). Archivo keeps only
+   the Latin glyphs the site uses and only the weight (400-800) and width
+   (68-100%) range it uses: 36 KB instead of 90 KB, so it loads and decodes
+   sooner and the relayout when it lands is shorter. The wordmark face holds
+   just the letters of "applied.theory()" and is small enough that the build
+   inlines it, so the logo never swaps. */
+@font-face {
+  font-family: 'Archivo Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 800;
+  font-stretch: 68% 100%;
+  src: url('../assets/fonts/archivo-subset.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('../assets/fonts/dm-mono-wordmark.woff2') format('woff2');
+}
 
 /* Reset ------------------------------------------------------------------ */
 *,
@@ -128,6 +147,12 @@ h3,
 h4,
 [id] {
   scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+/* While the menu (command palette) is open the page behind it does not scroll;
+   scrollbar-gutter on html keeps the layout from shifting. */
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 /* Cross-document View Transitions ------------------------------------------*/
