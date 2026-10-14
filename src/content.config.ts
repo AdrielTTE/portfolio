@@ -46,6 +46,9 @@ const work = defineCollection({
       // Show the measured build receipts (page weight, JS, Lighthouse) on
       // this case study. Only true for this site: it's the one build measured.
       receipts: z.boolean().default(false),
+      // Checked figures shown large under the screenshots. Only put a number
+      // here that was verified in the project's own repo or build.
+      facts: z.array(z.object({ value: z.string(), label: z.string() })).max(4).default([]),
       // Small flat mark shown beside the title (ProjectMark.astro).
       mark: z.enum(['bars', 'cards', 'disc']).optional(),
       // The app's real icon; shown instead of the flat mark when present.

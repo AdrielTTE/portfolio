@@ -28,6 +28,11 @@ shots:
   - src: "../../assets/work/crest/history.png"
     label: "History"
     alt: "Crest History screen: monthly totals and a list of past workouts with personal records"
+facts:
+  - value: "147"
+    label: "Built-in exercises"
+  - value: "0"
+    label: "Accounts or servers needed"
 featured: true
 order: 1
 problem: |-

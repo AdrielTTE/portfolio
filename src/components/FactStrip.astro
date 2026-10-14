@@ -1,0 +1,31 @@
+---
+// Verified figures for a case study, set large in the display voice (same
+// look as BuildReceipts). Values come from the project's front matter.
+interface Props { facts: { value: string; label: string }[] }
+const { facts } = Astro.props;
+---
+<dl>
+  {facts.map((f) => (
+    <div>
+      <dt>{f.label}</dt>
+      <dd class="display">{f.value}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--space-5) var(--gutter);
+  }
+  dt {
+    color: var(--c-ink-2);
+  }
+  dd {
+    margin-top: var(--space-1);
+    font-size: var(--step-6);
+    color: var(--c-display);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
