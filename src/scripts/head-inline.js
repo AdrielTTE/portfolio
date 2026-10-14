@@ -119,6 +119,55 @@
       };
       e.viewTransition.finished.then(done, done);
     });
+    // Browsers without cross-document view transitions (Firefox and forks such
+    // as Zen): the same page changes by hand. A click on a same-site link
+    // first plays a short exit on the page, then navigates; the next page
+    // plays the matching enter (global.css, .enter-*). Direction is kept in
+    // sessionStorage for that one hop. Browser Back/Forward still gets the
+    // enter. Not used when motion is reduced.
+    var noVT = !('onpagereveal' in window);
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (noVT && !calm) {
+      var rootEl2 = document.documentElement;
+      var dirTo = function (from, to) {
+        if (isHome(from) && workId(to)) return 'forward';
+        if (workId(from) && isHome(to)) return 'back';
+        return 'sibling';
+      };
+      try {
+        var navEntry = performance.getEntriesByType('navigation')[0];
+        var saved = sessionStorage.getItem('navDir');
+        sessionStorage.removeItem('navDir');
+        var dir = navEntry && navEntry.type === 'back_forward' ? 'back' : saved;
+        // First visit to the home page has its own intro; skip the enter there.
+        var introPlays = isHome(new URL(location.href)) && !rootEl2.classList.contains('intro-seen');
+        if (dir && !introPlays) rootEl2.classList.add('enter-' + dir);
+      } catch (e2) {
+        /* storage blocked: no enter animation */
+      }
+      document.addEventListener('click', function (e) {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a || a.target === '_blank' || a.hasAttribute('download') || a.origin !== location.origin) return;
+        var to = new URL(a.href);
+        var here = new URL(location.href);
+        if (to.pathname === here.pathname && to.search === here.search) return; // same page or #hash
+        e.preventDefault();
+        try {
+          sessionStorage.setItem('navDir', dirTo(here, to));
+        } catch (e3) {
+          /* no enter animation */
+        }
+        rootEl2.classList.add('leaving');
+        setTimeout(function () {
+          location.assign(a.href);
+        }, 150);
+      });
+      // Back/Forward cache can restore a page that was mid-exit.
+      addEventListener('pageshow', function (e) {
+        if (e.persisted) rootEl2.classList.remove('leaving');
+      });
+    }
   } catch (err) {
     /* view transitions unsupported: plain fade */
   }
