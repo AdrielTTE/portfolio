@@ -30,6 +30,7 @@ facts:
     label: "Automated tests"
   - value: "3"
     label: "Google services linked: Calendar, Drive, Gmail"
+sections: [overview, change, problem, built, facts, for-you]
 featured: true
 order: 2
 problem: |-

@@ -53,6 +53,13 @@ const work = defineCollection({
       mark: z.enum(['bars', 'cards', 'disc']).optional(),
       // The app's real icon; shown instead of the flat mark when present.
       icon: image().optional(),
+      // Order of the write-up sections below the screenshots. Omitted ids are
+      // not shown (a section with no content never shows anyway); leave the
+      // field out for the default order. Lets each case study lead with what
+      // matters for that project instead of one fixed template.
+      sections: z
+        .array(z.enum(['facts', 'overview', 'numbers', 'problem', 'built', 'data', 'change', 'for-you']))
+        .optional(),
       featured: z.boolean().default(false),
       order: z.number().default(0),
     }),

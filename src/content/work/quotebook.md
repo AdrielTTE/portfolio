@@ -28,6 +28,7 @@ shots:
 facts:
   - value: "93"
     label: "Automated test methods (xUnit)"
+sections: [problem, overview, data, built, facts, change, for-you]
 featured: true
 order: 0
 problem: |-
