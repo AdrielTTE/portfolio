@@ -13,10 +13,19 @@ document.querySelectorAll<HTMLElement>('[data-viewer]').forEach((viewer) => {
       t.setAttribute('aria-selected', String(i === j));
       t.tabIndex = i === j ? 0 : -1;
     });
-    phones.forEach((p, j) => p.classList.toggle('on', i === j));
+    // `--o` is each phone's offset from the chosen one; on wide screens the
+    // neighbours sit either side as a dimmed fan (see Shots.astro).
+    phones.forEach((p, j) => {
+      p.classList.toggle('on', i === j);
+      p.classList.toggle('near', Math.abs(j - i) === 1);
+      p.style.setProperty('--o', String(j - i));
+    });
     if (cap) cap.textContent = phones[i].querySelector('img')?.alt ?? '';
     if (focus) tabs[i].focus();
   };
+
+  phones.forEach((p, j) => p.addEventListener('click', () => select(j)));
+  select(0);
 
   const hover = matchMedia('(hover: hover) and (pointer: fine)').matches;
   tabs.forEach((tab, i) => {

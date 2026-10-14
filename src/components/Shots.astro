@@ -249,13 +249,53 @@ const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
       text-align: left;
     }
   }
-  /* Fine pointers: the phone pushes in 1.5% over a long, slow ease. */
-  @media (hover: hover) and (pointer: fine) {
-    .viewer.live .phones {
-      transition: transform 900ms var(--ease-enter);
+  /* Wide screens: the chosen phone sits centre with its neighbours either
+     side, dimmed and smaller; click one to bring it forward. Only transform
+     and opacity animate. */
+  @media (min-width: 1024px) {
+    .viewer.live {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      overflow: clip;
+      padding-inline: var(--space-6);
     }
-    .viewer.live .phones:hover {
-      transform: scale(1.015);
+    .viewer.live .phones {
+      width: clamp(240px, 20vw, 300px);
+    }
+    .viewer.live .phone {
+      transform: translateX(calc(var(--o, 0) * 96%)) scale(calc(1 - min(1, max(var(--o, 0), calc(var(--o, 0) * -1))) * 0.14));
+      transition:
+        transform var(--dur-slow) var(--ease-enter),
+        opacity var(--dur-slow) var(--ease-enter);
+    }
+    .viewer.live .phone.near {
+      opacity: 0.4;
+      cursor: pointer;
+    }
+    .viewer.live .phone.near:hover {
+      opacity: 0.65;
+    }
+    .viewer.live .side {
+      justify-items: center;
+      text-align: center;
+    }
+    .tabs {
+      flex-direction: row;
+      justify-content: center;
+      gap: var(--space-2) var(--space-6);
+    }
+    .tab {
+      font-size: var(--step-4);
+      text-align: center;
+    }
+    .cap {
+      min-height: 3em;
+      max-width: 48ch;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .viewer.live .phone {
+      transition: none;
     }
   }
 </style>

@@ -12,6 +12,7 @@ import CaseSection from '../../components/CaseSection.astro';
 import ArchDiagram from '../../components/ArchDiagram.astro';
 import SchemaCard from '../../components/SchemaCard.astro';
 import BuildReceipts from '../../components/BuildReceipts.astro';
+import FactStrip from '../../components/FactStrip.astro';
 import { getPrevNext } from '../../lib/work';
 
 export async function getStaticPaths() {
@@ -85,6 +86,9 @@ const schema = [
 
     {/* The Markdown body (what it is, who it's for) comes first, so a reader
         knows what the project is before the decisions. */}
+    <CaseSection id="facts" title="At a glance" show={project.data.facts.length > 0}>
+      <FactStrip facts={project.data.facts} />
+    </CaseSection>
     <CaseSection id="overview" title="Overview" show={Boolean(project.body?.trim())}>
       <Prose><Content /></Prose>
     </CaseSection>
