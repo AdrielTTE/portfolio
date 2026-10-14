@@ -1,0 +1,78 @@
+---
+// Two real app screens at the right of the hero, over the quarter-circle, so
+// the top of the page shows shipped work and not only type. Decorative (the
+// work list below is the real navigation), so hidden from assistive tech and
+// only drawn on wide screens where there is room beside the pitch.
+// Borrowed: the device-over-shape hero from studio portfolios; kept to two
+// phones, static, no scroll-linked motion.
+import { Image } from 'astro:assets';
+import type { WorkEntry } from '../lib/work';
+
+interface Props { projects: WorkEntry[] }
+const { projects } = Astro.props;
+const pick = (id: string) => projects.find((p) => p.id === id)?.data.shots[0]?.src;
+const phones = [pick('cairn'), pick('crest')].filter((s): s is NonNullable<typeof s> => Boolean(s));
+---
+{phones.length > 0 && (
+  <div class="hero-phones" aria-hidden="true">
+    {phones.map((src, i) => (
+      <div class="hp" style={`--k:${i}`}>
+        <div class="hp-screen">
+          <Image src={src} alt="" widths={[220, 340]} sizes="170px" loading="eager" fetchpriority="low" />
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+<style>
+  .hero-phones {
+    display: none;
+  }
+  @media (min-width: 1280px) {
+    .hero-phones {
+      display: block;
+      position: absolute;
+      right: calc(var(--margin) + 8px);
+      bottom: var(--space-6);
+      width: 300px;
+      height: 376px;
+      pointer-events: none;
+    }
+    .hp {
+      position: absolute;
+      bottom: 0;
+      width: 160px;
+      padding: 6px;
+      border-radius: 26px;
+      background: #0b0a09;
+      box-shadow: 0 0 0 1px var(--c-rule);
+      /* Back phone sits high-left and tilts left; front phone low-right. */
+      left: calc(var(--k) * 140px);
+      transform: translateY(calc((1 - var(--k)) * -34px)) rotate(calc(-4deg + var(--k) * 7deg));
+    }
+    .hp-screen {
+      aspect-ratio: 1344 / 2992;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #0f1117;
+    }
+    .hp-screen :global(img) {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Rise in once per session, after the masthead; transform and opacity. */
+    :global(.js-reveal:not(.intro-seen)) .hp {
+      animation: hp-in 900ms var(--ease-enter) both;
+      animation-delay: calc(700ms + var(--k) * 140ms);
+    }
+    @keyframes hp-in {
+      from {
+        opacity: 0;
+        transform: translateY(60px) rotate(calc(-4deg + var(--k) * 7deg));
+      }
+    }
+  }
+</style>
