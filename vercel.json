@@ -22,6 +22,11 @@
       "permanent": true
     },
     {
+      "source": "/work",
+      "destination": "/#work",
+      "permanent": true
+    },
+    {
       "source": "/experience",
       "destination": "/about/",
       "permanent": true
