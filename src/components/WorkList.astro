@@ -190,9 +190,9 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     }
   }
 
-  /* Reveal, once per row as it enters view (script above adds .in): the
-     title rises out of its own mask, the row rule draws left to right, the
-     summary lands just after. Transform and opacity only. Hidden only under
+  /* Reveal, once per row as it enters view (script above adds .in): the row
+     rule draws left to right and the mark pops in. The title and summary stay
+     put (text does not animate on scroll). Transform and opacity only. Hidden only under
      .js-reveal, so no-JS and reduced motion show everything. */
   .tw {
     display: block;
@@ -226,26 +226,11 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
   .mk {
     transform-origin: center;
   }
-  :global(.js-reveal) .work-row:not(.in) .tx-in {
-    transform: translateY(115%) rotate(4deg);
-  }
-  :global(.js-reveal) .work-row:not(.in) .ln-in {
-    transform: translateY(120%);
-  }
   :global(.js-reveal) .work-row:not(.in)::after {
     transform: scaleX(0);
   }
   :global(.js-reveal) .work-row:not(.in) .mk {
     transform: scale(0.4) rotate(-25deg);
-  }
-  :global(.js-reveal) .work-row .tx-in {
-    transform-origin: left bottom;
-    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--w, 0) * 90ms + 150ms);
-  }
-  :global(.js-reveal) .work-row .ln-in {
-    transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--l, 0) * 110ms + 450ms);
   }
   :global(.js-reveal) .work-row .mk {
     transition: transform 900ms cubic-bezier(0.34, 1.4, 0.5, 1) 500ms;

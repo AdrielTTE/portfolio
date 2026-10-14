@@ -174,18 +174,10 @@ h4,
    circular clip-path reveal was dropped to keep motion to transform and
    opacity only. */
 
-/* Section reveals (spec §5.3 item 5). Hidden only under .js-reveal, which
-   head-inline.js sets when JS runs and motion is allowed, so no-JS and
-   reduced motion always show content. reveal-sections.ts adds .in once. */
-.js-reveal [data-reveal]:not(.in) {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.js-reveal [data-reveal] {
-  transition:
-    opacity var(--dur-slow) var(--ease-enter),
-    transform var(--dur-slow) var(--ease-enter);
-}
+/* Sections no longer fade in on scroll: text stays put and only imagery
+   arrives (studio playbook: work is placed, text never animates on scroll).
+   [data-reveal] stays on the markup as a hook; reveal-sections.ts still adds
+   .in, which nothing styles. */
 
 /* Intro reveal (spec §5.3 item 1; addendum §8): each intro block rises once
    per session (head-inline.js sets .intro-seen on later loads). Text lines
