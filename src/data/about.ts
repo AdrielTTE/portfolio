@@ -70,4 +70,4 @@ export const skills: SkillGroup[] = [
 export const musicParagraph =
   'Outside development, I have 8 years of experience in audio and visual (AV) production, including 2 years as an AV coordinator at Emmanuel EFC, and 7 years performing live music on guitar and cajon, both ongoing.';
 
-export const photoAlt = "Adriel Tang smiling and looking off to the side, in glasses and a black polo shirt, in a warmly lit office.";
+export const photoAlt = "Adriel Tang in glasses and a black shirt, looking down at an acoustic guitar as he plays.";
