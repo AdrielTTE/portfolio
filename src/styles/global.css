@@ -172,6 +172,13 @@ h4,
   }
 }
 
+/* Browsers with no cross-document view transitions (Firefox, Zen): head-inline.js
+   adds .no-vt, and the page content rises in on load. Enter only: there is no
+   exit and no row-to-case-study morph without the browser feature. */
+.no-vt main {
+  animation: vt-fade-in 340ms var(--ease-enter) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
     navigation: none;
