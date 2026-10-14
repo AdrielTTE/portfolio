@@ -11,12 +11,31 @@ import photo from '../assets/adriel.jpg';
 import { heroRoleLine, bio, timeline, skills, musicParagraph, photoAlt } from '../data/about';
 import { toLatelyLine, newestFirst } from '../lib/lately';
 
+const origin = new URL('/', Astro.site).href;
+const aboutSchema = [
+  {
+    '@type': 'ProfilePage',
+    '@id': `${origin}about/#profile`,
+    url: `${origin}about/`,
+    name: 'About Adriel Tang',
+    inLanguage: 'en',
+    mainEntity: {
+      '@id': `${origin}#person`,
+      alumniOf: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Tunku Abdul Rahman University of Management and Technology',
+        alternateName: 'TAR UMT',
+      },
+    },
+  },
+];
 const lately = newestFirst((await getCollection('lately')).map((e) => e.data)).map(toLatelyLine);
 ---
 <BaseLayout
-  title="About Adriel Tang: ASP.NET and Flutter Developer in Kuala Lumpur"
+  title="About Adriel Tang: Full Stack Developer in Kuala Lumpur"
   description="Background, timeline, and skills for Adriel Tang, a full stack developer in Kuala Lumpur working in ASP.NET Core and Flutter, with a BIT (Honours) from TAR UMT."
   current="about"
+  schema={aboutSchema}
 >
   <div class="container about-layout">
     <div class="top-text">

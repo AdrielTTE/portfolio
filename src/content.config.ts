@@ -60,6 +60,9 @@ const work = defineCollection({
       sections: z
         .array(z.enum(['facts', 'overview', 'numbers', 'problem', 'built', 'data', 'change', 'for-you']))
         .optional(),
+      // schema.org applicationCategory for the app's structured data (e.g.
+      // HealthApplication, BusinessApplication, UtilitiesApplication).
+      appCategory: z.string().optional(),
       featured: z.boolean().default(false),
       order: z.number().default(0),
     }),

@@ -1,6 +1,6 @@
 ---
 title: "Quotebook"
-seoTitle: "Quotebook: A Quotation and Invoice Tracker"
+seoTitle: "Quotebook: Quote and Invoice Tracker, ASP.NET | Adriel Tang"
 seoDescription: "Quotebook is a quotation and invoice tracker for small service businesses, built with ASP.NET Core, EF Core and PostgreSQL. Try the live demo."
 summary: "A quotation and invoice tracker for small service businesses: quote, invoice, record payments, see who owes what. Live demo."
 scope: "Web app"
@@ -29,6 +29,7 @@ facts:
   - value: "93"
     label: "Automated test methods (xUnit)"
 sections: [problem, overview, data, built, facts, change, for-you]
+appCategory: "BusinessApplication"
 featured: true
 order: 0
 problem: |-
