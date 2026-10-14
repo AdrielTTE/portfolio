@@ -138,25 +138,6 @@ const pitchParts = home.pitch
       background-size: 0% max(0.07em, 3px);
     }
   }
-  /* A slow breathing dot makes "taking on projects" read as live. */
-  .avail {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6em;
-  }
-  .avail::before {
-    content: '';
-    width: 0.55em;
-    height: 0.55em;
-    border-radius: 50%;
-    background: var(--c-accent);
-    animation: breathe 2800ms ease-in-out infinite;
-  }
-  @keyframes breathe {
-    50% {
-      opacity: 0.25;
-    }
-  }
   .intro > * {
     position: relative;
   }
@@ -255,8 +236,10 @@ const pitchParts = home.pitch
     }
   }
 
+  /* Closer than the other sections so the first project row shows on the
+     first screen: the work is the point of the page. */
   .block {
-    margin-top: var(--section);
+    margin-top: clamp(40px, 3vw + 24px, 72px);
   }
 
   /* The espresso field. Everything inside reads on it in both themes. */

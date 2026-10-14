@@ -27,6 +27,9 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
             <span class="ln line"><span class="ln-in" style="--l:0">{p.data.summary}</span></span>
             <span class="ln meta"><span class="ln-in" style="--l:1">{p.data.scope}, {p.data.year}. {p.data.stack.join(', ')}.</span></span>
           </span>
+          {p.data.shots.length > 0 && (
+            <Image class="thumb" src={p.data.shots[0].src} alt="" widths={[480, 720]} sizes="(min-width: 700px) 640px, 92vw" loading="lazy" decoding="async" />
+          )}
         </a>
       </li>
     ))}
@@ -149,6 +152,23 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
   }
   .meta {
     color: var(--c-ink-2);
+  }
+  /* Touch and narrow screens: a cropped peek of the first screenshot under each
+     row (the mouse preview below is hover-only, so phones would see no work). */
+  .thumb {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px var(--c-rule);
+    margin-top: var(--space-3);
+  }
+  @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+    .thumb {
+      display: none;
+    }
   }
   .work-row a:focus-visible {
     outline-offset: 4px;
