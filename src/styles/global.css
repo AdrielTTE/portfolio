@@ -151,6 +151,14 @@ h4,
   animation-duration: 0s;
 }
 
+/* Work row <-> case study: the title and icon travel between the two pages
+   (names are set by scripts/work-morph.ts). One smooth, unhurried path. */
+::view-transition-group(work-title),
+::view-transition-group(work-mark) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
 @keyframes vt-fade-out {
   to {
     opacity: 0;

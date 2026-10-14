@@ -20,7 +20,7 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
   <h2 id="work-h" class="display section-h">Work</h2>
   <ol class="rows">
     {rows.map((p) => (
-      <li class="work-row" data-peek={p.data.shots.length ? p.id : undefined}>
+      <li class="work-row" data-work={p.id} data-peek={p.data.shots.length ? p.id : undefined}>
         <a href={`/work/${p.id}/`}>
           <span class="title display"><span class="tw">{p.data.title.split(' ').map((w, i) => (<><span class="tx"><span class="tx-in" style={`--w:${i}`}>{w}</span></span>{' '}</>))}</span><span class="go arrow" aria-hidden="true">→</span><span class="mk"><ProjectMark kind={p.data.mark} icon={p.data.icon} /></span></span>
           <span class="about">
@@ -196,6 +196,8 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
      .js-reveal, so no-JS and reduced motion show everything. */
   .tw {
     display: block;
+    /* Tight box so the title can morph into the case-study headline. */
+    width: fit-content;
   }
   .tx,
   .ln {
