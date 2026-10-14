@@ -280,20 +280,6 @@ const pitchParts = home.pitch
     font-size: var(--step-5);
     color: var(--c-block-ink);
   }
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .build-body p {
-        animation: line-lit linear both;
-        animation-timeline: view();
-        animation-range: entry 15% cover 40%;
-      }
-    }
-  }
-  @keyframes line-lit {
-    from {
-      opacity: 0.2;
-    }
-  }
   .build-body {
     margin-top: var(--space-5);
     display: grid;
