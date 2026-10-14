@@ -25,6 +25,9 @@ shots:
   - src: "../../assets/work/quotebook/quotation.png"
     label: "Quotation"
     alt: "Quotebook quotation Q-0006 under the business letterhead, in the Sent state, with Print and buttons to record that the customer accepted or rejected it"
+facts:
+  - value: "93"
+    label: "Automated test methods (xUnit)"
 featured: true
 order: 0
 problem: |-

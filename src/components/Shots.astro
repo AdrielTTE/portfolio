@@ -15,9 +15,12 @@ interface Props { project: WorkEntry }
 const { shots } = Astro.props.project.data;
 const ratioOf = (s: (typeof shots)[number]) => s.src.width / s.src.height;
 const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
+// Desktop screens of mixed height get the same viewer, in a fixed 3:2 window.
+const allWide = shots.length > 1 && shots.every((s) => ratioOf(s) >= 1.2);
+const viewer = allPhones || allWide;
 ---
-{shots.length > 0 && allPhones && (
-  <div class="shots viewer" data-viewer>
+{shots.length > 0 && viewer && (
+  <div class:list={['shots', 'viewer', { wide: allWide }]} data-viewer>
     <div class="phones">
       {shots.map((s, i) => (
         <div class:list={['phone', { on: i === 0 }]} data-i={i}>
@@ -25,8 +28,8 @@ const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
             <Image
               src={s.src}
               alt={s.alt}
-              widths={[320, 480, 720]}
-              sizes="(min-width: 800px) 340px, 60vw"
+              widths={allWide ? [640, 960, 1280] : [320, 480, 720]}
+              sizes={allWide ? '(min-width: 1024px) 900px, 92vw' : '(min-width: 800px) 340px, 60vw'}
               loading={i === 0 ? 'eager' : 'lazy'}
               fetchpriority={i === 0 ? 'high' : 'auto'}
             />
@@ -46,7 +49,7 @@ const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
     </div>
   </div>
 )}
-{shots.length > 0 && !allPhones && (
+{shots.length > 0 && !viewer && (
   <div class="shots">
     {shots.map((s, i) => {
       const ratio = ratioOf(s);
@@ -297,5 +300,54 @@ const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
     .viewer.live .phone {
       transition: none;
     }
+  }
+  /* Desktop screens: one large 3:2 window, no fan (the screens differ in
+     height, so each is cropped from the top to the same window). Crossfade
+     only; tabs run along the bottom at every width. */
+  .viewer.wide .phones {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100%, 900px);
+  }
+  .viewer.wide .phone {
+    padding: 0;
+    border-radius: 12px;
+    background: var(--c-bg);
+    box-shadow: 0 0 0 1px var(--c-rule);
+    overflow: hidden;
+  }
+  .viewer.wide .screen {
+    aspect-ratio: 3 / 2;
+    border-radius: 0;
+  }
+  .viewer.wide .screen :global(img) {
+    object-position: top;
+  }
+  .viewer.live.wide {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    padding-inline: clamp(12px, 3vw, var(--space-6));
+  }
+  .viewer.live.wide .phones {
+    width: min(100%, 900px);
+  }
+  .viewer.live.wide .phone,
+  .viewer.live.wide .phone.near {
+    transform: none;
+    cursor: default;
+  }
+  .viewer.live.wide .phone.near {
+    opacity: 0;
+  }
+  .viewer.live.wide .side {
+    justify-items: center;
+    text-align: center;
+  }
+  .viewer.wide .tabs {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .viewer.wide .tab {
+    font-size: var(--step-4);
+    text-align: center;
   }
 </style>

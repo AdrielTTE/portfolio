@@ -25,6 +25,11 @@ shots:
   - src: "../../assets/work/cairn/calendar.png"
     label: "Calendar"
     alt: "Cairn Calendar screen: month grid with calendar filters and the selected day agenda"
+facts:
+  - value: "180+"
+    label: "Automated tests"
+  - value: "3"
+    label: "Google services linked: Calendar, Drive, Gmail"
 featured: true
 order: 2
 problem: |-
