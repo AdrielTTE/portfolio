@@ -301,9 +301,9 @@ const viewer = allPhones || allWide;
       transition: none;
     }
   }
-  /* Desktop screens: one large 3:2 window, no fan (the screens differ in
-     height, so each is cropped from the top to the same window). Crossfade
-     only; tabs run along the bottom at every width. */
+  /* Desktop screens: one large 3:2 window (the screens differ in height, so
+     each is cropped from the top to the same window). Crossfade on narrow
+     screens, the fan from 1024px; tabs run along the bottom at every width. */
   .viewer.wide .phones {
     grid-template-columns: minmax(0, 1fr);
     width: min(100%, 900px);
@@ -330,13 +330,18 @@ const viewer = allPhones || allWide;
   .viewer.live.wide .phones {
     width: min(100%, 900px);
   }
-  .viewer.live.wide .phone,
-  .viewer.live.wide .phone.near {
-    transform: none;
-    cursor: default;
+  /* Wide screens: the same fan as the phones, in a narrower window so the
+     neighbours show either side of it. */
+  @media (min-width: 1024px) {
+    .viewer.live.wide .phones {
+      width: min(100%, 760px);
+    }
   }
-  .viewer.live.wide .phone.near {
-    opacity: 0;
+  .viewer.live .phone:first-child {
+    position: relative;
+  }
+  .viewer.live .phone.on {
+    z-index: 2;
   }
   .viewer.live.wide .side {
     justify-items: center;
