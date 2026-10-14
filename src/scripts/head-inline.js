@@ -34,141 +34,59 @@
   }
 })();
 
-// Container transform between a Work row and its case study: the row's title
-// and app icon glide into the case-study headline and icon (and back), on the
-// cross-document View Transitions in global.css. This lives here, inline in
-// <head>, because pagereveal fires before the first paint: a deferred module
-// script registers too late. A view-transition-name must be unique on a page,
-// so names go only to the one project involved, only while it travels.
+// Page changes. Chrome and Safari fade the old page out and the new one in with
+// cross-document view transitions (global.css); we add the orange sweep when
+// one happens. Firefox and forks such as Zen have no such feature, so a click
+// plays the exit by hand and the next page plays the enter (.leaving and
+// .entering in global.css). Not used when motion is reduced.
 (function () {
   try {
-    var TITLE = 'work-title';
-    var MARK = 'work-mark';
-    var workId = function (u) {
-      var m = u.pathname.match(/^\/work\/([a-z0-9-]+)\/?$/);
-      return m && m[1];
-    };
-    var isHome = function (u) {
-      return u.pathname === '/';
-    };
-    var name = function (pairs) {
-      var named = [];
-      pairs.forEach(function (p) {
-        if (p[0]) {
-          p[0].style.viewTransitionName = p[1];
-          named.push(p[0]);
-        }
-      });
-      return function () {
-        named.forEach(function (el) {
-          el.style.viewTransitionName = '';
-        });
-      };
-    };
-    var addType = function (vt, type) {
-      if (vt && vt.types && vt.types.add) vt.types.add(type);
-    };
-    var rowParts = function (id) {
-      var row = document.querySelector('.work-row[data-work="' + id + '"]');
-      if (!row) return [];
-      row.classList.add('in'); // revealed state, so the morph lands on the real size
-      return [[row.querySelector('.tw'), TITLE], [row.querySelector('.mk'), MARK]];
-    };
-    var caseParts = function () {
-      return [
-        [document.querySelector('.case-study h1'), TITLE],
-        [document.querySelector('.case-study .mark-slot'), MARK],
-      ];
-    };
-    // Leaving: name the elements captured as the old state.
-    addEventListener('pageswap', function (e) {
-      if (!e.viewTransition || !e.activation || !e.activation.entry) return;
-      var to = new URL(e.activation.entry.url);
-      var here = new URL(location.href);
-      if (isHome(here) && workId(to)) {
-        name(rowParts(workId(to)));
-        addType(e.viewTransition, 'forward');
-      } else if (workId(here) && isHome(to)) {
-        name(caseParts());
-        addType(e.viewTransition, 'back');
-      }
-    });
-    // Arriving: name the matching elements before the first frame.
+    var root = document.documentElement;
     addEventListener('pagereveal', function (e) {
-      var nav = window.navigation;
-      var from = nav && nav.activation && nav.activation.from && nav.activation.from.url;
-      if (!e.viewTransition || !from) return;
-      var prev = new URL(from);
-      var here = new URL(location.href);
-      var clear;
-      if (isHome(prev) && workId(here)) {
-        clear = name(caseParts());
-        addType(e.viewTransition, 'forward');
-      } else if (workId(prev) && isHome(here)) {
-        clear = name(rowParts(workId(prev)));
-        addType(e.viewTransition, 'back');
-      }
-      // Every page change gets the sweep; drop the class once it has played.
-      var rootEl = document.documentElement;
-      rootEl.classList.add('nav-sweep-on');
+      if (!e.viewTransition) return;
+      root.classList.add('nav-sweep-on');
       setTimeout(function () {
-        rootEl.classList.remove('nav-sweep-on');
+        root.classList.remove('nav-sweep-on');
       }, 800);
-      var done = function () {
-        if (clear) clear();
-      };
-      e.viewTransition.finished.then(done, done);
     });
-    // Browsers without cross-document view transitions (Firefox and forks such
-    // as Zen): the same page changes by hand. A click on a same-site link
-    // first plays a short exit on the page, then navigates; the next page
-    // plays the matching enter (global.css, .enter-*). Direction is kept in
-    // sessionStorage for that one hop. Browser Back/Forward still gets the
-    // enter. Not used when motion is reduced.
-    var noVT = !('onpagereveal' in window);
+
     var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (noVT && !calm) {
-      var rootEl2 = document.documentElement;
-      var dirTo = function (from, to) {
-        if (isHome(from) && workId(to)) return 'forward';
-        if (workId(from) && isHome(to)) return 'back';
-        return 'sibling';
-      };
-      try {
-        var navEntry = performance.getEntriesByType('navigation')[0];
-        var saved = sessionStorage.getItem('navDir');
-        sessionStorage.removeItem('navDir');
-        var dir = navEntry && navEntry.type === 'back_forward' ? 'back' : saved;
-        // First visit to the home page has its own intro; skip the enter there.
-        var introPlays = isHome(new URL(location.href)) && !rootEl2.classList.contains('intro-seen');
-        if (dir && !introPlays) rootEl2.classList.add('enter-' + dir);
-      } catch (e2) {
-        /* storage blocked: no enter animation */
-      }
-      document.addEventListener('click', function (e) {
-        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
-        if (!a || a.target === '_blank' || a.hasAttribute('download') || a.origin !== location.origin) return;
-        var to = new URL(a.href);
-        var here = new URL(location.href);
-        if (to.pathname === here.pathname && to.search === here.search) return; // same page or #hash
-        e.preventDefault();
-        try {
-          sessionStorage.setItem('navDir', dirTo(here, to));
-        } catch (e3) {
-          /* no enter animation */
-        }
-        rootEl2.classList.add('leaving');
-        setTimeout(function () {
-          location.assign(a.href);
-        }, 150);
-      });
-      // Back/Forward cache can restore a page that was mid-exit.
-      addEventListener('pageshow', function (e) {
-        if (e.persisted) rootEl2.classList.remove('leaving');
-      });
+    if ('onpagereveal' in window || calm) return;
+    // The transition tester (tx-tester.js) owns page changes when it is on.
+    if (root.getAttribute('data-tx') && root.getAttribute('data-tx') !== '0') return;
+
+    try {
+      var navEntry = performance.getEntriesByType('navigation')[0];
+      var flagged = sessionStorage.getItem('navEnter');
+      sessionStorage.removeItem('navEnter');
+      // First visit to the home page has its own intro; skip the enter there.
+      var introPlays = location.pathname === '/' && !root.classList.contains('intro-seen');
+      if ((flagged || (navEntry && navEntry.type === 'back_forward')) && !introPlays) root.classList.add('entering');
+    } catch (e2) {
+      /* storage blocked: no enter animation */
     }
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a || a.target === '_blank' || a.hasAttribute('download') || a.origin !== location.origin) return;
+      var to = new URL(a.href);
+      if (to.pathname === location.pathname && to.search === location.search) return; // same page or #hash
+      e.preventDefault();
+      try {
+        sessionStorage.setItem('navEnter', '1');
+      } catch (e3) {
+        /* no enter animation */
+      }
+      root.classList.add('leaving');
+      setTimeout(function () {
+        location.assign(a.href);
+      }, 120);
+    });
+    // The back/forward cache can restore a page that was mid-exit.
+    addEventListener('pageshow', function (e) {
+      if (e.persisted) root.classList.remove('leaving');
+    });
   } catch (err) {
-    /* view transitions unsupported: plain fade */
+    /* view transitions unsupported: plain page change */
   }
 })();
