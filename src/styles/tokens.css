@@ -47,7 +47,7 @@
   --font-wordmark: 'DM Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
   --display-stretch: 68%;
 
-  --step--1: clamp(13px, 0.09vw + 12.67px, 14px);
+  --step--1: clamp(14px, 0.09vw + 13.67px, 15px);
   --step-0: 16px;
   --step-1: clamp(17px, 0.19vw + 16.3px, 19px);
   --step-2: clamp(20px, 0.46vw + 18.3px, 25px);
