@@ -8,14 +8,13 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkList from '../components/WorkList.astro';
 import MagneticLink from '../components/MagneticLink.astro';
-import HeroPhones from '../components/HeroPhones.astro';
 import { site, home, offerCopy } from '../data/site';
 import { offersWithProjects } from '../lib/offers';
 
 const allWork = await getCollection('work');
 const offers = offersWithProjects(allWork);
-// The three things I build get a drawn underline in the pitch.
-const emphasis = ['websites', 'web apps', 'mobile apps'];
+// The two things I build get a drawn underline in the pitch.
+const emphasis = ['web apps', 'mobile apps'];
 const pitchParts = home.pitch
   .split(new RegExp(`(${emphasis.join('|')})`))
   .map((text) => ({ text, em: emphasis.includes(text) }));
@@ -23,7 +22,6 @@ const pitchParts = home.pitch
 <BaseLayout title={home.title} description={home.description}>
   <div class="hero-wrap">
   <span class="hero-shape" aria-hidden="true"></span>
-  <HeroPhones projects={allWork} />
   <div class="container home">
     <section class="intro" aria-labelledby="intro-h">
       <h1 id="intro-h" class="masthead display">
@@ -95,12 +93,6 @@ const pitchParts = home.pitch
   .hero-wrap {
     position: relative;
     overflow-x: clip;
-  }
-  /* Wide screens: extra height below the pitch holds the two phones. */
-  @media (min-width: 1280px) {
-    .hero-wrap {
-      padding-bottom: 210px;
-    }
   }
   .hero-wrap > .container {
     position: relative;
@@ -227,7 +219,7 @@ const pitchParts = home.pitch
     line-height: 1.08;
     letter-spacing: -0.015em;
     max-width: 26ch;
-    text-wrap: pretty;
+    text-wrap: balance;
   }
   .intro-text {
     margin-top: var(--space-5);

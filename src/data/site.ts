@@ -30,7 +30,7 @@ export const home = {
     'Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.',
   roleLine:
     'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart. First Class Honours graduate, now building software full-time.',
-  pitch: 'I build websites, web apps and mobile apps.',
+  pitch: 'I build web apps and mobile apps, and I take them all the way to launch.',
   // One casual line under the pitch. The music stays on /about.
   intro: "I'm a developer by day and I take freelance projects on the side. Got something you want built? Let's discuss.",
 };
