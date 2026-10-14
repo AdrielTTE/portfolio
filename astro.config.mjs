@@ -13,4 +13,11 @@ export default defineConfig({
   site: 'https://appliedtheory.asia',
   output: 'static',
   integrations: [sitemap()],
+  build: {
+    // Inline every stylesheet into its page. A separate CSS file can be served
+    // as a (cached) 404 by the CDN right after a deploy, which leaves the site
+    // unstyled in some browsers until the cache is purged. Inline CSS travels
+    // with the HTML, so it cannot go missing, and it saves a request.
+    inlineStylesheets: 'always',
+  },
 });
