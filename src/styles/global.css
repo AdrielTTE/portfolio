@@ -215,6 +215,48 @@ html:active-view-transition-type(back)::view-transition-new(root) {
 .no-vt .nav-sweep {
   animation: nav-sweep 650ms cubic-bezier(0.2, 0, 0, 1) both;
 }
+/* The same page changes for browsers without view transitions (Zen/Firefox);
+   head-inline.js adds .leaving on click and .enter-* on the next page. The
+   header stays put; the page and footer move. Transform and opacity only. */
+.leaving main,
+.leaving #site-footer {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 140ms var(--ease-enter),
+    transform 140ms var(--ease-enter);
+}
+.enter-sibling main,
+.enter-sibling #site-footer {
+  animation: zen-in 280ms var(--ease-enter) both;
+}
+.enter-forward main,
+.enter-forward #site-footer {
+  animation: zen-rise 460ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+.enter-back main,
+.enter-back #site-footer {
+  animation: zen-settle 320ms var(--ease-enter) both;
+}
+@keyframes zen-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes zen-rise {
+  from {
+    opacity: 0;
+    transform: translateY(72px);
+  }
+}
+@keyframes zen-settle {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
 @keyframes nav-sweep {
   0% {
     opacity: 1;
