@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './tx-tester.css';
 /* Two self-hosted, subset fonts (scripts/subset-fonts.mjs). Archivo keeps only
    the Latin glyphs the site uses and only the weight (400-800) and width
    (68-100%) range it uses: 36 KB instead of 90 KB, so it loads and decodes

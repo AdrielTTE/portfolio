@@ -1,0 +1,168 @@
+/* TEMPORARY page-transition tester styles (see src/scripts/tx-tester.js).
+   Everything keys off html[data-tx="N"], which only exists when the tester is
+   on, so with it off none of this applies. Option 0 is the normal fade. */
+
+/* The picker */
+.tx-panel {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 10000;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  max-width: calc(100vw - 24px);
+  background: #14161f;
+  color: #f3f4f2;
+  font: 500 13px/1.2 system-ui, sans-serif;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.15);
+}
+.tx-panel b {
+  font-weight: 700;
+  padding-bottom: 4px;
+}
+.tx-panel button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.tx-panel button[aria-pressed='true'] {
+  background: #ff8a57;
+  color: #14161f;
+}
+.tx-panel i {
+  opacity: 0.6;
+  font-style: normal;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1-6: switch the default fade off, then each style opts in. */
+  html:is([data-tx='1'], [data-tx='2'], [data-tx='3'], [data-tx='4'], [data-tx='5'], [data-tx='6'])::view-transition-old(root),
+  html:is([data-tx='1'], [data-tx='2'], [data-tx='3'], [data-tx='4'], [data-tx='5'], [data-tx='6'])::view-transition-new(root) {
+    animation: none;
+  }
+  html[data-tx='6'] .nav-sweep {
+    display: none;
+  }
+
+  /* 1 Lift away: the old page slides up and out, uncovering the new one. */
+  html[data-tx='1']::view-transition-old(root) {
+    z-index: 2;
+    animation: 400ms cubic-bezier(0.32, 0.72, 0, 1) both tx-lift;
+  }
+  html[data-tx='1']:active-view-transition-type(back)::view-transition-old(root) {
+    animation-name: tx-drop;
+  }
+  @keyframes tx-lift {
+    to {
+      transform: translateY(-100%);
+    }
+  }
+  @keyframes tx-drop {
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  /* 2 Push: old moves left (and a little less, for depth), new comes from the right. */
+  html[data-tx='2']::view-transition-old(root) {
+    animation: 420ms cubic-bezier(0.32, 0.72, 0, 1) both tx-out-left;
+  }
+  html[data-tx='2']::view-transition-new(root) {
+    animation: 420ms cubic-bezier(0.32, 0.72, 0, 1) both tx-in-right;
+  }
+  html[data-tx='2']:active-view-transition-type(back)::view-transition-old(root) {
+    z-index: 2;
+    animation-name: tx-out-right;
+  }
+  html[data-tx='2']:active-view-transition-type(back)::view-transition-new(root) {
+    animation-name: tx-in-left;
+  }
+  @keyframes tx-out-left {
+    to {
+      transform: translateX(-30%);
+    }
+  }
+  @keyframes tx-in-right {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes tx-out-right {
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes tx-in-left {
+    from {
+      transform: translateX(-30%);
+    }
+  }
+
+  /* 3 Curtain and 5 Title: an ink panel covers the page, the next page starts
+     covered and uncovers. The panel is html::after, so it exists on both
+     pages without any markup. 5 prints the destination in it. */
+  html[data-tx='3']::after,
+  html[data-tx='5']::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    background: var(--c-block);
+    color: var(--c-block-ink);
+    transform: translateY(100%);
+    pointer-events: none;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-stretch: var(--display-stretch);
+    font-size: clamp(64px, 16vw, 220px);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  html[data-tx='5']::after {
+    content: var(--tx-title, '');
+  }
+  html.tx-cover::after {
+    transform: translateY(0);
+    transition: transform 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  html.tx-uncover::after {
+    transform: translateY(0);
+    animation: tx-away 300ms cubic-bezier(0.32, 0.72, 0, 1) 60ms forwards;
+  }
+  @keyframes tx-away {
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  /* 4 Rise: no page animation; the headline rises into place and the rest of
+     the page fades up a beat later. */
+  html.tx-arrive[data-tx='4'] h1 {
+    animation: tx-title-in 480ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+  html.tx-arrive[data-tx='4'] main > * {
+    animation: tx-body-in 320ms cubic-bezier(0.22, 1, 0.36, 1) 100ms both;
+  }
+  @keyframes tx-title-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.35em);
+    }
+  }
+  @keyframes tx-body-in {
+    from {
+      opacity: 0;
+    }
+  }
+}

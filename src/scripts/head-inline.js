@@ -52,6 +52,8 @@
 
     var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if ('onpagereveal' in window || calm) return;
+    // The transition tester (tx-tester.js) owns page changes when it is on.
+    if (root.getAttribute('data-tx') && root.getAttribute('data-tx') !== '0') return;
 
     try {
       var navEntry = performance.getEntriesByType('navigation')[0];
