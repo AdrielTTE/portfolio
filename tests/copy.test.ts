@@ -7,10 +7,11 @@ import { OFFERS } from '../src/lib/offers';
 const NO_EMPLOYER = /bantu/i;
 
 it('home and offer copy are filled in', () => {
-  for (const v of Object.values(home)) expect(v.trim().length).toBeGreaterThan(0);
+  const homeStrings = Object.values(home).flatMap((v) => (typeof v === 'string' ? [v] : v.flatMap((f) => [f.label, f.note])));
+  for (const v of homeStrings) expect(v.trim().length).toBeGreaterThan(0);
   expect(home.title.length).toBeLessThan(60);
   expect(home.description.length).toBeLessThan(160);
-  for (const v of Object.values(home)) expect(v).not.toMatch(NO_EMPLOYER);
+  for (const v of homeStrings) expect(v).not.toMatch(NO_EMPLOYER);
   for (const o of Object.values(offerCopy)) {
     expect(o.line.trim().length).toBeGreaterThan(0);
     expect(o.stack.length).toBeGreaterThan(0);

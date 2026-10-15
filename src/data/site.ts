@@ -31,7 +31,13 @@ export const home = {
   // Leads with what has shipped, and says once that Applied Theory is Adriel's
   // studio. The degree lives on /about.
   roleLine:
-    'Adriel Tang is a full stack developer in Kuala Lumpur and the developer behind Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart. Quotebook is live and Crest is in closed testing on Google Play.',
+    'Adriel Tang is a full stack developer in Kuala Lumpur and the developer behind Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart.',
+  // Two checkable facts under the intro. Both also appear elsewhere on the site
+  // (about timeline, Crest case study); nothing here is new.
+  proof: [
+    { label: 'First Class Honours', note: 'TAR UMT, 2026' },
+    { label: 'Crest', note: 'In closed testing on Google Play' },
+  ],
   pitch: 'I build web apps and mobile apps, and I take them all the way to launch.',
   // One casual line under the pitch. The music stays on /about.
   intro: "I take on a few freelance projects at a time. Send me the problem and I'll tell you if I can build it.",
