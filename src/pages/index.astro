@@ -52,7 +52,7 @@ const pitchParts = home.pitch
   </div>
 
   <div class="container home">
-    <div class="block"><WorkList projects={listed}>{lead && <FeaturedWork project={lead} />}</WorkList></div>
+    <div class="block"><WorkList projects={listed}>{lead && <FeaturedWork project={lead} />}{listed.filter((p) => p.data.shots.length > 0).map((p) => <FeaturedWork project={p} phoneOnly />)}</WorkList></div>
   </div>
 
   {/* What I build: set like the Work list above it (big condensed title on
