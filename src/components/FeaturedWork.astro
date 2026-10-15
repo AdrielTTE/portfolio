@@ -211,8 +211,11 @@ const href = `/work/${project.id}/`;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    padding-inline-start: clamp(var(--space-5), 5vw, var(--space-9));
-    scroll-padding-inline-start: clamp(var(--space-5), 5vw, var(--space-9));
+    --pad: clamp(var(--space-5), 5vw, var(--space-9));
+    padding-inline-start: var(--pad);
+    scroll-padding-inline-start: var(--pad);
+    /* So a wide shot can size itself to the strip (cqw below). */
+    container-type: inline-size;
   }
   .strip::-webkit-scrollbar {
     display: none;
@@ -254,8 +257,10 @@ const href = `/work/${project.id}/`;
     padding: 4px;
     border-radius: var(--radius-2);
   }
+  /* A landscape shot fits the strip with a sliver of the next one showing
+     (frame + 20px gap + ~20px peek), never running off the edge. */
   .wide .frame :global(img) {
-    width: min(86vw, 560px);
+    width: min(calc(100cqw - 48px), 560px);
     height: auto;
     border-radius: calc(var(--radius-2) - 3px);
   }
