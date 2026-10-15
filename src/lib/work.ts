@@ -12,6 +12,8 @@ export function sortByOrder(entries: WorkEntry[]): WorkEntry[] {
 export interface AdjacentRef {
   title: string;
   slug: string;
+  stage?: string;
+  accent?: string;
 }
 
 export function getPrevNext(entries: WorkEntry[], currentId: string): {
@@ -24,7 +26,7 @@ export function getPrevNext(entries: WorkEntry[], currentId: string): {
   const prev = index > 0 ? sorted[index - 1] : undefined;
   const next = index < sorted.length - 1 ? sorted[index + 1] : undefined;
   return {
-    prev: prev ? { title: prev.data.title, slug: prev.id } : undefined,
-    next: next ? { title: next.data.title, slug: next.id } : undefined,
+    prev: prev ? { title: prev.data.title, slug: prev.id, stage: prev.data.stage, accent: prev.data.accent } : undefined,
+    next: next ? { title: next.data.title, slug: next.id, stage: next.data.stage, accent: next.data.accent } : undefined,
   };
 }
