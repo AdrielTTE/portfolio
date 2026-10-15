@@ -1,65 +1,140 @@
 ---
-// The lead project, shown large at the top of the Work section: a stage in the
-// project's own colour, two real screens standing straight and cropped by the
-// stage's bottom edge, and one clear way in. The rest of the work stays a
-// quiet list below it.
-// Borrowed: the device-cropped-by-the-frame feature from product studios'
-// case-study heroes; kept to two untilted screens, no scroll-linked motion.
+// One project on the home page's Work section: a stage in the project's own
+// colour, its name and summary, one clear way into the case study, and every
+// screenshot in a strip you scroll through (swipe, trackpad, keyboard, or the
+// arrows on a mouse). Each shot keeps its own shape: portrait screens in a
+// device frame, landscape ones in a wide frame.
+// Borrowed: the screens-on-a-colour-stage case-study cards of product studios,
+// with a snapped horizontal strip instead of a hover preview, since hover does
+// not exist on a phone.
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import ProjectMark from './ProjectMark.astro';
 import type { WorkEntry } from '../lib/work';
 
-// `phoneOnly`: shown on phones in place of the project's row in the list below,
-// so every project gets the same coloured block there (rows return from 700px).
-interface Props { project: WorkEntry; phoneOnly?: boolean }
-const { project, phoneOnly = false } = Astro.props;
-const { title, summary, scope, year, stack, stage, accent, shots } = project.data;
-const front = shots[0];
-const back = shots[3] ?? shots[1];
-// A landscape screenshot (a web app) gets a wide, browser-like frame instead of
-// a phone, so it does not shrink to a sliver.
-const wideFront = Boolean(front && front.src.width > front.src.height);
+interface Props { project: WorkEntry }
+const { project } = Astro.props;
+const { title, summary, scope, year, stack, stage, accent, shots, icon, mark } = project.data;
 const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
+const href = `/work/${project.id}/`;
 ---
-<a class:list={['lead', { 'phone-only': phoneOnly }]} href={`/work/${project.id}/`} style={vars}>
+<article class="block" style={vars} data-block>
   <div class="copy">
-    <h3 class="title display">{title}</h3>
+    <div class="head">
+      {(icon || mark) && <div class="mk"><ProjectMark kind={mark} icon={icon} /></div>}
+      <h3 class="title display"><a href={href}>{title}</a></h3>
+    </div>
     <p class="sum">{summary}</p>
     <p class="meta">{scope}, {year}. {stack.join(', ')}.</p>
-    <span class="cta">View the case study <span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></span>
-  </div>
-  {front && (
-    <div class:list={['devices', { wide: wideFront }]} aria-hidden="true">
-      {back && (
-        <div class="phone back"><div class="screen"><Image src={back.src} alt="" widths={[260, 390, 520]} sizes="(min-width: 900px) 260px, 50vw" loading="lazy" decoding="async" /></div></div>
+    <p class="actions">
+      <a class="cta" href={href}>View the case study <span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></a>
+      {shots.length > 1 && (
+        <span class="nav" data-nav>
+          <button type="button" class="step" data-dir="-1" aria-label={`Previous ${title} screenshot`} disabled><Icon name="arrow-left" /></button>
+          <button type="button" class="step" data-dir="1" aria-label={`Next ${title} screenshot`}><Icon name="arrow-right" /></button>
+        </span>
       )}
-      <div class:list={['phone', 'front', { wide: wideFront }]}><div class="screen"><Image src={front.src} alt="" widths={[260, 390, 520]} sizes="(min-width: 900px) 280px, 60vw" loading="lazy" decoding="async" /></div></div>
+    </p>
+  </div>
+  {shots.length > 0 && (
+    <div class="strip" role="region" aria-label={`${title} screenshots`} tabindex="0" data-strip>
+      <ul class="shots">
+        {shots.map((s) => {
+          const wide = s.src.width > s.src.height;
+          return (
+            <li class:list={['shot', { wide }]}>
+              <div class="frame">
+                <Image
+                  src={s.src}
+                  alt={s.alt}
+                  widths={wide ? [480, 720, 960] : [240, 360, 480]}
+                  sizes={wide ? '(min-width: 900px) 620px, 86vw' : '(min-width: 900px) 220px, 190px'}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              {s.label && <span class="cap">{s.label}</span>}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   )}
-</a>
+</article>
+
+<script>
+  // Arrow buttons scroll the strip by one shot; each disables at its end. The
+  // ends are watched with IntersectionObserver (no scroll listener).
+  document.querySelectorAll<HTMLElement>('[data-block]').forEach((block) => {
+    if (block.dataset.bound) return;
+    block.dataset.bound = '1';
+    const strip = block.querySelector<HTMLElement>('[data-strip]');
+    const buttons = [...block.querySelectorAll<HTMLButtonElement>('button[data-dir]')];
+    if (!strip || buttons.length === 0) return;
+    const [prev, next] = buttons;
+    const items = [...strip.querySelectorAll<HTMLElement>('.shot')];
+    const first = items[0];
+    const last = items[items.length - 1];
+    const calm = matchMedia('(prefers-reduced-motion: reduce)');
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        const dir = Number(b.dataset.dir);
+        const step = (first?.offsetWidth ?? 240) + 20;
+        strip.scrollBy({ left: dir * step, behavior: calm.matches ? 'auto' : 'smooth' });
+      }),
+    );
+    if ('IntersectionObserver' in window && first && last) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.target === first) prev.disabled = e.intersectionRatio > 0.98;
+            if (e.target === last) next.disabled = e.intersectionRatio > 0.98;
+          }
+        },
+        { root: strip, threshold: [0, 0.98, 1] },
+      );
+      io.observe(first);
+      io.observe(last);
+    }
+  });
+</script>
 
 <style>
-  .lead {
+  .block {
     display: grid;
     position: relative;
     overflow: hidden;
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-6);
     border-radius: var(--radius-2);
     background: var(--stage);
     color: #f3f4f2;
-    text-decoration: none;
     --c-focus: #f3f4f2;
+    --h: 380px;
+    --ink-soft: color-mix(in oklab, #f3f4f2 62%, var(--stage));
   }
   .copy {
     display: grid;
     align-content: start;
     gap: var(--space-4);
-    padding: clamp(var(--space-6), 5vw, var(--space-9));
+    padding: clamp(var(--space-6), 5vw, var(--space-9)) clamp(var(--space-5), 5vw, var(--space-9)) var(--space-4);
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .mk {
+    --mark: 52px;
+    flex: none;
   }
   .title {
-    font-size: var(--step-6);
-    line-height: 0.85;
+    font-size: var(--step-5);
+    line-height: 0.88;
     color: #f3f4f2;
+  }
+  .title a {
+    color: inherit;
+    text-decoration: none;
   }
   .sum {
     max-width: 34ch;
@@ -68,17 +143,24 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
   }
   .meta {
     max-width: 44ch;
-    color: color-mix(in oklab, #f3f4f2 62%, var(--stage));
-    font-family: var(--font-mono);
+    color: var(--ink-soft);
+    font-family: var(--font-data);
     font-size: var(--step--1);
     line-height: 1.6;
     letter-spacing: -0.01em;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-5);
+    margin-top: var(--space-3);
   }
   .cta {
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
-    margin-top: var(--space-3);
     min-height: 44px;
     color: var(--accent);
     font-weight: 600;
@@ -86,98 +168,123 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     text-decoration-thickness: 1px;
     text-underline-offset: 6px;
   }
-  /* Two screens, straight, each in a device frame, cropped by the stage. */
-  .devices {
-    position: relative;
-    height: clamp(280px, 70vw, 380px);
-    margin-top: calc(var(--space-4) * -1);
+  /* Arrows: for a mouse. A finger swipes the strip, so they are hidden on touch. */
+  .nav {
+    display: none;
+    gap: var(--space-2);
   }
-  .phone {
-    position: absolute;
-    bottom: calc(var(--space-8) * -1.4);
-    width: min(46vw, 250px);
+  .step {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid color-mix(in oklab, #f3f4f2 28%, var(--stage));
+    border-radius: 50%;
+    background: transparent;
+    color: #f3f4f2;
+    cursor: pointer;
+    transition:
+      opacity var(--dur-fast) var(--ease-enter),
+      border-color var(--dur-fast) var(--ease-enter);
+  }
+  .step:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .step:not(:disabled):active {
+    opacity: 0.7;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nav {
+      display: inline-flex;
+    }
+    .step:not(:disabled):hover {
+      border-color: var(--accent);
+    }
+  }
+
+  /* The strip: every screenshot in one snapped row. The scrollbar is hidden;
+     the next shot peeking in at the edge says there is more, and the arrows
+     and keyboard (focus the strip, then the arrow keys) work as well. */
+  .strip {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline-start: clamp(var(--space-5), 5vw, var(--space-9));
+    scroll-padding-inline-start: clamp(var(--space-5), 5vw, var(--space-9));
+  }
+  .strip::-webkit-scrollbar {
+    display: none;
+  }
+  .strip:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -4px;
+  }
+  .shots {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    list-style: none;
+    width: max-content;
+    padding-block: var(--space-4) var(--space-7);
+    /* Room after the last shot so it can scroll fully into the stage. */
+    padding-inline-end: clamp(var(--space-5), 5vw, var(--space-9));
+  }
+  .shot {
+    display: grid;
+    gap: var(--space-3);
+    scroll-snap-align: start;
+    flex: none;
+  }
+  .frame {
     padding: 6px;
     border-radius: var(--radius-3);
     background: #0b0a09;
     box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
-    transition: transform 520ms var(--ease-slide);
   }
-  .screen {
-    overflow: hidden;
+  .frame :global(img) {
+    display: block;
+    height: var(--h);
+    width: auto;
     border-radius: calc(var(--radius-3) - 6px);
     background: #0f1117;
   }
-  .screen :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  .front {
-    left: calc(50% - min(23vw, 125px));
-    z-index: 2;
-  }
-  .devices.wide {
-    height: clamp(170px, 46vw, 250px);
-    margin-top: var(--space-2);
-  }
-  .phone.wide {
-    left: var(--space-5);
-    right: var(--space-5);
-    width: auto;
+  .wide .frame {
     padding: 4px;
-    bottom: calc(var(--space-6) * -1);
     border-radius: var(--radius-2);
   }
-  .phone.wide .screen {
+  .wide .frame :global(img) {
+    width: min(86vw, 560px);
+    height: auto;
     border-radius: calc(var(--radius-2) - 3px);
   }
-  .back {
-    display: none;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .lead:hover .phone {
-      transform: translateY(-10px);
-    }
-    .lead:hover .back {
-      transition-delay: 40ms;
-    }
-  }
-  @media (min-width: 700px) {
-    .phone-only {
-      display: none;
-    }
+  .cap {
+    padding-inline: 6px;
+    color: var(--ink-soft);
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
   }
   @media (min-width: 900px) {
-    .lead {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      min-height: 520px;
+    .block {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      align-items: center;
+      --h: 460px;
     }
-    .devices {
-      height: auto;
-      margin-top: 0;
+    .copy {
+      padding-bottom: clamp(var(--space-6), 5vw, var(--space-9));
     }
-    .phone {
-      bottom: -90px;
-      width: 270px;
+    .strip {
+      padding-inline-start: 0;
+      scroll-padding-inline-start: 0;
     }
-    .front {
-      left: auto;
-      right: 14%;
+    .shots {
+      padding-block: var(--space-7);
+      padding-inline-end: var(--space-9);
     }
-    .devices.wide {
-      height: auto;
-    }
-    .phone.wide {
-      left: auto;
-      right: 6%;
-      width: 560px;
-      bottom: -60px;
-    }
-    .back {
-      display: block;
-      right: calc(14% + 300px);
-      bottom: -170px;
-      opacity: 0.92;
+    .wide .frame :global(img) {
+      width: 620px;
     }
   }
 </style>

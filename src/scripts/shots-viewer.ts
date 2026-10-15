@@ -4,7 +4,8 @@
 document.querySelectorAll<HTMLElement>('[data-viewer]').forEach((viewer) => {
   const tabs = [...viewer.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
   const phones = [...viewer.querySelectorAll<HTMLElement>('.phone')];
-  const cap = viewer.querySelector<HTMLElement>('.cap');
+  const caps = [...viewer.querySelectorAll<HTMLElement>('.cap')];
+  const live = viewer.querySelector<HTMLElement>('[data-live]');
   if (tabs.length < 2 || tabs.length !== phones.length) return;
   viewer.classList.add('live');
 
@@ -20,7 +21,8 @@ document.querySelectorAll<HTMLElement>('[data-viewer]').forEach((viewer) => {
       p.classList.toggle('near', Math.abs(j - i) === 1);
       p.style.setProperty('--o', String(j - i));
     });
-    if (cap) cap.textContent = phones[i].querySelector('img')?.alt ?? '';
+    caps.forEach((c, j) => c.classList.toggle('on', i === j));
+    if (live) live.textContent = phones[i].querySelector('img')?.alt ?? '';
     if (focus) tabs[i].focus();
   };
 

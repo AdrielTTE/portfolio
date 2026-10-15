@@ -1,0 +1,81 @@
+---
+// A project in the "More work" tier: one compact card in the project's own
+// colour, the whole card a link to its case study. Quieter than a full block
+// (no screenshot strip), so the archive can grow without the page growing.
+import Icon from './Icon.astro';
+import ProjectMark from './ProjectMark.astro';
+import type { WorkEntry } from '../lib/work';
+
+interface Props { project: WorkEntry; extra?: boolean }
+const { project, extra = false } = Astro.props;
+const { title, summary, scope, year, stack, stage, accent, icon, mark } = project.data;
+const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
+---
+<li class="card-li" data-extra={extra ? '' : undefined}>
+  <a class="card" href={`/work/${project.id}/`} style={vars}>
+    <span class="top">
+      {(icon || mark) && <span class="mk"><ProjectMark kind={mark} icon={icon} /></span>}
+      <span class="title display">{title}</span>
+      <span class="go" aria-hidden="true"><Icon name="arrow-right" /></span>
+    </span>
+    <span class="sum">{summary}</span>
+    <span class="meta">{scope}, {year}. {stack.slice(0, 3).join(', ')}.</span>
+  </a>
+</li>
+
+<style>
+  .card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    height: 100%;
+    padding: var(--space-5);
+    border-radius: var(--radius-2);
+    background: var(--stage);
+    color: #f3f4f2;
+    text-decoration: none;
+    --c-focus: #f3f4f2;
+  }
+  .top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .mk {
+    --mark: 40px;
+    flex: none;
+  }
+  .title {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--step-4);
+    line-height: 0.9;
+    color: #f3f4f2;
+  }
+  .go {
+    flex: none;
+    color: var(--accent);
+    font-size: 1.1em;
+  }
+  .sum {
+    max-width: 38ch;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .meta {
+    color: color-mix(in oklab, #f3f4f2 62%, var(--stage));
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+  .card:active {
+    opacity: 0.85;
+  }
+  .card:focus-visible {
+    outline-offset: 3px;
+  }
+</style>
