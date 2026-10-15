@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 // Site footer, and the one colour block on the site: a solid espresso back
 // cover (the flat colour field). On every page but
 // /contact it opens with the hire moment, so no page needs its own CTA band.
@@ -8,12 +9,24 @@
 import MagneticLink from './MagneticLink.astro';
 import CopyEmail from './CopyEmail.astro';
 import { site } from '../data/site';
+import { execFileSync } from 'node:child_process';
 
 interface Props {
   hire?: boolean;
 }
 const { hire = true } = Astro.props;
 const year = new Date().getFullYear();
+// When the site was last changed: the date of the latest commit. Left out when
+// git is not available, never guessed.
+let updatedIso = '';
+try {
+  updatedIso = execFileSync('git', ['log', '-1', '--format=%cI'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+} catch {
+  updatedIso = '';
+}
+const updated = updatedIso
+  ? new Date(updatedIso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kuala_Lumpur' })
+  : '';
 ---
 <footer class:list={['site-footer', { slim: !hire }]} id="site-footer">
   {hire && (<><span class="shape disc" aria-hidden="true"></span><span class="shape steps" aria-hidden="true"><i></i><i></i><i></i></span></>)}
@@ -38,14 +51,15 @@ const year = new Date().getFullYear();
         <li><a href="/#work">Work</a></li>
         <li><a href="/about/">About</a></li>
         <li><a href="/contact/">Contact</a></li>
-        <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
-        <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span><span class="visually-hidden"> (opens in new tab)</span></a></li>
         <li><a href="/sitemap-index.xml">Sitemap</a></li>
         <li><a href="/privacy/">Privacy</a></li>
       </ul>
       <p class="colophon-line">
         <span>© {year} Adriel Tang (Applied Theory), {site.city}.</span>
         <span>Built with Astro, set in Archivo.</span>
+        {updated && <span>Last updated <time datetime={updatedIso}>{updated}</time>.</span>}
         <span class="local" data-clock-wrap hidden>Local time <span data-clock>--:--</span> in {site.city}.</span>
         <span class="palette-hint">Press <kbd data-kbd-mod>⌘K</kbd> to jump anywhere.</span>
         <span class="sha" data-receipt-wrap="sha" hidden>Built from <a data-receipt="sha" data-href-template="https://github.com/AdrielTTE/portfolio/commit/{v}" hidden></a></span>

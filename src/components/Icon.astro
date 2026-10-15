@@ -1,0 +1,21 @@
+---
+// The one icon set. Thin 1.5px strokes with square ends so the arrows match the
+// sharp condensed type, drawn on a 24px grid, sized in em so they follow the
+// text they sit in. Replaces the mixed text glyphs (→ ↗ ←).
+//
+// Each icon renders twice inside a small clip: on hover of the nearest link or
+// button the first slides out and the second slides in behind it, in the
+// direction the arrow points (global.css, .ico-slide). Transform only, and the
+// resting state is a single clean arrow.
+interface Props { name: 'arrow-right' | 'arrow-left' | 'arrow-up-right' }
+const { name } = Astro.props;
+const paths: Record<Props['name'], string> = {
+  'arrow-right': 'M4 12h15M13 6l6 6-6 6',
+  'arrow-left': 'M20 12H5M11 6l-6 6 6 6',
+  'arrow-up-right': 'M7 17 17 7M8 7h9v9',
+};
+---
+<span class="ico-slide" data-dir={name} aria-hidden="true">
+  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" focusable="false"><path d={paths[name]} /></svg>
+  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" focusable="false"><path d={paths[name]} /></svg>
+</span>

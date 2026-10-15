@@ -1,10 +1,11 @@
 ---
+import Icon from './Icon.astro';
 // Primary CTA that leans toward the pointer on fine-pointer devices only.
 // Spec §5.3 item 10; visual states per docs/design-addendum.md §6.1 (primary).
 // The trailing arrow is rendered here so it can shift on hover.
 interface Props { href: string }
 ---
-<a class="magnetic" href={Astro.props.href} data-magnetic><span><slot /></span><span class="arrow" aria-hidden="true">→</span></a>
+<a class="magnetic" href={Astro.props.href} data-magnetic><span><slot /></span><span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></a>
 <script src="../scripts/magnetic.ts"></script>
 <style>
   .magnetic {
@@ -40,9 +41,6 @@ interface Props { href: string }
     /* Instant fill change, no colour transition (addendum §6.1). */
     .magnetic:hover {
       background: color-mix(in oklab, var(--c-accent) 86%, var(--c-ink));
-    }
-    .magnetic:hover .arrow {
-      transform: translateX(3px);
     }
   }
 </style>

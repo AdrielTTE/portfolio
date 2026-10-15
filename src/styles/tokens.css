@@ -51,12 +51,14 @@
   --display-stretch: 68%;
 
   --step--1: clamp(14px, 0.09vw + 13.67px, 15px);
-  --step-0: 16px;
-  --step-1: clamp(17px, 0.19vw + 16.3px, 19px);
-  --step-2: clamp(20px, 0.46vw + 18.3px, 25px);
-  --step-3: clamp(24px, 0.93vw + 20.7px, 34px);
-  --step-4: clamp(32px, 1.67vw + 26px, 50px);
-  --step-5: clamp(44px, 3.7vw + 30.7px, 84px);
+  /* A 1.25 scale (major third) that opens slightly with the viewport: each
+     step is about a quarter bigger than the one below, so sizes relate. */
+  --step-0: clamp(16px, 0.1vw + 15.6px, 17px);
+  --step-1: clamp(19px, 0.3vw + 17.8px, 21px);
+  --step-2: clamp(24px, 0.55vw + 21.8px, 27px);
+  --step-3: clamp(30px, 1.1vw + 25.6px, 36px);
+  --step-4: clamp(38px, 2.1vw + 29.6px, 52px);
+  --step-5: clamp(48px, 4vw + 32px, 88px);
   --step-6: clamp(56px, 6vw + 34px, 124px);
 
   /* space (4px base) */
@@ -70,7 +72,11 @@
   --space-8: 64px;
   --space-9: 96px;
   --space-10: 128px;
-  --section: clamp(72px, 7.4vw + 45px, 160px);
+  --space-11: 168px;
+  --space-12: 216px;
+  /* Generous by design: space between sections is what makes a page read as
+     considered. Was 72-160px; now 96-208px. */
+  --section: clamp(96px, 8vw + 56px, 208px);
   --header-h: 60px;
 
   /* grid */
@@ -80,6 +86,7 @@
   /* motion */
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-slide: cubic-bezier(0.32, 0.72, 0, 1);
   --dur-fast: 150ms;
   --dur-base: 250ms;
   --dur-slow: 450ms;

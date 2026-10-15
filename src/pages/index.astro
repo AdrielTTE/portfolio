@@ -31,6 +31,7 @@ const pitchParts = home.pitch
       <div class="under">
         <div class="who line-rise" style="--i:2">
           <p>{home.roleLine}</p>
+          <p class="local" data-clock-wrap hidden>{site.city}, <span data-clock>--:--</span> (UTC+8)</p>
         </div>
         <div class="what">
           <p class="pitch line-rise" style="--i:3">{pitchParts.map((p, i) => (p.em ? <span class="u" style={`--u:${pitchParts.slice(0, i).filter((q) => q.em).length}`}>{p.text}</span> : p.text))}</p>
@@ -242,44 +243,47 @@ const pitchParts = home.pitch
   /* Closer than the other sections so the first project row shows on the
      first screen: the work is the point of the page. */
   .block {
-    margin-top: clamp(40px, 3vw + 24px, 72px);
+    margin-top: clamp(56px, 4vw + 32px, 104px);
   }
 
-  /* What I build: same language as the Work list (ruled rows, condensed
-     title left, plain text right). */
+  /* What I build: a three-column spec sheet in running type, on purpose unlike
+     the big ruled Work rows above it, so the page does not repeat its best
+     moment. Each column opens with a rule and ends in a proof link. */
   .build {
     margin-top: var(--section);
     content-visibility: auto;
-    contain-intrinsic-size: auto 900px;
+    contain-intrinsic-size: auto 640px;
   }
   .build-h {
     font-size: var(--step-4);
     color: var(--c-ink);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-7);
   }
   .offers {
     list-style: none;
-    border-top: 1px solid var(--c-ink);
+    display: grid;
+    gap: var(--space-7) var(--gutter);
   }
   .offer {
     display: grid;
-    gap: var(--space-3);
-    padding-block: var(--space-6) var(--space-7);
-    border-bottom: 1px solid var(--c-rule);
+    align-content: start;
+    gap: var(--space-4);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--c-ink);
   }
   .offer-title {
-    font-size: var(--step-5);
+    font-size: var(--step-3);
     color: var(--c-display);
     line-height: 0.95;
   }
   .offer-body {
     display: grid;
-    gap: var(--space-2);
-    max-width: 46ch;
+    gap: var(--space-3);
+    max-width: 38ch;
   }
   .offer-line {
     font-size: var(--step-1);
-    line-height: 1.4;
+    line-height: 1.45;
   }
   .how {
     color: var(--c-ink-2);
@@ -294,12 +298,12 @@ const pitchParts = home.pitch
       text-decoration-thickness: 2px;
     }
   }
-  @media (min-width: 1024px) {
-    .offer {
-      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-      column-gap: var(--gutter);
-      align-items: end;
-      padding-block: var(--space-7);
+  @media (min-width: 900px) {
+    .offers {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+  }
+  .local {
+    font-variant-numeric: tabular-nums;
   }
 </style>
