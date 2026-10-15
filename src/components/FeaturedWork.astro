@@ -9,14 +9,19 @@ import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import type { WorkEntry } from '../lib/work';
 
-interface Props { project: WorkEntry }
-const { project } = Astro.props;
+// `phoneOnly`: shown on phones in place of the project's row in the list below,
+// so every project gets the same coloured block there (rows return from 700px).
+interface Props { project: WorkEntry; phoneOnly?: boolean }
+const { project, phoneOnly = false } = Astro.props;
 const { title, summary, scope, year, stack, stage, accent, shots } = project.data;
 const front = shots[0];
 const back = shots[3] ?? shots[1];
+// A landscape screenshot (a web app) gets a wide, browser-like frame instead of
+// a phone, so it does not shrink to a sliver.
+const wideFront = Boolean(front && front.src.width > front.src.height);
 const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
 ---
-<a class="lead" href={`/work/${project.id}/`} style={vars}>
+<a class:list={['lead', { 'phone-only': phoneOnly }]} href={`/work/${project.id}/`} style={vars}>
   <div class="copy">
     <h3 class="title display">{title}</h3>
     <p class="sum">{summary}</p>
@@ -24,11 +29,11 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     <span class="cta">View the case study <span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></span>
   </div>
   {front && (
-    <div class="devices" aria-hidden="true">
+    <div class:list={['devices', { wide: wideFront }]} aria-hidden="true">
       {back && (
         <div class="phone back"><div class="screen"><Image src={back.src} alt="" widths={[260, 390, 520]} sizes="(min-width: 900px) 260px, 50vw" loading="lazy" decoding="async" /></div></div>
       )}
-      <div class="phone front"><div class="screen"><Image src={front.src} alt="" widths={[260, 390, 520]} sizes="(min-width: 900px) 280px, 60vw" loading="lazy" decoding="async" /></div></div>
+      <div class:list={['phone', 'front', { wide: wideFront }]}><div class="screen"><Image src={front.src} alt="" widths={[260, 390, 520]} sizes="(min-width: 900px) 280px, 60vw" loading="lazy" decoding="async" /></div></div>
     </div>
   )}
 </a>
@@ -111,6 +116,21 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     left: calc(50% - min(23vw, 125px));
     z-index: 2;
   }
+  .devices.wide {
+    height: clamp(170px, 46vw, 250px);
+    margin-top: var(--space-2);
+  }
+  .phone.wide {
+    left: var(--space-5);
+    right: var(--space-5);
+    width: auto;
+    padding: 4px;
+    bottom: calc(var(--space-6) * -1);
+    border-radius: var(--radius-2);
+  }
+  .phone.wide .screen {
+    border-radius: calc(var(--radius-2) - 3px);
+  }
   .back {
     display: none;
   }
@@ -120,6 +140,11 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     }
     .lead:hover .back {
       transition-delay: 40ms;
+    }
+  }
+  @media (min-width: 700px) {
+    .phone-only {
+      display: none;
     }
   }
   @media (min-width: 900px) {
@@ -138,6 +163,15 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     .front {
       left: auto;
       right: 14%;
+    }
+    .devices.wide {
+      height: auto;
+    }
+    .phone.wide {
+      left: auto;
+      right: 6%;
+      width: 560px;
+      bottom: -60px;
     }
     .back {
       display: block;

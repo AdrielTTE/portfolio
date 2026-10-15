@@ -22,7 +22,7 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
   <slot />
   <ol class="rows">
     {rows.map((p) => (
-      <li class="work-row" data-work={p.id} data-peek={p.data.shots.length ? p.id : undefined}>
+      <li class:list={['work-row', { 'has-block': p.data.shots.length > 0 }]} data-work={p.id} data-peek={p.data.shots.length ? p.id : undefined}>
         <a href={`/work/${p.id}/`}>
           <span class="title display"><span class="tw">{p.data.title.split(' ').map((w, i) => (<><span class="tx"><span class="tx-in" style={`--w:${i}`}>{w}</span></span>{' '}</>))}</span><span class="go arrow" aria-hidden="true"><Icon name="arrow-right" /></span><span class="mk"><ProjectMark kind={p.data.mark} icon={p.data.icon} /></span></span>
           <span class="about">
@@ -105,6 +105,13 @@ const rows = [...projects].sort((a, b) => b.data.year - a.data.year || a.data.or
     font-size: var(--step-4);
     color: var(--c-ink);
     margin-bottom: var(--space-6);
+  }
+  /* On phones a project with screenshots appears as a coloured block above
+     (FeaturedWork, phoneOnly) instead of a row. */
+  @media (max-width: 699px) {
+    .has-block {
+      display: none;
+    }
   }
   .rows {
     list-style: none;
