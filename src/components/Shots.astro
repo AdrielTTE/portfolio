@@ -48,7 +48,16 @@ const viewer = allPhones || allWide;
           </button>
         ))}
       </div>
-      <p class="cap" aria-live="polite">{shots[0].alt}</p>
+      {/* Every description sits in the same grid cell and only the chosen one
+          shows, so the block is always as tall as the longest and the stage
+          never grows or shrinks when you switch screens. Screen readers get
+          the chosen one from the live line below. */}
+      <div class="caps">
+        {shots.map((s, i) => (
+          <p class:list={['cap', { on: i === 0 }]} data-i={i} aria-hidden="true">{s.alt}</p>
+        ))}
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-live>{shots[0].alt}</p>
     </div>
   </div>
 )}
@@ -227,11 +236,20 @@ const viewer = allPhones || allWide;
     outline: 2px solid currentColor;
     outline-offset: 4px;
   }
+  .caps {
+    display: grid;
+  }
   .cap {
+    grid-area: 1 / 1;
     max-width: 32ch;
     font-size: var(--step-0);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease-enter);
+  }
+  .cap.on {
     opacity: 0.85;
-    min-height: 4.5em;
+    pointer-events: auto;
   }
   @media (min-width: 800px) {
     .viewer.live {
@@ -298,7 +316,6 @@ const viewer = allPhones || allWide;
       text-align: center;
     }
     .cap {
-      min-height: 3em;
       max-width: 48ch;
     }
   }

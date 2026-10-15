@@ -1,0 +1,25 @@
+---
+// The home page's Work section: every project as one coloured block with its
+// screenshots in a scrolling strip (FeaturedWork). The lead project comes first,
+// then the rest newest first.
+import FeaturedWork from './FeaturedWork.astro';
+import type { WorkEntry } from '../lib/work';
+
+interface Props { projects: WorkEntry[] }
+const { projects } = Astro.props;
+const ordered = [...projects].sort(
+  (a, b) => Number(b.data.lead) - Number(a.data.lead) || b.data.year - a.data.year || a.data.order - b.data.order,
+);
+---
+<section class="work" aria-labelledby="work-h" id="work">
+  <h2 id="work-h" class="display section-h">Work</h2>
+  {ordered.map((p) => <FeaturedWork project={p} />)}
+</section>
+
+<style>
+  .section-h {
+    font-size: var(--step-4);
+    color: var(--c-ink);
+    margin-bottom: var(--space-6);
+  }
+</style>
