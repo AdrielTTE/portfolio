@@ -1,25 +1,153 @@
 ---
-// The home page's Work section: every project as one coloured block with its
-// screenshots in a scrolling strip (FeaturedWork). The lead project comes first,
-// then the rest newest first.
+// The home page's Work section, in two tiers so it stays short as the archive
+// grows. The lead and featured projects are full blocks with a screenshot strip
+// (FeaturedWork). Everything else is a compact card under "More work", twelve
+// at a time with "Show more" (WorkCompact). Without JavaScript every card shows.
 import FeaturedWork from './FeaturedWork.astro';
-import type { WorkEntry } from '../lib/work';
+import WorkCompact from './WorkCompact.astro';
+import { tierWork, MORE_PAGE, type WorkEntry } from '../lib/work';
 
 interface Props { projects: WorkEntry[] }
 const { projects } = Astro.props;
-const ordered = [...projects].sort(
-  (a, b) => Number(b.data.lead) - Number(a.data.lead) || b.data.year - a.data.year || a.data.order - b.data.order,
-);
+const { blocks, more } = tierWork(projects);
+const hidden = Math.max(0, more.length - MORE_PAGE);
 ---
 <section class="work" aria-labelledby="work-h" id="work">
   <h2 id="work-h" class="display section-h">Work</h2>
-  {ordered.map((p) => <FeaturedWork project={p} />)}
+  {blocks.map((p) => <FeaturedWork project={p} />)}
+
+  {more.length > 0 && (
+    <div class="more" data-more data-page={MORE_PAGE}>
+      <h3 id="more-h" class="more-h">More work <span class="count">{more.length}</span></h3>
+      <ul class="grid" aria-labelledby="more-h">
+        {more.map((p, i) => <WorkCompact project={p} extra={i >= MORE_PAGE} />)}
+      </ul>
+      {hidden > 0 && (
+        <p class="more-actions">
+          <button type="button" class="btn" data-show>Show <span data-n>{Math.min(MORE_PAGE, hidden)}</span> more</button>
+          <button type="button" class="btn quiet" data-fewer hidden>Show fewer</button>
+        </p>
+      )}
+    </div>
+  )}
 </section>
+
+<script>
+  // "Show more" reveals the next page of cards; "Show fewer" folds back to the
+  // first page and returns to the heading. The extra cards are hidden by CSS
+  // only under .js-reveal, so without JS they are all simply there.
+  document.querySelectorAll<HTMLElement>('[data-more]').forEach((root) => {
+    if (root.dataset.bound) return;
+    root.dataset.bound = '1';
+    const page = Number(root.dataset.page) || 12;
+    const extras = [...root.querySelectorAll<HTMLElement>('[data-extra]')];
+    const show = root.querySelector<HTMLButtonElement>('[data-show]');
+    const fewer = root.querySelector<HTMLButtonElement>('[data-fewer]');
+    const n = root.querySelector<HTMLElement>('[data-n]');
+    const heading = root.querySelector<HTMLElement>('.more-h');
+    if (!show || !fewer || !n || extras.length === 0) return;
+    let shown = 0;
+    const paint = () => {
+      extras.forEach((el, i) => el.classList.toggle('shown', i < shown));
+      const left = extras.length - shown;
+      show.hidden = left <= 0;
+      fewer.hidden = shown === 0;
+      n.textContent = String(Math.min(page, left));
+    };
+    show.addEventListener('click', () => {
+      const first = extras[shown];
+      shown = Math.min(extras.length, shown + page);
+      paint();
+      first?.querySelector<HTMLElement>('a')?.focus({ preventScroll: false });
+    });
+    fewer.addEventListener('click', () => {
+      shown = 0;
+      paint();
+      heading?.setAttribute('tabindex', '-1');
+      heading?.scrollIntoView({ block: 'center' });
+      heading?.focus({ preventScroll: true });
+    });
+    paint();
+  });
+</script>
 
 <style>
   .section-h {
     font-size: var(--step-4);
     color: var(--c-ink);
     margin-bottom: var(--space-6);
+  }
+  .more {
+    margin-top: var(--space-8);
+    border-top: 1px solid var(--c-ink);
+    padding-top: var(--space-5);
+  }
+  .more-h {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .more-h:focus {
+    outline: none;
+  }
+  .count {
+    color: var(--c-ink-2);
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    font-weight: 400;
+  }
+  .grid {
+    list-style: none;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 700px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  /* Beyond the first page: hidden only where JS can bring them back. */
+  :global(.js-reveal) .grid :global([data-extra]:not(.shown)) {
+    display: none;
+  }
+  .more-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  /* Both buttons exist only for JS; without it all cards already show. */
+  .btn {
+    display: none;
+    min-height: 44px;
+    padding: 0 var(--space-5);
+    border: 1px solid var(--c-ink);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--c-ink);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  :global(.js-reveal) .btn:not([hidden]) {
+    display: inline-flex;
+    align-items: center;
+  }
+  .btn.quiet {
+    border-color: var(--c-rule);
+    color: var(--c-ink-2);
+  }
+  .btn:active {
+    opacity: 0.7;
   }
 </style>

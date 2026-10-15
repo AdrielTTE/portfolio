@@ -48,6 +48,7 @@ body {
 /* The display voice: Archivo pulled condensed and heavy. Used for the
    masthead, work titles and section headings, never for running text. */
 .display {
+  font-family: var(--font-display-stack);
   font-stretch: var(--display-stretch);
   font-weight: 800;
   line-height: 0.9;

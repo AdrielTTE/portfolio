@@ -9,6 +9,25 @@ export function sortByOrder(entries: WorkEntry[]): WorkEntry[] {
   return [...entries].sort((a, b) => a.data.order - b.data.order);
 }
 
+/** How many compact "More work" cards show before "Show more". */
+export const MORE_PAGE = 12;
+
+/**
+ * The home page's two tiers. The lead and anything marked `featured` are full
+ * blocks with a screenshot strip; the rest are compact cards under "More work",
+ * so the page stays short as the archive grows. Lead first, then newest. If
+ * nothing is marked, the first project is promoted so the section is never
+ * only small cards.
+ */
+export function tierWork(entries: WorkEntry[]): { blocks: WorkEntry[]; more: WorkEntry[] } {
+  const newest = (a: WorkEntry, b: WorkEntry) =>
+    Number(Boolean(b.data.lead)) - Number(Boolean(a.data.lead)) || b.data.year - a.data.year || a.data.order - b.data.order;
+  const blocks = entries.filter((e) => e.data.lead || e.data.featured).sort(newest);
+  const more = entries.filter((e) => !(e.data.lead || e.data.featured)).sort(newest);
+  if (blocks.length === 0 && more.length > 0) blocks.push(more.shift()!);
+  return { blocks, more };
+}
+
 export interface AdjacentRef {
   title: string;
   slug: string;

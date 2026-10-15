@@ -3,16 +3,30 @@
    with the same ink as a flat field (the stack band and the site footer).
    Light is the default; dark is opt-in via the toggle and is the same job reversed: near-black blue paper, pale grey accent. */
 
-/* Metric-matched fallback for Archivo (computed with fontkit from the
-   Fontsource woff2 against Arial: hhea 878/-210 on a 1000 upm, average
-   advance 1.02x Arial), so the swap shifts almost nothing. */
+/* Metric-matched fallbacks for Archivo, so text wraps the same before and after
+   the web font lands and nothing moves when it does. Widths were measured in
+   the browser on this site's own copy (7,800 characters across every page)
+   against Arial: Archivo at weight 400 sets 0.978x as wide. The condensed
+   heavy display voice (weight 800, 68% width) cannot be condensed from a
+   system face, so its fallback is Arial Bold scaled to 0.74x, the measured
+   ratio for the site's headings and tab labels. Vertical metrics come from
+   Archivo's hhea table (878 / -210 on 1000 upm), divided by each size-adjust. */
 @font-face {
   font-family: 'Archivo Fallback';
   src: local('Arial');
-  ascent-override: 86%;
-  descent-override: 20.6%;
+  ascent-override: 89.8%;
+  descent-override: 21.5%;
   line-gap-override: 0%;
-  size-adjust: 102%;
+  size-adjust: 97.8%;
+}
+@font-face {
+  font-family: 'Archivo Fallback Display';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 800;
+  ascent-override: 118.6%;
+  descent-override: 28.4%;
+  line-gap-override: 0%;
+  size-adjust: 74%;
 }
 
 :root {
@@ -43,6 +57,7 @@
   /* type: one variable family (weight 100-900, width 62-125%) does both the
      condensed display voice and the text; code falls back to system mono. */
   --font-sans: 'Archivo Variable', 'Archivo Fallback', system-ui, sans-serif;
+  --font-display-stack: 'Archivo Variable', 'Archivo Fallback Display', system-ui, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, monospace;
   --font-wordmark: 'DM Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
   --display-stretch: 68%;
