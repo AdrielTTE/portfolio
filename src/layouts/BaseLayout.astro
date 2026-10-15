@@ -75,6 +75,8 @@ const jsonLd = {
       url: origin,
       email: `mailto:${facts.email}`,
       image: new URL('/og-default.png', site).href,
+      // The square mark (512px), for search results and knowledge panels.
+      logo: { '@type': 'ImageObject', url: new URL('/logo-512.png', site).href, width: 512, height: 512 },
       address,
       areaServed: { '@type': 'Country', name: 'Malaysia' },
       founder: { '@id': `${origin}#person` },
@@ -113,6 +115,7 @@ const jsonLdText = JSON.stringify(jsonLd).replace(/</g, '\\u003c');
     <meta name="theme-color" content="#F3F4F2" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.png?v=3" type="image/png" sizes="48x48" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
 
     <link rel="preload" as="font" type="font/woff2" href={archivoWoff2} crossorigin />
