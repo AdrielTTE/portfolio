@@ -1,7 +1,6 @@
 // Live Kuala Lumpur time in the footer. Rewrites one text node once a minute,
 // aligned to the minute change; nothing is shown without JS.
-const el = document.querySelector<HTMLElement>('[data-clock]');
-if (el) {
+document.querySelectorAll<HTMLElement>('[data-clock]').forEach((el) => {
   const fmt = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Asia/Kuala_Lumpur',
     hour: '2-digit',
@@ -15,5 +14,5 @@ if (el) {
     setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
   };
   tick();
-}
+});
 export {};

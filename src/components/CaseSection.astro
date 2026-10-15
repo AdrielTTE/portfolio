@@ -22,11 +22,54 @@ const visible = show ?? Boolean(text);
 )}
 <style>
   .case-section {
-    margin-top: clamp(var(--space-8), 5vw + 24px, var(--space-10));
+    position: relative;
+    margin-top: clamp(var(--space-9), 6vw + 48px, var(--space-11));
+    padding-top: var(--space-6);
     /* Off-screen sections skip layout and paint until they are near the
        viewport, which keeps a project page's first layout cheap. */
     content-visibility: auto;
-    contain-intrinsic-size: auto 480px;
+    contain-intrinsic-size: auto 520px;
+  }
+  /* A hairline opens each section. Where scroll-driven animation exists it
+     draws in from the left as the section enters; elsewhere it is simply there. */
+  .case-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    height: 1px;
+    background: var(--c-rule);
+    transform-origin: left center;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .case-section::before {
+        animation-name: rule-draw;
+        animation-duration: 1ms;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+      }
+      /* The timeline is its own, higher-specificity rule on purpose: the
+         minifier folds `animation-timeline` into the `animation` shorthand,
+         which browsers that only know the longhand then reject (the same trap
+         as ProgressBar.astro). Keep the longhands split. */
+      /* The section is the timeline's subject (not the 1px line, which would
+         "enter" in a pixel of scroll): the line draws as the section's top
+         enters the viewport. */
+      .case-section {
+        view-timeline-name: --section-in;
+        view-timeline-axis: block;
+      }
+      .case-section.case-section::before {
+        animation-timeline: --section-in;
+        animation-range: entry 0% entry 55%;
+      }
+    }
+  }
+  @keyframes rule-draw {
+    from {
+      transform: scaleX(0);
+    }
   }
   h2 {
     font-size: var(--step-4);

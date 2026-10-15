@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 // Contact: how to reach me and what happens next on the left, the form on the
 // right. The footer drops its hire block on this page (it would repeat it).
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -30,9 +31,9 @@ const faqSchema = {
         <CopyEmail email={site.email} />
       </p>
       <ul class="links-list">
-        <li><a href={whatsappUrl()} rel="noopener" target="_blank">WhatsApp <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
-        <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
-        <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href={whatsappUrl()} rel="noopener" target="_blank">WhatsApp <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href={site.linkedin} rel="noopener" target="_blank">LinkedIn <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span><span class="visually-hidden"> (opens in new tab)</span></a></li>
+        <li><a href={site.github} rel="noopener" target="_blank">GitHub <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" /></span><span class="visually-hidden"> (opens in new tab)</span></a></li>
       </ul>
       <section class="next-steps" aria-labelledby="next-h">
         <h2 id="next-h">What happens next</h2>
