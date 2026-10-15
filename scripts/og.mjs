@@ -44,6 +44,8 @@ for (const file of readdirSync(join(root, 'src/content/work')).filter((f) => f.e
 
   const shotPath = join(root, 'src', shot);
   const { width, height } = await sharp(shotPath).metadata();
+  const stageColour = field(md, 'stage') || '#14161f';
+  const accentColour = field(md, 'accent') || '#c2410c';
   const phone = width / height < 1;
   const img = pathToFileURL(shotPath).href;
   const stage = phone
@@ -61,7 +63,8 @@ body{width:1200px;height:630px;background:#f3f4f2;color:#14161f;font-family:A,sa
 .mark{font:500 24px ui-monospace,Consolas,monospace}.mark b{color:#c2410c;font-weight:500}
 h1{font-size:${titleSize}px;line-height:.82;font-weight:800;font-stretch:68%;text-transform:uppercase;letter-spacing:-.02em}
 p{font-size:30px;line-height:1.25;font-weight:500;max-width:560px;color:#14161f}
-.r{width:500px;background:#14161f;display:flex;align-items:center;justify-content:center}
+.r{width:500px;background:${stageColour};display:flex;align-items:center;justify-content:center;position:relative}
+.r::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:${accentColour}}
 .phone{padding:7px;border-radius:30px;background:#0b0a09;box-shadow:0 0 0 1px #2a2f3a}
 .phone img{display:block;border-radius:23px}
 .win{border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px #2a2f3a}.win img{display:block}

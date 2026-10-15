@@ -30,6 +30,8 @@ facts:
     label: "Automated test methods (xUnit)"
 sections: [problem, overview, data, built, facts, change, for-you]
 appCategory: "BusinessApplication"
+stage: "#243b53"
+accent: "#e0793f"
 featured: true
 order: 0
 problem: |-
