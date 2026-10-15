@@ -28,11 +28,13 @@ export const home = {
   title: 'Adriel Tang: ASP.NET and Flutter developer in Kuala Lumpur',
   description:
     'Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.',
+  // Leads with what has shipped, and says once that Applied Theory is Adriel's
+  // studio. The degree lives on /about.
   roleLine:
-    'Full stack developer in Kuala Lumpur, working mainly in ASP.NET Core, C#, Flutter, and Dart. First Class Honours graduate, now building software full-time.',
+    'Adriel Tang is a full stack developer in Kuala Lumpur and the developer behind Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart. Quotebook is live and Crest is in closed testing on Google Play.',
   pitch: 'I build web apps and mobile apps, and I take them all the way to launch.',
   // One casual line under the pitch. The music stays on /about.
-  intro: "I'm a developer by day and I take freelance projects on the side. Send me the problem and I'll tell you if I can build it.",
+  intro: "I take on a few freelance projects at a time. Send me the problem and I'll tell you if I can build it.",
 };
 
 // How a project runs, in three plain steps. Shown as
