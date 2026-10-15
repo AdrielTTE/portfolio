@@ -34,6 +34,9 @@ const pitchParts = home.pitch
         <div class="who line-rise" style="--i:2">
           <p>{home.roleLine}</p>
           <p class="local" data-clock-wrap hidden>{site.city}, <span data-clock>--:--</span> (UTC+8)</p>
+          <dl class="proof">
+            {home.proof.map((f) => (<div><dt>{f.label}</dt><dd>{f.note}</dd></div>))}
+          </dl>
         </div>
         <div class="what">
           <p class="pitch line-rise" style="--i:3">{pitchParts.map((p, i) => (p.em ? <span class="u" style={`--u:${pitchParts.slice(0, i).filter((q) => q.em).length}`}>{p.text}</span> : p.text))}</p>
@@ -160,6 +163,25 @@ const pitchParts = home.pitch
   .who p:first-child {
     color: var(--c-ink);
     font-weight: 500;
+  }
+  .proof {
+    margin-top: var(--space-3);
+    border-top: 1px solid var(--c-rule);
+  }
+  .proof div {
+    display: grid;
+    gap: 2px;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .proof dt {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .proof dd {
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
   }
   .pitch {
     font-size: var(--step-4);
