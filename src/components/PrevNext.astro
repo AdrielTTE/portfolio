@@ -5,8 +5,8 @@ import Icon from './Icon.astro';
 // omitted), and the contact line. The espresso footer follows straight after
 // with the full hire block, so the contact here is one plain line.
 interface Props {
-  prev?: { title: string; slug: string };
-  next?: { title: string; slug: string };
+  prev?: { title: string; slug: string; stage?: string; accent?: string };
+  next?: { title: string; slug: string; stage?: string; accent?: string };
 }
 const { prev, next } = Astro.props;
 ---
@@ -23,7 +23,7 @@ const { prev, next } = Astro.props;
       )}
       {next && (
         <li class="next">
-          <a href={`/work/${next.slug}/`}>
+          <a href={`/work/${next.slug}/`} class:list={{ tinted: Boolean(next.stage) }} style={next.stage ? `--stage:${next.stage};--accent:${next.accent ?? '#f3f4f2'}` : undefined}>
             <span class="dir">Next</span>
             <span class="t display">{next.title} <span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></span>
           </a>
@@ -62,6 +62,21 @@ const { prev, next } = Astro.props;
     font-size: var(--step-5);
     color: var(--c-display);
     text-transform: uppercase;
+  }
+  /* The next project arrives in its own colour: a taste of what is behind the link. */
+  .adjacent a.tinted {
+    margin-block: var(--space-4);
+    padding: var(--space-6);
+    border-radius: var(--radius-2);
+    background: var(--stage);
+    color: #f3f4f2;
+    --c-focus: #f3f4f2;
+  }
+  .tinted .dir {
+    color: var(--accent);
+  }
+  .tinted .t {
+    color: #f3f4f2;
   }
   .t .arrow {
     font-stretch: 100%;

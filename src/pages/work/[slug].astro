@@ -85,9 +85,9 @@ const schema = [
       {(project.data.icon || project.data.mark) && <div class="mark-slot"><ProjectMark kind={project.data.mark} icon={project.data.icon} /></div>}
     </header>
 
-    <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} download={download} privacy={privacy} />
-
     <div class="shots-wrap"><Shots project={project} /></div>
+
+    <FactsRow role={role} team={team} scope={scope} stack={stack} year={year} repo={repo} live={live} download={download} privacy={privacy} />
 
     {/* The Markdown body (what it is, who it's for) comes first, so a reader
         knows what the project is before the decisions. */}
@@ -177,6 +177,7 @@ const schema = [
   .shots-wrap:has(:global(.shots)) {
     margin-top: var(--space-7);
   }
+  /* Facts follow the stage, so the facts row needs no extra top rule of its own. */
   @media (min-width: 1024px) {
     .title-block {
       grid-template-columns: repeat(12, minmax(0, 1fr));
