@@ -37,9 +37,6 @@
   --c-block: #14161f;
   --c-block-ink: #f3f4f2;
   --c-block-ink-2: #b5bac4;
-  /* Flat decorative shapes: a tint of the paper, and a tint of the field. */
-  --c-shape-paper: #e8eae7;
-  --c-shape-field: #1f2330;
   /* The masthead and big display words take the accent. */
   --c-display: var(--c-accent);
 
@@ -130,6 +127,4 @@
   --c-block: #252c41;
   --c-block-ink: #f3f4f2;
   --c-block-ink-2: #b9bfcb;
-  --c-shape-paper: #171a22;
-  --c-shape-field: #2f3852;
 }
