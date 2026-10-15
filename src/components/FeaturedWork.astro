@@ -42,7 +42,7 @@ const href = `/work/${project.id}/`;
         {shots.map((s) => {
           const wide = s.src.width > s.src.height;
           return (
-            <li class:list={['shot', { wide }]}>
+            <li class:list={['shot', { wide }]} style={`--ar:${s.src.width / s.src.height}`}>
               <div class="frame">
                 <Image
                   src={s.src}
@@ -264,6 +264,34 @@ const href = `/work/${project.id}/`;
     height: auto;
     border-radius: calc(var(--radius-2) - 3px);
   }
+  /* Phones: each shot snaps to the centre, and the first and last get enough
+     lead-in and tail to centre too, so the frame sits mid-stage with a sliver of
+     its neighbour either side. --fw is the frame's own width. */
+  @media (max-width: 899px) {
+    .strip {
+      padding-inline: 0;
+      scroll-padding-inline: 0;
+    }
+    .shots {
+      padding-inline-end: 0;
+    }
+    .shot {
+      scroll-snap-align: center;
+      --fw: calc(var(--h) * var(--ar) + 12px);
+    }
+    .shot.wide {
+      --fw: calc(100cqw - 80px);
+    }
+    .wide .frame :global(img) {
+      width: calc(100cqw - 88px);
+    }
+    .shot:first-child {
+      margin-inline-start: calc((100cqw - var(--fw)) / 2);
+    }
+    .shot:last-child {
+      margin-inline-end: calc((100cqw - var(--fw)) / 2);
+    }
+  }
   .cap {
     padding-inline: 6px;
     color: var(--ink-soft);
@@ -280,9 +308,11 @@ const href = `/work/${project.id}/`;
     .copy {
       padding-bottom: clamp(var(--space-6), 5vw, var(--space-9));
     }
+    /* Desktop: starts just after the text column and runs off the stage's right
+       edge, the cropped last shot saying there is more. */
     .strip {
-      padding-inline-start: 0;
-      scroll-padding-inline-start: 0;
+      padding-inline-start: var(--space-5);
+      scroll-padding-inline-start: var(--space-5);
     }
     .shots {
       padding-block: var(--space-7);
