@@ -18,7 +18,7 @@ export interface SkillGroup {
 export const heroRoleLine = 'Full stack developer in Kuala Lumpur, working at Bantu2U Holdings.';
 
 export const bio = [
-  "I'm a full stack developer in Kuala Lumpur. I build with ASP.NET Core and C# for web apps and APIs, SQL for the databases behind them, and Flutter and Dart for mobile apps. I take on freelance projects. Applied Theory is where I apply what I've learned from studying and researching to real-life projects, and I'm getting my own apps ready for Google Play under that name, starting with Crest, which is in closed testing.",
+  "I'm a full stack developer in Kuala Lumpur. I build with ASP.NET Core and C# for web apps and APIs, SQL for the databases behind them, and Flutter and Dart for mobile apps. Applied Theory is where I apply what I've learned from studying and researching to real-life projects, and I'm getting my own apps ready for Google Play under that name, starting with Crest, which is in closed testing.",
   'I graduated in Software Systems Development from TAR UMT with First Class Honours in April 2026, and I now work full-time as a Software Developer at Bantu2U Holdings.',
 ];
 
