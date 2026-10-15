@@ -34,6 +34,9 @@ facts:
   - value: "0"
     label: "Accounts or servers needed"
 appCategory: "HealthApplication"
+stage: "#1e2022"
+accent: "#e4c88a"
+lead: true
 featured: true
 order: 1
 problem: |-

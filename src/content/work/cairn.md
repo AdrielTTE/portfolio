@@ -32,6 +32,8 @@ facts:
     label: "Google services linked: Calendar, Drive, Gmail"
 sections: [overview, change, problem, built, facts, for-you]
 appCategory: "UtilitiesApplication"
+stage: "#2a211b"
+accent: "#d8c3a5"
 featured: true
 order: 2
 problem: |-

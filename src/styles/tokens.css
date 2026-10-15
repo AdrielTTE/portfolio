@@ -49,6 +49,9 @@
   --font-mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Menlo, Consolas, monospace;
   --font-wordmark: 'DM Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
   --display-stretch: 68%;
+  /* The second voice: type tells the story, mono carries the specs (stacks,
+     years, clocks, dates, counts). */
+  --font-data: var(--font-mono);
 
   --step--1: clamp(14px, 0.09vw + 13.67px, 15px);
   /* A 1.25 scale (major third) that opens slightly with the viewport: each
@@ -87,6 +90,11 @@
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-slide: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* radius scale: controls, images and thumbnails, device frames */
+  --radius-1: 2px;
+  --radius-2: 10px;
+  --radius-3: 28px;
   --dur-fast: 150ms;
   --dur-base: 250ms;
   --dur-slow: 450ms;
@@ -119,9 +127,9 @@
   --c-focus: #ff8a57;
   --c-error: #ff8a7a;
   --c-signal: #ff8a57;
-  --c-block: #1c2130;
+  --c-block: #252c41;
   --c-block-ink: #f3f4f2;
   --c-block-ink-2: #b9bfcb;
   --c-shape-paper: #171a22;
-  --c-shape-field: #2a3042;
+  --c-shape-field: #2f3852;
 }

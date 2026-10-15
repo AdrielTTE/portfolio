@@ -63,6 +63,12 @@ const work = defineCollection({
       // schema.org applicationCategory for the app's structured data (e.g.
       // HealthApplication, BusinessApplication, UtilitiesApplication).
       appCategory: z.string().optional(),
+      // The project's own colour: the stage behind its screenshots and a small
+      // accent, both taken from its app icon. Colour lives inside the work.
+      stage: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+      accent: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+      // The one project shown large at the top of the home page's Work section.
+      lead: z.boolean().default(false),
       featured: z.boolean().default(false),
       order: z.number().default(0),
     }),

@@ -12,7 +12,10 @@ import { Image } from 'astro:assets';
 import type { WorkEntry } from '../lib/work';
 
 interface Props { project: WorkEntry }
-const { shots } = Astro.props.project.data;
+const { shots, stage, accent } = Astro.props.project.data;
+// The stage takes the project's own colour (light text stays readable: every
+// stage is a dark tone). Without one the default stage applies.
+const stageStyle = stage ? `--c-stage:${stage};--c-stage-ink:#f3f4f2;${accent ? `--project-accent:${accent};` : ''}` : undefined;
 const ratioOf = (s: (typeof shots)[number]) => s.src.width / s.src.height;
 const allPhones = shots.length > 1 && shots.every((s) => ratioOf(s) < 1);
 // Desktop screens of mixed height get the same viewer, in a fixed 3:2 window.
@@ -20,7 +23,7 @@ const allWide = shots.length > 1 && shots.every((s) => ratioOf(s) >= 1.2);
 const viewer = allPhones || allWide;
 ---
 {shots.length > 0 && viewer && (
-  <div class:list={['shots', 'viewer', { wide: allWide }]} data-viewer>
+  <div class:list={['shots', 'viewer', { wide: allWide }]} data-viewer style={stageStyle}>
     <div class="phones">
       {shots.map((s, i) => (
         <div class:list={['phone', { on: i === 0 }]} data-i={i}>
@@ -50,7 +53,7 @@ const viewer = allPhones || allWide;
   </div>
 )}
 {shots.length > 0 && !viewer && (
-  <div class="shots">
+  <div class="shots" style={stageStyle}>
     {shots.map((s, i) => {
       const ratio = ratioOf(s);
       return (
@@ -133,12 +136,12 @@ const viewer = allPhones || allWide;
   }
   .phone {
     padding: 7px;
-    border-radius: 28px;
+    border-radius: var(--radius-3);
     background: #0b0a09;
   }
   .screen {
     aspect-ratio: 1344 / 2992;
-    border-radius: 21px;
+    border-radius: calc(var(--radius-3) - 7px);
     overflow: hidden;
     background: #0f1117;
   }
@@ -206,7 +209,7 @@ const viewer = allPhones || allWide;
     right: 0;
     bottom: 4px;
     height: 3px;
-    background: currentColor;
+    background: var(--project-accent, currentColor);
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform var(--dur-base) var(--ease-enter);
@@ -313,7 +316,7 @@ const viewer = allPhones || allWide;
   }
   .viewer.wide .phone {
     padding: 0;
-    border-radius: 12px;
+    border-radius: var(--radius-2);
     background: var(--c-bg);
     box-shadow: 0 0 0 1px var(--c-rule);
     overflow: hidden;
