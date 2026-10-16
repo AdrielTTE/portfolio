@@ -102,6 +102,17 @@
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ease-slide: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Springs for things that were moved by hand. `--spring` is critically
+     damped (damping 1, no overshoot, the default); `--spring-flick` is damping
+     0.7 and overshoots about 4%, used only after a flick that carried
+     momentum. Browsers without linear() keep the cubic-bezier. */
+  --spring: var(--ease-enter);
+  --spring-flick: var(--ease-enter);
+  /* Tracking follows size: big display text tightens, small text opens. */
+  --track-display: -0.03em;
+  --track-heading: -0.02em;
+  --track-title: -0.01em;
+  --track-small: 0.01em;
 
   /* radius scale: controls, images and thumbnails, device frames */
   --radius-1: 2px;
@@ -142,4 +153,11 @@
   --c-block: #252c41;
   --c-block-ink: #f3f4f2;
   --c-block-ink-2: #b9bfcb;
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring: linear(0, 0.042, 0.136, 0.251, 0.368, 0.477, 0.574, 0.657, 0.727, 0.784, 0.831, 0.868, 0.897, 0.921, 0.939, 0.953, 0.964, 0.973, 0.979, 0.984, 0.988, 0.991, 0.993, 0.995, 0.996, 0.997, 0.998, 0.998, 1);
+    --spring-flick: linear(0, 0.04, 0.137, 0.264, 0.402, 0.537, 0.659, 0.764, 0.851, 0.919, 0.969, 1.004, 1.027, 1.04, 1.045, 1.046, 1.042, 1.037, 1.031, 1.025, 1.019, 1.013, 1.009, 1.005, 1.003, 1.001, 0.999, 0.998, 0.998, 0.998, 0.998, 0.998, 0.999, 0.999, 0.999, 0.999, 1, 1, 1, 1);
+  }
 }

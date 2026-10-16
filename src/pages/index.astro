@@ -121,7 +121,7 @@ const pitchParts = home.pitch
   .masthead {
     font-size: calc((100vw - 2 * var(--margin)) * 0.36);
     line-height: 0.8;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--track-display);
     color: var(--c-display);
     text-transform: uppercase;
   }
@@ -180,13 +180,13 @@ const pitchParts = home.pitch
   .proof dd {
     font-family: var(--font-data);
     font-size: var(--step--1);
-    letter-spacing: -0.01em;
+    letter-spacing: var(--track-small);
   }
   .pitch {
     font-size: var(--step-4);
     font-weight: 500;
     line-height: 1.08;
-    letter-spacing: -0.015em;
+    letter-spacing: var(--track-heading);
     max-width: 26ch;
     text-wrap: balance;
   }
@@ -269,7 +269,7 @@ const pitchParts = home.pitch
   .how {
     font-family: var(--font-data);
     font-size: 0.92em;
-    letter-spacing: -0.01em;
+    letter-spacing: var(--track-small);
     color: var(--c-ink-2);
   }
   .how a {
@@ -290,7 +290,7 @@ const pitchParts = home.pitch
   .local {
     font-family: var(--font-data);
     font-size: 0.92em;
-    letter-spacing: -0.01em;
+    letter-spacing: var(--track-small);
     font-variant-numeric: tabular-nums;
   }
   /* "Online now" / "Back Monday at 09:00" under the clock: a small dot (solid
