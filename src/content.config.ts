@@ -27,6 +27,9 @@ const work = defineCollection({
       scope: z.string(),
       stack: z.array(z.string()).min(1),
       year: z.number().int(),
+      // Where the project stands today, shown as a small status line on its
+      // Work card (e.g. "Live", "Closed testing"). Keep it short and true.
+      status: z.string().max(24).optional(),
       role: z.string(),
       team: z.string().optional(),
       repo: z.url().optional(),

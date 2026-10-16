@@ -8,7 +8,7 @@ import type { WorkEntry } from '../lib/work';
 
 interface Props { project: WorkEntry; extra?: boolean }
 const { project, extra = false } = Astro.props;
-const { title, summary, scope, year, stack, stage, accent, icon, mark } = project.data;
+const { title, summary, scope, year, stack, stage, accent, icon, mark, status } = project.data;
 const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
 ---
 <li class="card-li" data-extra={extra ? '' : undefined}>
@@ -19,6 +19,7 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
       <span class="go" aria-hidden="true"><Icon name="arrow-right" /></span>
     </span>
     <span class="sum">{summary}</span>
+    {status && <span class="status"><span class="dot" aria-hidden="true"></span>{status}</span>}
     <span class="meta">{scope}, {year}. {stack.slice(0, 3).join(', ')}.</span>
   </a>
 </li>
@@ -64,6 +65,22 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+    color: color-mix(in oklab, #f3f4f2 62%, var(--stage));
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
+  }
+  .status .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
   }
   .meta {
     color: color-mix(in oklab, #f3f4f2 62%, var(--stage));

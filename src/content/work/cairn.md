@@ -6,6 +6,7 @@ summary: "A local-first planner for tasks, projects and notes, with Google Calen
 scope: "Mobile app"
 stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
+status: "APK on GitHub"
 role: "Design and build"
 download: "https://github.com/AdrielTTE/cairn/releases/latest"
 privacy: "/cairn/privacy/"
