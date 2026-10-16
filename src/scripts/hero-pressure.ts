@@ -93,9 +93,18 @@ function init() {
     if (!raf) raf = requestAnimationFrame(tick);
   };
 
+  // The hint exists only where the effect does, and bows out the first time
+  // the pointer reaches the name.
+  const hint = document.createElement('p');
+  hint.className = 'hint';
+  hint.setAttribute('aria-hidden', 'true');
+  hint.textContent = 'hover the letters';
+  h1.after(hint);
+
   zone.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
     pointer = { x: e.clientX, y: e.clientY };
+    if (e.target instanceof Element && e.target.closest('.masthead')) hint.classList.add('gone');
     wake();
   });
   zone.addEventListener('pointerleave', () => {

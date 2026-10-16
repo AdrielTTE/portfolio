@@ -136,6 +136,28 @@ const pitchParts = home.pitch
     text-align: center;
     contain: layout;
   }
+  /* "hover the letters": added by the script only where the effect runs. Zero
+     height, so it sits in the gap under the name without moving anything. */
+  .intro :global(.hint) {
+    height: 0;
+    margin: var(--space-4) 0 calc(var(--space-4) * -1);
+    color: var(--c-ink-2);
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition: opacity var(--dur-base) var(--ease-exit);
+    animation: hint-in var(--dur-slow) var(--ease-enter) 900ms both;
+  }
+  .intro :global(.hint.gone) {
+    opacity: 0;
+    animation: none;
+  }
+  @keyframes hint-in {
+    from {
+      opacity: 0;
+    }
+  }
   .masthead > .line-mask {
     display: block;
   }
