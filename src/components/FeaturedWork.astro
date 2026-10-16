@@ -31,7 +31,6 @@ const href = `/work/${project.id}/`;
       <a class="cta" href={href}>View the case study <span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></a>
       {shots.length > 1 && (
         <span class="nav" data-nav>
-          <span class="pager" data-pager aria-live="polite"></span>
           <button type="button" class="step" data-dir="-1" aria-label={`Previous ${title} screenshot`} disabled><Icon name="arrow-left" /></button>
           <button type="button" class="step" data-dir="1" aria-label={`Next ${title} screenshot`}><Icon name="arrow-right" /></button>
         </span>
@@ -65,19 +64,21 @@ const href = `/work/${project.id}/`;
 </article>
 
 <script>
-  // Phones and tablets: the arrows (mouse only) scroll the strip by one shot and
-  // swipe works natively. Desktop (900px and up): the strip becomes a window
-  // sized to a whole number of shots, so nothing is ever cropped, and the arrows
-  // move a page at a time with a "1 / 2" counter. If every shot fits, the arrows
-  // and counter are hidden. There is no per-frame scroll listener:
-  // IntersectionObserver notices shots entering and leaving, scrollend settles
-  // the counter, and ResizeObserver handles resizing.
+  // The arrows (mouse only) scroll the strip by one shot; swipe and trackpad
+  // work natively. Every shot is a snap point, so at rest the strip always
+  // starts exactly on a phone and the left edge never cuts one. The right edge
+  // may still crop the next phone: that peek says there is more. The one catch
+  // is the end of the strip: it can only scroll as far as its content, which
+  // would leave the left edge mid-phone, so on desktop the script adds just
+  // enough empty space after the last shot (--tail) for its last position to
+  // be a phone start too. Nothing listens to scroll per frame:
+  // IntersectionObserver and scrollend update the arrows, ResizeObserver
+  // recomputes --tail.
   document.querySelectorAll<HTMLElement>('[data-block]').forEach((block) => {
     if (block.dataset.bound) return;
     block.dataset.bound = '1';
     const strip = block.querySelector<HTMLElement>('[data-strip]');
     const nav = block.querySelector<HTMLElement>('[data-nav]');
-    const pager = block.querySelector<HTMLElement>('[data-pager]');
     const buttons = [...block.querySelectorAll<HTMLButtonElement>('button[data-dir]')];
     if (!strip || buttons.length === 0) return;
     const [prev, next] = buttons;
@@ -85,68 +86,38 @@ const href = `/work/${project.id}/`;
     const calm = matchMedia('(prefers-reduced-motion: reduce)');
     const wide = matchMedia('(min-width: 900px)');
     const GAP = 20;
-    let k = 1;
-    let pages = 1;
 
     const stepPx = () => (items[0]?.offsetWidth ?? 240) + GAP;
-    const behavior = () => (calm.matches ? 'auto' : 'smooth');
-    const maxLeft = () => strip.scrollWidth - strip.clientWidth;
-    const pageLeft = (p: number) => Math.min(p * k * stepPx(), maxLeft());
-    const currentPage = () => {
-      if (strip.scrollLeft >= maxLeft() - 4) return pages - 1;
-      return Math.min(pages - 1, Math.floor((strip.scrollLeft + stepPx() / 2) / (k * stepPx())));
-    };
-
     const sync = () => {
       prev.disabled = strip.scrollLeft < 4;
       next.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 4;
-      if (pager) pager.textContent = block.classList.contains('paged') ? `${currentPage() + 1} / ${pages}` : '';
     };
 
+    // Desktop only: pad the end so the last scroll position starts on a phone.
+    // Phones keep their centred snapping, which already centres the last shot.
     const layout = () => {
-      // Keep the page the reader is on, and keep the snap points in place while
-      // measuring: with none, the browser would snap to the last shot.
-      const keep = block.classList.contains('paged') ? currentPage() : 0;
-      strip.style.removeProperty('--win');
-      if (!wide.matches || items.length === 0) {
-        items.forEach((el) => delete el.dataset.snap);
-        block.classList.remove('paged');
-        if (nav) nav.hidden = false;
-        sync();
-        return;
+      strip.style.removeProperty('--tail');
+      if (wide.matches && items.length > 0) {
+        const step = stepPx();
+        const content = items.length * step - GAP;
+        const over = content - strip.clientWidth;
+        const last = Math.min(Math.ceil(over / step), items.length - 1);
+        strip.style.setProperty('--tail', over > 0 ? `${Math.max(0, last * step - over)}px` : '0px');
+        if (nav) nav.hidden = over <= 0;
+      } else if (nav) {
+        nav.hidden = false;
       }
-      block.classList.add('paged');
-      const avail = strip.clientWidth;
-      const w = items[0].offsetWidth;
-      k = Math.max(1, Math.min(items.length, Math.floor((avail + GAP) / (w + GAP))));
-      pages = Math.ceil(items.length / k);
-      strip.style.setProperty('--win', `${k * w + (k - 1) * GAP}px`);
-      items.forEach((el, i) => {
-        if (i % k === 0) el.dataset.snap = '';
-        else delete el.dataset.snap;
-      });
-      if (nav) nav.hidden = pages < 2;
-      strip.scrollLeft = pageLeft(Math.min(keep, pages - 1));
       sync();
     };
 
-    buttons.forEach((b) =>
-      b.addEventListener('click', () => {
-        const dir = Number(b.dataset.dir);
-        if (block.classList.contains('paged')) {
-          const to = Math.max(0, Math.min(pages - 1, currentPage() + dir));
-          strip.scrollTo({ left: pageLeft(to), behavior: behavior() });
-        } else {
-          strip.scrollBy({ left: dir * stepPx(), behavior: behavior() });
-        }
-        // Browsers without scrollend still settle the counter and arrows.
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        strip.scrollBy({ left: Number(btn.dataset.dir) * stepPx(), behavior: calm.matches ? 'auto' : 'smooth' });
+        // Browsers without scrollend still settle the arrows.
         setTimeout(sync, 650);
       }),
     );
-    // The observer only fires as shots cross the edges, which is before a smooth
-    // scroll lands; scrollend (one event per scroll, not per frame) finishes it.
     strip.addEventListener('scrollend', sync);
-
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(sync, { root: strip, threshold: [0, 1] });
       items.forEach((el) => io.observe(el));
@@ -271,17 +242,7 @@ const href = `/work/${project.id}/`;
     opacity: 0.3;
     cursor: default;
   }
-  .pager {
-    align-self: center;
-    margin-inline-end: var(--space-2);
-    color: var(--ink-soft);
-    font-family: var(--font-data);
-    font-size: var(--step--1);
-    font-variant-numeric: tabular-nums;
-  }
-  .pager:empty {
-    display: none;
-  }
+
   .step:not(:disabled):active {
     opacity: 0.7;
   }
@@ -401,41 +362,32 @@ const href = `/work/${project.id}/`;
       padding-inline-end: var(--space-5);
     }
     /* Desktop: starts just after the text column and runs off the stage's right
-       edge, the cropped last shot saying there is more. */
+       edge, the cropped last shot saying there is more. The gap after the text
+       is a margin, not padding, so the strip's left edge is where a phone
+       starts: a scrolled-past phone is fully out of the window, never a sliver.
+       The 2px of padding only keeps the first frame's 1px ring from clipping. */
     .strip {
-      padding-inline-start: var(--space-7);
-      scroll-padding-inline-start: var(--space-7);
+      margin-inline-start: var(--space-7);
+      padding-inline-start: 2px;
+      scroll-padding-inline-start: 2px;
     }
     .shots {
       padding-block: var(--space-7);
       padding-inline-end: var(--space-9);
     }
+    /* A landscape shot is 620px, but never wider than the window (the strip is a
+       size container), so even a narrow desktop shows it whole. 12px is the
+       frame's padding plus the strip's 2px inset. */
     .wide .frame :global(img) {
-      width: 620px;
+      width: min(620px, calc(100cqw - 12px));
     }
 
-    /* Paged (set by the script): the strip is a window exactly as wide as a
-       whole number of shots (--win), so no shot is ever cut by an edge. It
-       still scrolls natively and snaps to pages, so a trackpad or a touch
-       screen at this width works without the arrows. */
-    .paged .strip {
-      width: var(--win, auto);
-      margin-inline: var(--space-7) var(--space-8);
-      padding-inline: 0;
-      scroll-padding-inline: 0;
+    /* Desktop end of strip (--tail is set by the script): empty space after
+       the last shot, just enough that the strip's last scroll position starts
+       on a phone, so the left edge never cuts one. */
+    .shots {
+      padding-inline-end: var(--tail, var(--space-9));
     }
-    .paged .shots {
-      padding-inline-end: 0;
-    }
-    .paged .shot {
-      scroll-snap-align: none;
-    }
-    .paged .shot[data-snap],
-    .paged .shot:last-child {
-      scroll-snap-align: start;
-    }
-    .paged .shot:last-child:not([data-snap]) {
-      scroll-snap-align: end;
-    }
+
   }
 </style>
