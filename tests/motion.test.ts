@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lerp, magnetOffset } from '../src/lib/motion';
+import { lerp, magnetOffset, pressureWeight } from '../src/lib/motion';
 
 describe('motion math', () => {
   it('lerp', () => {
@@ -14,5 +14,23 @@ describe('motion math', () => {
     expect(o.y).toBe(0);
     const edge = magnetOffset(79, 79, 80, 6);
     expect(Math.hypot(edge.x, edge.y)).toBe(0);
+  });
+});
+
+import { pressureWeight } from '../src/lib/motion';
+
+describe('pressureWeight', () => {
+  it('stays at rest outside the radius', () => {
+    expect(pressureWeight(300, 200, 800, 450)).toBe(800);
+    expect(pressureWeight(200, 200, 800, 450)).toBe(800);
+  });
+  it('reaches the minimum under the pointer', () => {
+    expect(pressureWeight(0, 200, 800, 450)).toBe(450);
+  });
+  it('falls monotonically toward the pointer', () => {
+    const a = pressureWeight(150, 200, 800, 450);
+    const b = pressureWeight(60, 200, 800, 450);
+    expect(a).toBeGreaterThan(b);
+    expect(a).toBeLessThan(800);
   });
 });

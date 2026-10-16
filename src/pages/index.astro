@@ -80,6 +80,7 @@ const pitchParts = home.pitch
       </ol>
     </div>
   </section>
+<script src="../scripts/hero-pressure.ts"></script>
 </BaseLayout>
 
 <style>
@@ -122,6 +123,18 @@ const pitchParts = home.pitch
     letter-spacing: -0.02em;
     color: var(--c-display);
     text-transform: uppercase;
+  }
+  /* Letter boxes made by scripts/hero-pressure.ts (desktop mouse only). Each
+     keeps the width its letter had in the whole word, so a weight change never
+     moves its neighbours. */
+  .masthead :global(.chs) {
+    display: block;
+    white-space: nowrap;
+  }
+  .masthead :global(.ch) {
+    display: inline-block;
+    text-align: center;
+    contain: layout;
   }
   .masthead > .line-mask {
     display: block;
