@@ -2,6 +2,7 @@
 // filter, arrow/enter selection, sliding highlight (transform only).
 // Markup/ARIA/interfaces: task-8 brief. Visuals: docs/design-addendum.md §7.6.
 import { filterCommands, groupHeadersFor, type Command } from '../lib/palette';
+import { project, rubberband } from '../lib/motion';
 
 // The header button and footer hint render "⌘K" server-side (Apple default).
 // Swap it for "Ctrl K" on non-Apple platforms so the hint stays accurate.
@@ -45,6 +46,8 @@ if (dialog && !dialog.dataset.bound) {
   };
   const closeAnimated = () => {
     if (!dialog.open || closing) return;
+    // Mid-drag or settling: the sheet's own animation owns the exit.
+    if (sheetBusy()) return;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       dialog.close();
       return;
@@ -67,6 +70,85 @@ if (dialog && !dialog.dataset.bound) {
       closeAnimated();
     }
   });
+  // Phone sheet: drag the grabber up to dismiss ------------------------------
+  // 1:1 with the finger, resists when pulled down, and on release projects
+  // where the flick was heading: a flick up goes, a slow drag goes once it is
+  // past a third of the sheet (at most 160px), otherwise it springs back. Grabbing it again mid-settle picks up from where
+  // it is on screen, not from where it was going.
+  const sheet = matchMedia('(max-width: 599px)');
+  const grab = dialog.querySelector<HTMLElement>('[data-grab]');
+  type Drag = { id: number; y0: number; base: number; off: number; trail: { y: number; t: number }[] };
+  let drag: Drag | null = null;
+  let settleTimer = 0;
+  const sheetBusy = () => drag !== null;
+  const setDy = (dy: number) => {
+    const h = dialog.offsetHeight || 1;
+    dialog.style.setProperty('--dy', `${dy}px`);
+    dialog.style.setProperty('--p', String(Math.max(0, Math.min(1, -dy / h))));
+  };
+  const clearSheet = () => {
+    clearTimeout(settleTimer);
+    dialog.classList.remove('dragging', 'settling');
+    dialog.style.removeProperty('--dy');
+    dialog.style.removeProperty('--p');
+  };
+  const settle = (to: number, then?: () => void) => {
+    dialog.classList.remove('dragging');
+    dialog.classList.add('settling');
+    setDy(to);
+    const done = () => {
+      dialog.removeEventListener('transitionend', onEnd);
+      clearTimeout(settleTimer);
+      then?.();
+    };
+    const onEnd = (e: TransitionEvent) => {
+      if (e.target === dialog && e.propertyName === 'transform') done();
+    };
+    dialog.addEventListener('transitionend', onEnd);
+    // transitionend never fires if nothing moved (or under reduced motion).
+    settleTimer = window.setTimeout(done, 600);
+  };
+  grab?.addEventListener('pointerdown', (e) => {
+    if (!sheet.matches || closing) return;
+    clearTimeout(settleTimer);
+    // Pick up from the live on-screen position.
+    const base = new DOMMatrix(getComputedStyle(dialog).transform).m42 || 0;
+    dialog.classList.remove('settling');
+    dialog.classList.add('dragging');
+    setDy(base);
+    grab.setPointerCapture(e.pointerId);
+    drag = { id: e.pointerId, y0: e.clientY, base, off: base, trail: [{ y: e.clientY, t: e.timeStamp }] };
+  });
+  grab?.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dy = drag.base + (e.clientY - drag.y0);
+    drag.off = dy > 0 ? rubberband(dy, 160) : dy;
+    drag.trail.push({ y: e.clientY, t: e.timeStamp });
+    while (drag.trail.length > 2 && e.timeStamp - drag.trail[0].t > 100) drag.trail.shift();
+    setDy(drag.off);
+  });
+  const dragEnd = (e: PointerEvent) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const { off, trail } = drag;
+    drag = null;
+    const a = trail[0];
+    const b = trail[trail.length - 1];
+    const v = e.type === 'pointercancel' || b.t <= a.t ? 0 : ((b.y - a.y) / (b.t - a.t)) * 1000;
+    const h = dialog.offsetHeight;
+    // A real flick decides by its direction; a slow drag by how far it went.
+    const dismiss = Math.abs(v) > 300 ? v < 0 && off < -20 : off + project(v) < -Math.min(h * 0.3, 160);
+    if (dismiss) {
+      settle(-(h + 32), () => {
+        clearSheet();
+        dialog.close();
+      });
+    } else {
+      settle(0, clearSheet);
+    }
+  };
+  grab?.addEventListener('pointerup', dragEnd);
+  grab?.addEventListener('pointercancel', dragEnd);
+
   let results: Command[] = all;
   let active = 0;
 
@@ -187,7 +269,22 @@ if (dialog && !dialog.dataset.bound) {
     }
   };
 
-  const open = () => {
+  // Where the palette grows from: the middle of whatever opened it, as an
+  // offset inside the dialog. Keyboard opens have no trigger, so the origin is
+  // the top centre. Skipped for the phone sheet, which drops from the top.
+  const setOrigin = (from?: Element | null) => {
+    if (!from || sheet.matches) {
+      dialog.style.removeProperty('--ox');
+      dialog.style.removeProperty('--oy');
+      return;
+    }
+    const t = from.getBoundingClientRect();
+    const d = dialog.getBoundingClientRect();
+    dialog.style.setProperty('--ox', `${t.left + t.width / 2 - d.left}px`);
+    dialog.style.setProperty('--oy', `${t.top + t.height / 2 - d.top}px`);
+  };
+
+  const open = (from?: Element | null) => {
     if (closing) {
       // Reopened mid-exit: cancel the exit and keep the dialog open.
       closing = false;
@@ -198,7 +295,9 @@ if (dialog && !dialog.dataset.bound) {
     if (dialog.open) return;
     input.value = '';
     if (status) status.textContent = '';
+    clearSheet();
     dialog.showModal();
+    setOrigin(from);
     render();
     input.focus();
   };
@@ -242,7 +341,7 @@ if (dialog && !dialog.dataset.bound) {
       // The trigger may be a real <a href="#site-footer"> (no-JS fallback);
       // once JS runs, it opens the dialog instead of following the link.
       e.preventDefault();
-      open();
+      open(e.currentTarget as Element);
     }),
   );
 }
