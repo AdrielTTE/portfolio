@@ -11,3 +11,12 @@ export function magnetOffset(dx: number, dy: number, radius: number, max: number
   const strength = (1 - d / radius) * max;
   return { x: (dx / d) * strength, y: (dy / d) * strength };
 }
+
+// Weight of a masthead letter at distance `d` from the pointer: `rest` outside
+// `radius`, easing down to `min` right under it (quadratic falloff, so the
+// dip is a soft pool around the pointer rather than a cone).
+export function pressureWeight(d: number, radius: number, rest: number, min: number): number {
+  if (d >= radius) return rest;
+  const t = 1 - Math.max(0, d) / radius;
+  return rest - (rest - min) * t * t;
+}
