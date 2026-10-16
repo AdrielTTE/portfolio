@@ -52,6 +52,7 @@ const commands: Command[] = [
       <span><kbd>↵</kbd> open</span>
       <span><kbd>esc</kbd> close</span>
     </div>
+    <div class="grabber" data-grab aria-hidden="true"><span></span></div>
   </div>
   <script type="application/json" id="palette-data" set:html={JSON.stringify(commands)} />
   <span id="palette-email" hidden>{site.email}</span>
@@ -76,16 +77,30 @@ const commands: Command[] = [
        which doubled the scrollbar whenever the rows were a few px too tall. */
     overflow: hidden;
   }
+  /* The palette grows out of whatever opened it (--ox/--oy are set from the
+     trigger's position, top centre for the keyboard) and shrinks back into it.
+     The spring is critically damped: it faded in, so it should not bounce. */
   dialog[open] {
-    animation: pal-in var(--dur-base) var(--ease-enter);
-    transform-origin: top center;
+    animation: pal-in 380ms var(--spring);
+    transform-origin: var(--ox, 50%) var(--oy, 0);
+    transform: translateY(var(--dy, 0px));
   }
   dialog::backdrop {
-    background: rgb(29 23 18 / 0.45);
+    /* --p (0 to 1) is how far the sheet has been dragged away; it thins the
+       scrim as it goes. The custom property is inherited from the dialog. */
+    background: rgb(29 23 18 / calc(0.45 * (1 - var(--p, 0))));
     animation: fade var(--dur-base) var(--ease-enter);
   }
   :root[data-theme='dark'] dialog::backdrop {
-    background: rgb(0 0 0 / 0.6);
+    background: rgb(0 0 0 / calc(0.6 * (1 - var(--p, 0))));
+  }
+  /* A soft blur behind the scrim, on desktop only: a full-screen blur is too
+     heavy to animate on a mid-range phone. The blur itself never animates;
+     only the scrim's opacity does. */
+  @media (hover: hover) and (pointer: fine) {
+    dialog::backdrop {
+      backdrop-filter: blur(5px);
+    }
   }
   /* Exit (palette.ts adds .closing, closes on animationend). `forwards`
      holds the end state for the frame before dialog.close(). */
@@ -98,7 +113,7 @@ const commands: Command[] = [
   @keyframes pal-out {
     to {
       opacity: 0;
-      transform: scale(0.98);
+      transform: scale(0.92);
     }
   }
   @keyframes fade-out {
@@ -109,7 +124,19 @@ const commands: Command[] = [
   @keyframes pal-in {
     from {
       opacity: 0;
-      transform: scale(0.96);
+      transform: scale(0.92);
+    }
+  }
+  @keyframes pal-sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(-28px);
+    }
+  }
+  @keyframes pal-sheet-out {
+    to {
+      opacity: 0;
+      transform: translateY(-28px);
     }
   }
   @keyframes fade {
@@ -122,6 +149,40 @@ const commands: Command[] = [
       width: calc(100% - 16px);
       margin: 8px auto auto;
       --pal-max: calc(100dvh - 16px);
+    }
+    /* On a phone it is a sheet that drops from the header: it comes in from
+       the top, so it leaves to the top, and can be dragged up to dismiss. */
+    dialog[open] {
+      animation-name: pal-sheet-in;
+    }
+    dialog.closing {
+      animation-name: pal-sheet-out;
+    }
+    dialog.dragging {
+      transition: none;
+    }
+    dialog.settling {
+      transition: transform var(--dur-slow) var(--spring);
+    }
+  }
+  .grabber {
+    display: none;
+  }
+  @media (max-width: 599px) {
+    .grabber {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 28px;
+      touch-action: none;
+      cursor: grab;
+      border-top: 1px solid var(--c-rule);
+    }
+    .grabber span {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--c-rule);
     }
   }
 
