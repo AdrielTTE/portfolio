@@ -75,7 +75,7 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     color: color-mix(in oklab, #f3f4f2 62%, var(--stage));
     font-family: var(--font-data);
     font-size: var(--step--1);
-    letter-spacing: -0.01em;
+    letter-spacing: var(--track-small);
   }
   .status .dot {
     width: 7px;
@@ -88,7 +88,7 @@ const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
     font-family: var(--font-data);
     font-size: var(--step--1);
     line-height: 1.5;
-    letter-spacing: -0.01em;
+    letter-spacing: var(--track-small);
   }
   .card:active {
     opacity: 0.85;

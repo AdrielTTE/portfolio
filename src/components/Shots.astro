@@ -176,10 +176,39 @@ const viewer = allPhones || allWide;
   }
   .viewer.live .phone {
     opacity: 0;
-    transition: opacity var(--dur-slow) var(--ease-enter);
+    transition:
+      opacity var(--dur-slow) var(--ease-enter),
+      transform var(--dur-slow) var(--spring);
   }
   .viewer.live .phone.on {
     opacity: 1;
+  }
+  .viewer.live[data-flick] .phone {
+    transition-timing-function: var(--ease-enter), var(--spring-flick);
+  }
+  /* Swiping: the screen follows the finger 1:1 (--dx) and fades out as the
+     next one (.peek) fades in (--p, 0 to 1). Vertical scroll still works. */
+  .viewer.live .phones {
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .viewer.live .screen :global(img) {
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+  .viewer.live.dragging .phones {
+    cursor: grabbing;
+  }
+  .viewer.live.dragging .phone {
+    transition: none;
+  }
+  .viewer.live .phone.on {
+    transform: translateX(var(--dx, 0px));
+    opacity: calc(1 - var(--p, 0));
+  }
+  .viewer.live .phone.peek {
+    opacity: var(--p, 0);
   }
   .viewer.live .side {
     display: grid;
@@ -208,6 +237,7 @@ const viewer = allPhones || allWide;
     text-transform: uppercase;
     font-size: var(--step-4);
     line-height: 1;
+    letter-spacing: var(--track-heading);
     opacity: 0.5;
     transition: opacity var(--dur-base) var(--ease-enter);
   }
@@ -290,10 +320,25 @@ const viewer = allPhones || allWide;
       width: clamp(240px, 20vw, 300px);
     }
     .viewer.live .phone {
-      transform: translateX(calc(var(--o, 0) * 96%)) scale(calc(1 - min(1, max(var(--o, 0), calc(var(--o, 0) * -1))) * 0.14));
+      transform: translateX(calc(var(--o, 0) * 96% + var(--dx, 0px))) scale(calc(1 - min(1, max(var(--o, 0), calc(var(--o, 0) * -1))) * 0.14));
       transition:
-        transform var(--dur-slow) var(--ease-enter),
+        transform var(--dur-slow) var(--spring),
         opacity var(--dur-slow) var(--ease-enter);
+    }
+    .viewer.live[data-flick] .phone {
+      transition-timing-function: var(--spring-flick), var(--ease-enter);
+    }
+    .viewer.live.dragging .phone {
+      transition: none;
+    }
+    /* In the fan the neighbours are already in place; only the chosen phone's
+       opacity stays put while everything shifts together. */
+    .viewer.live .phone.on {
+      transform: translateX(calc(var(--o, 0) * 96% + var(--dx, 0px))) scale(1);
+      opacity: 1;
+    }
+    .viewer.live .phones {
+      cursor: grab;
     }
     .viewer.live .phone.near {
       opacity: 0.4;
