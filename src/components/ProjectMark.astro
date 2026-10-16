@@ -8,7 +8,7 @@ interface Props { kind?: 'bars' | 'cards' | 'disc'; icon?: ImageMetadata }
 const { kind, icon } = Astro.props;
 ---
 {icon ? (
-  <Image class="app-icon" src={icon} width={192} height={192} alt="" aria-hidden="true" />
+  <span class="app-icon"><Image src={icon} width={192} height={192} alt="" aria-hidden="true" /></span>
 ) : kind && (
   <span class:list={['mark', kind]} aria-hidden="true">
     {kind === 'bars' && (<><i></i><i></i><i></i></>)}
@@ -18,15 +18,32 @@ const { kind, icon } = Astro.props;
 )}
 
 <style>
+  /* On paper the icon keeps a hairline rule. On a project's dark stage the
+     parent sets --mark-shadow (a soft drop shadow) and --mark-hl (a 1px light
+     top edge, drawn over the image by ::after because an inset shadow cannot
+     show through an <img>), since an icon whose own background is close to the
+     stage colour would otherwise melt into it. */
   .app-icon {
+    position: relative;
     display: block;
     width: var(--mark, 64px);
     height: var(--mark, 64px);
     border-radius: 22%;
-    /* The ring defaults to the page rule; on a project's dark stage the
-       parent sets a light one, since an icon whose own background is close to
-       the stage colour would otherwise melt into it. */
-    box-shadow: 0 0 0 var(--mark-ring-w, 1px) var(--mark-ring, var(--c-rule));
+    box-shadow: var(--mark-shadow, 0 0 0 1px var(--c-rule));
+  }
+  .app-icon :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+  }
+  .app-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--mark-hl, none);
+    pointer-events: none;
   }
   .mark {
     --m: var(--mark, 64px);
