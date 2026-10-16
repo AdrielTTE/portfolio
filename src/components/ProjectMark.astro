@@ -23,7 +23,10 @@ const { kind, icon } = Astro.props;
     width: var(--mark, 64px);
     height: var(--mark, 64px);
     border-radius: 22%;
-    box-shadow: 0 0 0 1px var(--c-rule);
+    /* The ring defaults to the page rule; on a project's dark stage the
+       parent sets a light one, since an icon whose own background is close to
+       the stage colour would otherwise melt into it. */
+    box-shadow: 0 0 0 var(--mark-ring-w, 1px) var(--mark-ring, var(--c-rule));
   }
   .mark {
     --m: var(--mark, 64px);
