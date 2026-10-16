@@ -17,6 +17,9 @@ export const site = {
   replyTime: 'I reply within 1 working day.',
   city: 'Kuala Lumpur',
   country: 'MY',
+  // Working hours behind the hero's "Online now" line (lib/availability.ts).
+  // Days are 0 = Sunday ... 6 = Saturday; hours are local (UTC+8). Owner to confirm.
+  hours: { days: [1, 2, 3, 4, 5], open: 9, close: 18, utcOffset: 8 },
 } as const;
 
 export function whatsappUrl(): string {
