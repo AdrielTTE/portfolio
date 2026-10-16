@@ -49,6 +49,10 @@
     var theme = localStorage.getItem('theme');
     if (theme === 'light' || theme === 'dark') {
       root.setAttribute('data-theme', theme);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      // First visit: follow the system. Not stored, so the choice stays open
+      // until the toggle is used.
+      root.setAttribute('data-theme', 'dark');
     }
   } catch (e) {
     /* localStorage unavailable (private mode, etc.): fall back to system theme */

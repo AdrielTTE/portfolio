@@ -6,6 +6,7 @@ summary: "An offline-first gym workout tracker: log sets, run rest timers, and s
 scope: "Mobile app"
 stack: ["Flutter", "Dart", "Drift", "SQLite", "Riverpod"]
 year: 2026
+status: "Closed testing"
 role: "Design and build"
 download: "https://github.com/AdrielTTE/crest/releases/latest"
 privacy: "/crest/privacy/"

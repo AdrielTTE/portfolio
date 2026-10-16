@@ -6,6 +6,7 @@ summary: "A quotation and invoice tracker for small service businesses: quote, i
 scope: "Web app"
 stack: ["ASP.NET Core", "C#", "Razor Pages", "EF Core", "PostgreSQL", "xUnit", "Docker"]
 year: 2026
+status: "Live"
 role: "Design and build"
 repo: "https://github.com/AdrielTTE/quotebook"
 live: "https://quotebook-oe9t.onrender.com/"

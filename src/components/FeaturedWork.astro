@@ -14,7 +14,7 @@ import type { WorkEntry } from '../lib/work';
 
 interface Props { project: WorkEntry }
 const { project } = Astro.props;
-const { title, summary, scope, year, stack, stage, accent, shots, icon, mark } = project.data;
+const { title, summary, scope, year, stack, stage, accent, shots, icon, mark, status } = project.data;
 const vars = `--stage:${stage ?? '#14161f'};--accent:${accent ?? '#f3f4f2'}`;
 const href = `/work/${project.id}/`;
 ---
@@ -25,6 +25,7 @@ const href = `/work/${project.id}/`;
       <h3 class="title display"><a href={href}>{title}</a></h3>
     </div>
     <p class="sum">{summary}</p>
+    {status && <p class="status"><span class="dot" aria-hidden="true"></span>{status}</p>}
     <p class="meta">{scope}, {year}. {stack.join(', ')}.</p>
     <p class="actions">
       <a class="cta" href={href}>View the case study <span class="arrow" aria-hidden="true"><Icon name="arrow-right" /></span></a>
@@ -140,6 +141,22 @@ const href = `/work/${project.id}/`;
     max-width: 34ch;
     font-size: var(--step-1);
     line-height: 1.45;
+  }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+    color: var(--ink-soft);
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    letter-spacing: -0.01em;
+  }
+  .status .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
   }
   .meta {
     max-width: 44ch;
