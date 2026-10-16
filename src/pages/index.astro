@@ -139,9 +139,11 @@ const pitchParts = home.pitch
     gap: inherit;
     color: var(--c-signal);
     opacity: 0;
+    transition:
+      transform 170ms var(--ease-enter),
+      opacity 140ms var(--ease-exit);
     pointer-events: none;
     user-select: none;
-    will-change: transform, opacity;
   }
   .masthead :global(.ghost *) {
     animation: none !important;
