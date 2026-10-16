@@ -31,6 +31,7 @@ const pitchParts = home.pitch
         <div class="who line-rise" style="--i:2">
           <p>{home.roleLine}</p>
           <p class="local" data-clock-wrap hidden>{site.city}, <span data-clock>--:--</span> (UTC+8)</p>
+          <p class="local presence" data-presence data-hours={JSON.stringify(site.hours)} hidden><i class="dot" aria-hidden="true"></i><span data-presence-text></span></p>
           <dl class="proof">
             {home.proof.map((f) => (<div><dt>{f.label}</dt><dd>{f.note}</dd></div>))}
           </dl>
@@ -80,6 +81,7 @@ const pitchParts = home.pitch
       </ol>
     </div>
   </section>
+<script src="../scripts/presence.ts"></script>
 </BaseLayout>
 
 <style>
@@ -290,5 +292,35 @@ const pitchParts = home.pitch
     font-size: 0.92em;
     letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
+  }
+  /* "Online now" / "Back Monday at 09:00" under the clock: a small dot (solid
+     while it is working time, a ring otherwise) and the line. Added by
+     scripts/presence.ts. The online dot breathes on a mouse device only. */
+  .presence {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: calc(var(--space-2) * -1);
+  }
+  .presence .dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--c-ink-2);
+  }
+  .presence[data-online='true'] .dot {
+    border-color: var(--c-signal);
+    background: var(--c-signal);
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .presence[data-online='true'] .dot {
+      animation: breathe 2.8s ease-in-out infinite alternate;
+    }
+    @keyframes breathe {
+      to {
+        opacity: 0.35;
+      }
+    }
   }
 </style>
