@@ -114,6 +114,8 @@ const href = `/work/${project.id}/`;
     --ink-soft: color-mix(in oklab, #f3f4f2 62%, var(--stage));
   }
   .copy {
+    /* A size container, so the title below can fit the column it is in. */
+    container-type: inline-size;
     display: grid;
     align-content: start;
     gap: var(--space-4);
@@ -129,7 +131,10 @@ const href = `/work/${project.id}/`;
     flex: none;
   }
   .title {
-    font-size: var(--step-5);
+    /* Never wider than the column: the head holds a 52px mark and a 16px gap
+       beside the title, and the longest title here sets about 3.94em wide, so
+       a long name shrinks to fit instead of running into the screenshots. */
+    font-size: min(var(--step-5), calc((100cqw - 68px) / 4.1));
     line-height: 0.88;
     color: #f3f4f2;
   }
@@ -318,18 +323,23 @@ const href = `/work/${project.id}/`;
   }
   @media (min-width: 900px) {
     .block {
-      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
       align-items: center;
       --h: 460px;
     }
     .copy {
       padding-bottom: clamp(var(--space-6), 5vw, var(--space-9));
+      padding-inline-end: var(--space-5);
     }
     /* Desktop: starts just after the text column and runs off the stage's right
        edge, the cropped last shot saying there is more. */
     .strip {
-      padding-inline-start: var(--space-5);
-      scroll-padding-inline-start: var(--space-5);
+      padding-inline-start: var(--space-7);
+      scroll-padding-inline-start: var(--space-7);
+      /* A shot that has scrolled past the left edge fades out over 32px
+         instead of being cut off hard. At rest the first shot starts 48px in,
+         clear of the fade. A static mask: nothing animates. */
+      mask-image: linear-gradient(to right, transparent, #000 32px);
     }
     .shots {
       padding-block: var(--space-7);
