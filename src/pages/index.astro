@@ -80,7 +80,6 @@ const pitchParts = home.pitch
       </ol>
     </div>
   </section>
-<script src="../scripts/hero-misregister.ts"></script>
 </BaseLayout>
 
 <style>
@@ -123,56 +122,6 @@ const pitchParts = home.pitch
     letter-spacing: -0.02em;
     color: var(--c-display);
     text-transform: uppercase;
-  }
-  /* The misregister copy made by scripts/hero-misregister.ts (desktop mouse
-     only): the name again in the signal colour, behind the ink, shifted by a
-     few pixels with the pointer. Only transform and opacity ever change. */
-  .masthead {
-    position: relative;
-    isolation: isolate;
-  }
-  .masthead :global(.ghost) {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    display: inherit;
-    gap: inherit;
-    color: var(--c-signal);
-    opacity: 0;
-    transition:
-      transform 170ms var(--ease-enter),
-      opacity 140ms var(--ease-exit);
-    pointer-events: none;
-    user-select: none;
-  }
-  .masthead :global(.ghost *) {
-    animation: none !important;
-  }
-  .masthead :global(.ghost .line-mask) {
-    display: block;
-    overflow: visible;
-  }
-  /* "move over the name": added by the script only where the effect runs. Zero
-     height, so it sits in the gap under the name without moving anything. */
-  .intro :global(.hint) {
-    height: 0;
-    margin: var(--space-4) 0 calc(var(--space-4) * -1);
-    color: var(--c-ink-2);
-    font-family: var(--font-data);
-    font-size: var(--step--1);
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    transition: opacity var(--dur-base) var(--ease-exit);
-    animation: hint-in var(--dur-slow) var(--ease-enter) 900ms both;
-  }
-  .intro :global(.hint.gone) {
-    opacity: 0;
-    animation: none;
-  }
-  @keyframes hint-in {
-    from {
-      opacity: 0;
-    }
   }
   .masthead > .line-mask {
     display: block;
