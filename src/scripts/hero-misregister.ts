@@ -1,21 +1,23 @@
-// Masthead misregister: a flat orange copy of the name sits behind it and
-// slides a few pixels with the pointer, so the letters look like a two-colour
-// print job that is slightly off register. Desktop mouse only; touch and
-// reduced motion keep the plain masthead, which is also what renders without
-// JavaScript. The copy only ever moves (transform) and fades (opacity).
-const REACH_X = 0.035; // max shift, in font sizes
-const REACH_Y = 0.02;
-const EASE = 0.14; // share of the gap closed per frame
+// Masthead misregister: a flat signal-colour copy of the name sits behind it
+// and, while a mouse is over the name, steps off register the way a press
+// plate does: a few pixels one way, held, then clicking over to the other side
+// when the pointer crosses the middle. No tracking loop: the copy only changes
+// when the side changes, and a CSS transition makes each step crisp. Desktop
+// mouse only; touch, reduced motion and no-JS keep the plain masthead. Only
+// transform and opacity change.
+const STEP_X = 0.03; // shift, in font sizes
+const STEP_Y = 0.017;
+const DEAD_X = 0.12; // middle band that keeps the current side, as a share of half the width
+const DEAD_Y = 0.2;
 
 function init() {
   const h1 = document.querySelector<HTMLElement>('.masthead');
-  const zone = h1?.closest<HTMLElement>('.intro');
-  if (!h1 || !zone || h1.dataset.misregister) return;
+  if (!h1 || h1.dataset.misregister) return;
   h1.dataset.misregister = '1';
 
   const fontPx = parseFloat(getComputedStyle(h1).fontSize);
-  const maxX = fontPx * REACH_X;
-  const maxY = fontPx * REACH_Y;
+  const stepX = fontPx * STEP_X;
+  const stepY = fontPx * STEP_Y;
 
   const ghost = document.createElement('span');
   ghost.className = 'ghost';
@@ -31,52 +33,38 @@ function init() {
   hint.textContent = 'move over the name';
   h1.after(hint);
 
-  let x = 0;
-  let y = 0;
-  let o = 0;
-  let tx = 0;
-  let ty = 0;
-  let to = 0;
-  let raf = 0;
-
-  const tick = () => {
-    raf = 0;
-    x += (tx - x) * EASE;
-    y += (ty - y) * EASE;
-    o += (to - o) * EASE;
-    const settled = Math.abs(tx - x) < 0.05 && Math.abs(ty - y) < 0.05 && Math.abs(to - o) < 0.01;
-    if (settled) {
-      x = tx;
-      y = ty;
-      o = to;
-    }
-    ghost.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
-    ghost.style.opacity = o.toFixed(3);
-    if (!settled) raf = requestAnimationFrame(tick);
-  };
-  const wake = () => {
-    if (!raf) raf = requestAnimationFrame(tick);
+  // Which side the copy sits on: -1 / 1 for each axis. It trails the pointer,
+  // so it steps to the far side from where the pointer is.
+  let sx = 1;
+  let sy = 1;
+  const place = () => {
+    ghost.style.transform = `translate3d(${sx * stepX}px, ${sy * stepY}px, 0)`;
   };
 
-  zone.addEventListener('pointermove', (e) => {
+  h1.addEventListener('pointerenter', (e) => {
     if (e.pointerType !== 'mouse') return;
-    const r = h1.getBoundingClientRect();
-    // -1..1 across the name, so the copy trails the pointer left to right and
-    // top to bottom; clamped so a pointer far below the name holds the edge.
-    const dx = ((e.clientX - (r.left + r.width / 2)) / (r.width / 2)) || 0;
-    const dy = ((e.clientY - (r.top + r.height / 2)) / (r.height / 2)) || 0;
-    tx = -Math.max(-1, Math.min(1, dx)) * maxX;
-    ty = -Math.max(-1, Math.min(1, dy)) * maxY;
-    to = 1;
-    if (e.target instanceof Element && e.target.closest('.masthead')) hint.classList.add('gone');
-    wake();
+    hint.classList.add('gone');
+    side(e);
+    ghost.style.opacity = '1';
   });
-  zone.addEventListener('pointerleave', () => {
-    tx = 0;
-    ty = 0;
-    to = 0;
-    wake();
+  h1.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'mouse') side(e);
   });
+  h1.addEventListener('pointerleave', () => {
+    ghost.style.opacity = '0';
+  });
+
+  function side(e: PointerEvent) {
+    const r = h1!.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+    const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+    const nx = Math.abs(dx) > DEAD_X ? (dx > 0 ? -1 : 1) : sx;
+    const ny = Math.abs(dy) > DEAD_Y ? (dy > 0 ? -1 : 1) : sy;
+    if (nx === sx && ny === sy && ghost.style.transform) return;
+    sx = nx;
+    sy = ny;
+    place();
+  }
 }
 
 if (
