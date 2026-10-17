@@ -43,6 +43,8 @@ body {
   line-height: 1.5;
   font-synthesis: none;
   font-weight: 400;
+  /* At a large text size a long word wraps rather than widening the page. */
+  overflow-wrap: break-word;
 }
 
 /* The display voice: Archivo pulled condensed and heavy. Used for the

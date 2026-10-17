@@ -65,33 +65,33 @@
      years, clocks, dates, counts). */
   --font-data: var(--font-mono);
 
-  --step--1: clamp(14px, 0.09vw + 13.67px, 15px);
+  --step--1: clamp(0.875rem, 0.09vw + 0.854375rem, 0.9375rem);
   /* A 1.25 scale (major third) that opens slightly with the viewport: each
      step is about a quarter bigger than the one below, so sizes relate. */
-  --step-0: clamp(16px, 0.1vw + 15.6px, 17px);
-  --step-1: clamp(19px, 0.3vw + 17.8px, 21px);
-  --step-2: clamp(24px, 0.55vw + 21.8px, 27px);
-  --step-3: clamp(30px, 1.1vw + 25.6px, 36px);
-  --step-4: clamp(38px, 2.1vw + 29.6px, 52px);
-  --step-5: clamp(48px, 4vw + 32px, 88px);
-  --step-6: clamp(56px, 6vw + 34px, 124px);
+  --step-0: clamp(1rem, 0.1vw + 0.975rem, 1.0625rem);
+  --step-1: clamp(1.1875rem, 0.3vw + 1.1125rem, 1.3125rem);
+  --step-2: clamp(1.5rem, 0.55vw + 1.3625rem, 1.6875rem);
+  --step-3: clamp(1.875rem, 1.1vw + 1.6rem, 2.25rem);
+  --step-4: clamp(2.375rem, 2.1vw + 1.85rem, 3.25rem);
+  --step-5: clamp(3rem, 4vw + 2rem, 5.5rem);
+  --step-6: clamp(3.5rem, 6vw + 2.125rem, 7.75rem);
 
-  /* space (4px base) */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
-  --space-10: 128px;
-  --space-11: 168px;
-  --space-12: 216px;
+  /* space (4px base, in rem so it scales with the reader's text size) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --space-11: 10.5rem;
+  --space-12: 13.5rem;
   /* Generous by design: space between sections is what makes a page read as
      considered. Was 72-160px; now 96-208px. */
-  --section: clamp(96px, 8vw + 56px, 208px);
+  --section: clamp(6rem, 8vw + 3.5rem, 13rem);
   --header-h: 60px;
 
   /* grid */
@@ -159,5 +159,19 @@
   :root {
     --spring: linear(0, 0.042, 0.136, 0.251, 0.368, 0.477, 0.574, 0.657, 0.727, 0.784, 0.831, 0.868, 0.897, 0.921, 0.939, 0.953, 0.964, 0.973, 0.979, 0.984, 0.988, 0.991, 0.993, 0.995, 0.996, 0.997, 0.998, 0.998, 1);
     --spring-flick: linear(0, 0.04, 0.137, 0.264, 0.402, 0.537, 0.659, 0.764, 0.851, 0.919, 0.969, 1.004, 1.027, 1.04, 1.045, 1.046, 1.042, 1.037, 1.031, 1.025, 1.019, 1.013, 1.009, 1.005, 1.003, 1.001, 0.999, 0.998, 0.998, 0.998, 0.998, 0.998, 0.999, 0.999, 0.999, 0.999, 1, 1, 1, 1);
+  }
+}
+
+/* More contrast (a system setting): darker secondary text and stronger
+   hairlines, so nothing relies on a pale grey. */
+@media (prefers-contrast: more) {
+  :root {
+    --c-ink-2: #3a3e46;
+    --c-rule: #858a92;
+    --c-block-ink-2: #e4e7ec;
+  }
+  :root[data-theme='dark'] {
+    --c-ink-2: #c8cdd6;
+    --c-rule: #5d6474;
   }
 }
