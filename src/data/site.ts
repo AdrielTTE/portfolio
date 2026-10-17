@@ -30,11 +30,11 @@ export function whatsappUrl(): string {
 export const home = {
   title: "Adriel Tang: ASP.NET and Flutter developer in Kuala Lumpur",
   description:
-    "Adriel Tang is a full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.",
+    "Full stack developer in Kuala Lumpur building web apps, backend APIs and databases in ASP.NET Core, and mobile apps in Flutter.",
   // Leads with what has shipped, and says once that Applied Theory is Adriel's
   // studio. The degree lives on /about.
   roleLine:
-    "Adriel Tang is a full stack developer in Kuala Lumpur and the developer behind Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart.",
+    "Full stack developer in Kuala Lumpur and the developer behind Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart.",
   // Two checkable facts under the intro. Both also appear elsewhere on the site
   // (about timeline, Crest case study); nothing here is new.
   proof: [
