@@ -19,11 +19,19 @@ const { facts } = Astro.props;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: var(--space-5) var(--gutter);
   }
+  /* Each fact is as tall as the tallest in its row, with the figure pinned to
+     the bottom: a label that wraps onto a second line no longer pushes its
+     number below its neighbours'. */
+  dl > div {
+    display: flex;
+    flex-direction: column;
+  }
   dt {
     color: var(--c-ink-2);
   }
   dd {
-    margin-top: var(--space-1);
+    margin-top: auto;
+    padding-top: var(--space-1);
     font-size: var(--step-6);
     color: var(--c-display);
     font-variant-numeric: tabular-nums;
