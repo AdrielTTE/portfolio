@@ -11,6 +11,8 @@
 // motion swaps without the transition. The per-page scripts are small module
 // scripts; after a swap they are run again against the new content (the
 // persistent ones, in the header and palette, guard against binding twice).
+import { springScrollTo } from '../lib/spring-scroll';
+
 declare global {
   interface Window {
     __router?: { go: (href: string) => void };
@@ -170,6 +172,19 @@ function install() {
     settleIntro();
   };
 
+  // A link to a spot on the page you are already on (the Work link in the
+  // header, the logo): glide there on a spring instead of jumping, and keep the
+  // history and focus behaving like a normal in-page link.
+  const scrollToHash = (url: URL) => {
+    const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+    if (!el) return;
+    if (location.hash !== url.hash) history.pushState({ idx: ++idx }, '', url.pathname + url.search + url.hash);
+    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+    springScrollTo(el.getBoundingClientRect().top + scrollY - margin);
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
+  };
+
   const navigate = async (href: string, dir: 'forward' | 'back', opts: { pop: boolean; scroll?: number }) => {
     const id = ++navId;
     const url = new URL(href, location.href);
@@ -214,10 +229,13 @@ function install() {
     const url = new URL(a.href, location.href);
     if (!isPage(url)) return;
     if (url.pathname + url.search === current) {
-      // Same page: let #hash links scroll natively; the logo just goes to the top.
+      // Same page: #hash links glide to their spot; the logo goes to the top.
       if (!url.hash) {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        springScrollTo(0);
+      } else if (document.getElementById(decodeURIComponent(url.hash.slice(1)))) {
+        e.preventDefault();
+        scrollToHash(url);
       }
       return;
     }
@@ -244,7 +262,13 @@ function install() {
   document.addEventListener('focusin', warm);
   document.addEventListener('touchstart', warm, { passive: true });
 
-  window.__router = { go: (href: string) => void navigate(new URL(href, location.href).href, 'forward', { pop: false }) };
+  window.__router = {
+    go: (href: string) => {
+      const url = new URL(href, location.href);
+      if (url.pathname + url.search === current && url.hash) scrollToHash(url);
+      else void navigate(url.href, 'forward', { pop: false });
+    },
+  };
 }
 
 // The script is part of every page, so it runs again after each swap: install once.
