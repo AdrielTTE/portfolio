@@ -274,6 +274,19 @@ const commands: Command[] = [
   .panel > ul::-webkit-scrollbar {
     display: none;
   }
+  /* Where more rows are hidden above or below, the list fades out at that edge
+     instead of cutting a row in half. palette.ts sets data-more-top and
+     data-more-bottom from the scroll position; with everything in view
+     there is no fade. */
+  .panel > ul[data-more-top] {
+    mask-image: linear-gradient(to bottom, transparent 0, #000 22px);
+  }
+  .panel > ul[data-more-bottom] {
+    mask-image: linear-gradient(to top, transparent 0, #000 26px);
+  }
+  .panel > ul[data-more-top][data-more-bottom] {
+    mask-image: linear-gradient(to bottom, transparent 0, #000 22px, #000 calc(100% - 26px), transparent 100%);
+  }
   :global(#palette-list .grp-label) {
     padding: 8px 12px 4px;
     font-size: var(--step--1);

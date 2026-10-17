@@ -351,6 +351,23 @@ html:has(dialog[open]) {
   }
 }
 
+/* Press feedback on touch: every tappable thing answers the moment a finger
+   lands, not when it lifts. Elements that already have their own pressed
+   state (buttons, cards, arrows, tabs, the toggle) are left alone; :where()
+   keeps this at zero specificity so any component rule wins. No tap-highlight
+   flash, and no double-tap delay. */
+@media (pointer: coarse) {
+  :where(a:not(.btn, .magnetic, .theme-toggle, .tab, .card, .step), button:not(.btn, .theme-toggle, .tab, .copy-button, .step), summary) {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: opacity var(--dur-base) var(--ease-enter);
+  }
+  :where(a:not(.btn, .magnetic, .theme-toggle, .tab, .card, .step), button:not(.btn, .theme-toggle, .tab, .copy-button, .step), summary):active {
+    opacity: 0.6;
+    transition-duration: 60ms;
+  }
+}
+
 /* Reduced motion safety net --------------------------------------------------
    Component-specific rules still apply (progress bar keeps position feedback,
    just without the thickness animation); this only guards anything missed. */

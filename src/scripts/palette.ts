@@ -156,7 +156,17 @@ if (dialog && !dialog.dataset.bound) {
   // navigation is indexed over the option elements only, not list.children.
   const options = (): HTMLLIElement[] => Array.from(list.querySelectorAll<HTMLLIElement>('li[role="option"]'));
 
-  const moveHl = () => {
+  // Fade the list at whichever edge still has rows beyond it.
+  const edges = () => {
+    const more = list.scrollHeight - list.clientHeight;
+    list.toggleAttribute('data-more-top', list.scrollTop > 2);
+    list.toggleAttribute('data-more-bottom', more - list.scrollTop > 2);
+  };
+
+  // `reveal` scrolls the active row into view: right for the keyboard, wrong
+  // while the list itself is being scrolled (it would snap back).
+  const moveHl = (reveal = true) => {
+    edges();
     const opts = options();
     const li = opts[active];
     hl.hidden = !li;
@@ -165,7 +175,7 @@ if (dialog && !dialog.dataset.bound) {
     if (li) {
       li.setAttribute('aria-selected', 'true');
       input.setAttribute('aria-activedescendant', li.id);
-      li.scrollIntoView({ block: 'nearest' });
+      if (reveal) li.scrollIntoView({ block: 'nearest' });
     } else {
       input.removeAttribute('aria-activedescendant');
     }
@@ -323,7 +333,7 @@ if (dialog && !dialog.dataset.bound) {
   });
   // Scroll listener on the palette list only, while the dialog is open - it
   // repositions the highlight and is not a page scroll listener.
-  list.addEventListener('scroll', moveHl, { passive: true });
+  list.addEventListener('scroll', () => moveHl(false), { passive: true });
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) closeAnimated();
   });
