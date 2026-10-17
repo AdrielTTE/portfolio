@@ -32,11 +32,16 @@ interface Props { href: string }
     translate: 0 1px;
   }
   .arrow {
-    transition: transform var(--dur-fast) var(--ease-enter);
+    transition: transform var(--dur-base) var(--spring);
   }
   @media (hover: hover) and (pointer: fine) {
+    /* Following the pointer is quick; letting go (data-settle, set by
+       magnetic.ts) is a spring back to rest rather than a fixed-time ease. */
     .magnetic {
-      transition: transform var(--dur-base) var(--ease-enter);
+      transition: transform 140ms var(--ease-enter);
+    }
+    .magnetic[data-settle] {
+      transition: transform 520ms var(--spring);
     }
     /* Instant fill change, no colour transition (addendum §6.1). */
     .magnetic:hover {

@@ -25,6 +25,7 @@ if (
     };
     zone.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
+      el.removeAttribute('data-settle');
       const r = el.getBoundingClientRect();
       // Subtract the current offset so the rest position is the reference.
       const cx = r.left - ox + r.width / 2;
@@ -43,7 +44,10 @@ if (
         : magnetOffset(ex, ey, RADIUS, MAX);
       set(Math.round(x * 10) / 10, Math.round(y * 10) / 10);
     });
-    zone.addEventListener('pointerleave', () => set(0, 0));
+    zone.addEventListener('pointerleave', () => {
+      el.setAttribute('data-settle', '');
+      set(0, 0);
+    });
   });
 }
 export {};
