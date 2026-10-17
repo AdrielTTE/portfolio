@@ -32,11 +32,13 @@ const Tag = as;
     align-items: center;
     justify-content: center;
   }
+  /* Down is instant (feedback on the press), back up is a spring. */
   .btn {
-    transition: scale var(--dur-fast) var(--ease-enter);
+    transition: scale var(--dur-base) var(--spring);
   }
   .btn:active {
     scale: 0.97;
+    transition-duration: 80ms;
   }
   .btn--primary {
     min-height: 52px;
