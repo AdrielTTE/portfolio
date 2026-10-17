@@ -34,7 +34,7 @@ export const home = {
   // Leads with what has shipped, and says once that Applied Theory is Adriel's
   // studio. The degree lives on /about.
   roleLine:
-    "Full stack developer in Kuala Lumpur and the developer behind Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart.",
+    "Full stack developer in Kuala Lumpur, working as Applied Theory. Building with ASP.NET Core, C#, Flutter and Dart.",
   // Two checkable facts under the intro. Both also appear elsewhere on the site
   // (about timeline, Crest case study); nothing here is new.
   proof: [

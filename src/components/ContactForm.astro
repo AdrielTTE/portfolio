@@ -197,7 +197,17 @@ const successNote = `${site.replyTime} Keep an eye out for an email from ${site.
       align-self: flex-start;
     }
   }
-  /* Built by contact-form.ts after the form is removed, so not scoped. */
+  /* Built by contact-form.ts after the form is removed, so not scoped. It
+     settles in with a spring instead of appearing. */
+  :global(.form-success) {
+    animation: success-in 460ms var(--spring) both;
+  }
+  @keyframes success-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.98);
+    }
+  }
   :global(.form-success h2) {
     font-size: var(--step-2);
     font-weight: 500;

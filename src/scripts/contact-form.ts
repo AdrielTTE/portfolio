@@ -2,6 +2,7 @@
 // script (with native browser validation); with it, native validation is
 // switched off in favour of inline messages, and the form submits via fetch.
 // docs/design-spec.md §5.4.
+import { haptic } from '../lib/haptic';
 const form = document.getElementById('contact-form') as HTMLFormElement | null;
 
 if (form) {
@@ -34,6 +35,7 @@ if (form) {
   }
 
   function showSuccess() {
+    haptic();
     const box = document.createElement('div');
     box.className = 'form-success';
     const heading = document.createElement('h2');
