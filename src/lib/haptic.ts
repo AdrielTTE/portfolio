@@ -1,10 +1,11 @@
-// One short buzz for a meaningful moment (something was copied, a message was
-// sent). Android browsers only; everywhere else it is a no-op. Never for
-// routine taps.
-export function haptic(ms = 12): void {
+// A short buzz for a meaningful moment (something was copied, a message was
+// sent), never for routine taps. 30ms is about the least most phone motors can
+// render. Needs Chrome, Edge, Samsung Internet or Firefox on Android with
+// touch vibration on; iOS Safari has no Vibration API, so there it does nothing.
+export function haptic(pattern: number | number[] = 30): void {
   try {
-    navigator.vibrate?.(ms);
+    navigator.vibrate?.(pattern);
   } catch {
-    // Blocked by the browser or a permission policy: nothing to do.
+    // Blocked by the browser or a permissions policy: nothing to do.
   }
 }

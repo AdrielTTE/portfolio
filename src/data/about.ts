@@ -18,7 +18,7 @@ export interface SkillGroup {
 export const heroRoleLine = 'Full stack developer in Kuala Lumpur, working at Bantu2U Holdings.';
 
 export const bio = [
-  "I'm a full stack developer in Kuala Lumpur. I build with ASP.NET Core and C# for web apps and APIs, SQL for the databases behind them, and Flutter and Dart for mobile apps. Applied Theory is where I apply what I've learned from studying and researching to real-life projects, and I'm getting my own apps ready for Google Play under that name, starting with Crest, which is in closed testing.",
+  "I'm a full stack developer in Kuala Lumpur. I build with ASP.NET Core and C# for web apps and APIs, SQL for the databases behind them, and Flutter and Dart for mobile apps. Applied Theory is my own studio, where I put what I learned at uni into real projects. I'm getting my own apps ready for Google Play under that name, starting with Crest, which is in closed testing.",
   'I graduated in Software Systems Development from TAR UMT with First Class Honours in April 2026, and I now work full-time as a Software Developer at Bantu2U Holdings.',
 ];
 
@@ -68,6 +68,6 @@ export const skills: SkillGroup[] = [
 ];
 
 export const musicParagraph =
-  'Outside development, I have 8 years of experience in audio and visual (AV) production, including 2 years as an AV coordinator at Emmanuel EFC, and 7 years performing live music on guitar and cajon, both ongoing.';
+  "Outside coding, I've done 8 years of audio and visual (AV) production, 2 of them as AV coordinator at Emmanuel EFC, and played guitar and cajon live for 7. Both are still going.";
 
 export const photoAlt = "Adriel Tang in glasses and a black shirt, looking down at an acoustic guitar as he plays.";

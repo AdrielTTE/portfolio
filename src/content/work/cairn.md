@@ -67,4 +67,4 @@ Cairn is a local-first planner built with Flutter. It holds tasks, projects and 
 
 ### Who it's for
 
-Someone who wants one quiet place for what to do, what it's for and what they've written down, that keeps working offline.
+Anyone who wants tasks, projects and notes in one app that keeps working offline.
