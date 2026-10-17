@@ -1,6 +1,7 @@
 // Copy-to-clipboard with a label crossfade and a Clipboard API fallback
 // (select the text and ask for Ctrl+C). docs/design-spec.md §5.4. Wires every
 // .copy-email on the page, so two instances never share ids or state.
+import { haptic } from '../lib/haptic';
 const HOLD = 1600;
 
 document.querySelectorAll<HTMLElement>('.copy-email').forEach((root) => {
@@ -25,6 +26,7 @@ document.querySelectorAll<HTMLElement>('.copy-email').forEach((root) => {
     try {
       await navigator.clipboard.writeText(email);
       button.classList.add('is-copied');
+      haptic();
       announce('Email address copied');
       clearTimeout(resetTimer);
       resetTimer = setTimeout(() => {

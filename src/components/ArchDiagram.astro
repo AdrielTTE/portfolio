@@ -112,19 +112,16 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
     stroke-width: 1.25;
     transition: opacity var(--dur-base) var(--ease-enter);
   }
-  /* A lit connection draws itself in, so the direction of the flow reads. */
   path.lit {
     stroke: var(--c-accent);
     stroke-width: 2;
-    stroke-dasharray: 1;
-    animation: draw var(--dur-slow) var(--ease-enter) both;
+    animation: light var(--dur-base) var(--ease-enter) both;
   }
-  @keyframes draw {
+  /* A lit connection fades in. (It used to draw itself along its length, which
+     animates stroke-dashoffset and repaints the SVG on every frame.) */
+  @keyframes light {
     from {
-      stroke-dashoffset: 1;
-    }
-    to {
-      stroke-dashoffset: 0;
+      opacity: 0;
     }
   }
   .note :global(strong) {
