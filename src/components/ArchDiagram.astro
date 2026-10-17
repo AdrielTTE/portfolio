@@ -71,10 +71,12 @@ const label = (id: string) => nodes.find((n) => n.id === id)!.label;
     list-style: none;
     padding: 0;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
   .list li {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2px;
     padding: 14px 16px;
     background: var(--c-bg-2);

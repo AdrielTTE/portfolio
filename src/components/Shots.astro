@@ -238,6 +238,9 @@ const viewer = allPhones || allWide;
     font-size: var(--step-4);
     line-height: 1;
     letter-spacing: var(--track-heading);
+    /* At a large text size a long label must wrap, not push the page wide. */
+    max-width: 100%;
+    overflow-wrap: anywhere;
     opacity: 0.5;
     transition: opacity var(--dur-base) var(--ease-enter);
   }

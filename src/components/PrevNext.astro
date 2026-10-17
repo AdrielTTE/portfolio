@@ -45,12 +45,14 @@ const { prev, next } = Astro.props;
   .adjacent {
     list-style: none;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
   }
   .adjacent li + li {
     border-top: 1px solid var(--c-rule);
   }
   .adjacent a {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-2);
     padding-block: var(--space-6);
     text-decoration: none;
