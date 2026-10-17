@@ -35,7 +35,7 @@ if (form) {
   }
 
   function showSuccess() {
-    haptic();
+    haptic([30, 60, 30]);
     const box = document.createElement('div');
     box.className = 'form-success';
     const heading = document.createElement('h2');

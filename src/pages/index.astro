@@ -106,8 +106,15 @@ const pitchParts = home.pitch
     background: var(--c-accent);
     transform-origin: left center;
   }
+  /* Every visit to the home page draws the underlines (a quick stroke), not
+     only the first one of a session, so the page never looks finished-but-flat.
+     After the full intro they wait for the pitch to rise; on a repeat visit
+     there is no intro, so they start almost at once. */
+  :global(.js-reveal) .u::after {
+    animation: u-draw 800ms var(--spring) both;
+    animation-delay: calc(150ms + var(--u, 0) * 160ms);
+  }
   :global(.js-reveal:not(.intro-seen)) .u::after {
-    animation: u-draw 700ms var(--spring) both;
     animation-delay: calc(500ms + var(--u, 0) * 220ms);
   }
   @keyframes u-draw {

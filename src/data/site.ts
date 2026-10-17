@@ -43,7 +43,7 @@ export const home = {
   ],
   pitch: "I build web apps and mobile apps, and I publish them.",
   // One casual line under the pitch. The music stays on /about.
-  intro: "Open to taking freelance projects.",
+  intro: "Tell me what you need and I'll tell you if I can build it.",
 };
 
 // How a project runs, in three plain steps. Shown as
@@ -76,7 +76,7 @@ export const faq = [
 // Stacks lead with the core tools; the rest are ones the proof projects use.
 export const offerCopy: Record<OfferId, { line: string; stack: string[] }> = {
   webapps: {
-    line: "Web apps with user logins, dashboards, and the workflows your team runs every day.",
+    line: "Web apps with logins and dashboards, built around the approvals, quotes and reports your team handles by hand.",
     stack: ["ASP.NET Core", "C#", "Laravel"],
   },
   apis: {
